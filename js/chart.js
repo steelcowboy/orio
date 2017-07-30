@@ -142,7 +142,7 @@ function newBlock(key, data, index) {
 
 function addBlock(block, blockSpot, id) {
     var element =  `
-        <div class="block show-block ${block.block_type}" id="${id}-block" name="${block.ge_type}" value="${block.credit_type}">
+        <div class="block show-block ${block.block_type}" id="${id}-block" name="${block.ge_type}" value="${block.credit_type}" onclick="alertClassInfo(this.id)">
             <div class="delete-block">
                 <p id="${id}delete-block" onclick="addFlag(this.id)">&times;</p>
                 <i class="material-icons" id="${id}mark-complete" onclick="editBlock(this.id)">mode_edit</i>
@@ -343,3 +343,7 @@ function closeSiteNav() {
 //        });
 //    }
 //}
+
+function alertClassInfo(block_id) {
+    alert("This will give class info! Block " + block_id + " was clicked!");
+}
