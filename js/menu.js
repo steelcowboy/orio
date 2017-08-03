@@ -11,12 +11,6 @@ $(document).on('click', '.major-option', function() {
     popStack();
 });
 
-/* One of the main menu options was clicked. This gets the new window */
-$(document).on('click', '.menu-option', function() {
-    $(".back-button").show();
-//    changeWindow($(".menu-modal").children(), $(this).attr("id"));
-});
-
 /* User wants to exit main menu */
 $(document).on('click', '.disabled', function() {
     closeMenu();
@@ -28,6 +22,7 @@ $(document).on('click', '#chart-browser', function() {
 
 $(document).on('click', '#chart-builder', function() {
     setupBuilder();
+    closeMenu();
 });
 
 $(document).on('click', '#utilities-browser', function() {
@@ -55,6 +50,9 @@ function openMenu() {
     if (menuStack.length > 0) {
         $(".back-button").show();
     };
+    $(".logo-container").fadeOut("fast");
+    $(".popup-message").remove();
+    $("#menu-button").addClass("open").removeClass("closed");
     $("#edit-flowchart").addClass("unclickable");
     $(".header").addClass("shrink-header");
     $(".menu-modal").removeClass("slide-out-left");
@@ -63,7 +61,7 @@ function openMenu() {
 
 function closeMenu() {
     closeSiteNav();
-    $("#menu-button").removeClass("open");
+    $("#menu-button").removeClass("open").addClass("closed");
     $(".checked").removeClass("checked");
     $("#edit-flowchart").removeClass("unclickable");
     $(".header").removeClass("shrink-header");
@@ -72,46 +70,58 @@ function closeMenu() {
     $(".menu-modal, .popup-message, .disabled, .back-button, .block-menu").fadeOut("fast");
 }
 
-function changeWindow(current, target) {
-    var element;
+function changeWindow(current, target, title=null) {
+    var element = "";
+    var view;
+    
+    if (title != null) {
+        element = `<h2 class="modal-header slide-in-right">${title}</h2>`;
+    }
     switch(target) {
         case "chart-browser":
-            element = newChartBrowserView();
+            view = newChartBrowserView();
             break;
         case "utilities-browser":
-            element = newUtilitiesView();
+            view = newUtilitiesView();
             break;
         case "login-button":
-            element = newLoginView();
+            view = newLoginView();
             break;
         case "signup-button":
-            element = newSignupView();
+            view = newSignupView();
             break;
         case "settings-button":
-            var val = JSON.parse(localStorage.getItem("summerQuarter"));
-            val = val ? "checked" : "unchecked";
-            element = newSettingsView();
+            view = newSettingsView();
             break;
-    }
+        case "department-selector":
+            view = newDepartmentSelectorView();
+            break;
+        case "course-selector":
+            view = newCourseSelectorView();
+            break;
+                 }
+    $(".back-button").show();
+    element = element.concat(view);
+    $(".menu-modal").children().addClass("slide-in-left");
     $(".menu-modal").empty().append(element);
     menuStack.push(current.toArray());
-
-//    $("#toggle-summerQuarter label, #toggle-summerQuarter input").change(function() {
-//        var val;
-//        if ($(this).val() == "on"){
-//            $(this).val("off");
-//            val = false;
-//        } else {
-//            $(this).val("on");
-//            val = true;
-//        }
-//        toggleSummerQuarter(val);
-//    });
 }
 
 function popStack() {
-    var newWindow = menuStack.pop();
-    $(".menu-modal").html(newWindow);
+    var window = menuStack.pop();
+    $(".menu-modal").html(window);
+    if (menuStack.length == 0) {
+        $(".back-button").fadeOut("fast");
+    }
+    setAutocomplete();
+}
+
+function emptyStack() {
+    var view;
+    while (menuStack.length > 0) {
+        view = menuStack.pop();
+    }
+    $(".menu-modal").html(view);
     $(".back-button").fadeOut("fast");
 }
 
@@ -150,9 +160,9 @@ function newUtilitiesView() {
         `<h2 class="modal-header slide-in-right">Degree Information</h2>
         <h3 class="list-item slide-in-right" onclick="showCurriculumSheet()">Get Curriculum Sheet</h3>
         <h4 class="modal-sub-header">Completed Units</h4>
-        <h4 class="modal-statistic">GE's: #</h4>
-        <h4 class="modal-statistic">Support: #</h4>
-        <h4 class="modal-statistic">Major: #</h4>`;
+        <h4 class="modal-statistic" id="ge-count">GE's: ${completedGECount}</h4>
+        <h4 class="modal-statistic" id="support-count">Support: ${completedSupportCount}</h4>
+        <h4 class="modal-statistic" id="major-count">Major: ${completedMajorCount}</h4>`;
     return element;
 }
 

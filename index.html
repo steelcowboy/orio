@@ -5,15 +5,25 @@
         <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="css/animations.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script src="js/plugins/jquery.js"></script>
         <script src="js/plugins/jquery-ui.js"></script>
         <script src="js/plugins/jquery-touch.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.js"></script>
+        <script src="js/plugins/materialize.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=0.8 user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
     </head>
     <body onload="loadTasks()">
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-letter">
+                    <div id="top-f"></div>
+                    <div id="bottom-f"></div>
+                </div>
+                <div class="bottom-text">flowchamp</div>
+            </div>
+        </div>
         <div class="menu-nav-buttons">
             <div id="menu-button">
                 <span></span>
@@ -25,7 +35,7 @@
         </div>
         <div class="header">
             <div class=header-contents>
-                <p class="header-title">pyFlowChart</p>
+                <p class="header-title">Welcome</p>
                 <div class="nav-button" id="edit-flowchart" onclick="toggleEditMode()"><i class="material-icons edit-button" style="color:white">mode_edit</i></div>
                 <div class="loading">
                     <div class="indeterminate"></div>
@@ -48,18 +58,21 @@
                     </div>
                     <div class="quarter-holder" id="f2">
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Fall</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Winter</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Spring</h5>
                                 <h5 class="quarter-unit-count"></h5>
@@ -78,18 +91,21 @@
                     </div>
                     <div class="quarter-holder">
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Fall</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Winter</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Spring</h5>
                                 <h5 class="quarter-unit-count"></h5>
@@ -108,18 +124,21 @@
                     </div>
                     <div class="quarter-holder">
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Fall</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Winter</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Spring</h5>
                                 <h5 class="quarter-unit-count"></h5>
@@ -138,18 +157,21 @@
                     </div>
                     <div class="quarter-holder">
                        <div class="quarter">
+                           <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Fall</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Winter</h5>
                                 <h5 class="quarter-unit-count"></h5>
                             </div>
                         </div>
                         <div class="quarter">
+                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
                             <div class='quarter-head'>
                                 <h5 class="season">Spring</h5>
                                 <h5 class="quarter-unit-count"></h5>
@@ -164,15 +186,49 @@
                 </div>
             </div>
         </div>
+        <div class="edit-palette hidden z-depth-5">
+            <div class="button-container">
+                <div class="edit-palette-button">
+                    <i class="material-icons red" id="delete-block" onclick="addFlag(this.id, true)">close</i>
+                </div>
+                <div class="edit-palette-button">
+                    <i class="material-icons" id="mark-retake" onclick="editBlock(this.id)">settings_backup_restore</i>
+                </div>   
+                <div class="edit-palette-button">
+                    <i class="material-icons" id="mark-next-quarter" onclick="editBlock(this.id)">call_made</i>
+                </div>   
+                <div class="edit-palette-button">
+                    <i class="material-icons" id="mark-in-progress" onclick="editBlock(this.id)">schedule</i>
+                </div>
+                <div class="edit-palette-button">
+                    <i class="material-icons green" id="mark-complete" onclick="editBlock(this.id)">check</i>
+                </div>
+            </div>
+
+                <div class="color-palette">
+                    <div class="color-choice" id="concentration-class"></div>
+                    <div class="color-choice" id="minor-class"></div>
+                    <div class="color-choice" id="free-class"></div>
+                    <div class="color-choice" id="general-class"></div>
+                    <div class="color-choice" id="major-class"></div>
+                    <div class="color-choice" id="support-class"></div>
+                </div>
+        </div>
         <div class="disabled"></div>
         <div class="option-modal"></div>
         <div class="block-menu"></div>
         <div class="menu-modal">
-            <div class="logo">
-
+            <div class="menu-logo-container">
+                <div class="logo menu-logo">
+                    <div class="logo-letter">
+                        <div id="top-f"></div>
+                        <div id="bottom-f"></div>
+                    </div>
+                    <div class="bottom-text">flowchamp</div>
+                </div>
             </div>
             <h3 class="menu-option slide-right" id="chart-browser">Choose Flowchart</h3>
-<!--            <h3 class="menu-option slide-right" id="chart-builder">Chart Builder</h3>-->
+            <h3 class="menu-option slide-right" id="chart-builder">Chart Builder</h3>
             <h3 class="menu-option slide-right" id="utilities-browser">Degree Info</h3>
 <!--
             <h3 class="menu-option slide-right" id="login-button">Log In</h3>

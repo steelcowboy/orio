@@ -23,9 +23,10 @@ $('.block-menu-button').on('click', function() {
 });
 
 function getLastChart() {
-    var savedChart = localStorage.getItem("savedChart");
-    /* TODO: Add localstorage*/
-    loadChart("Software_Engineering");
+//    var savedChart = localStorage.getItem("savedChart");
+//    /* TODO: Add localstorage*/
+//    savedChart = savedChart.split(" ").join("_");
+//    loadChart(savedChart);
 }
 
 function loadChart(chartName) {
@@ -37,6 +38,7 @@ function loadChart(chartName) {
         timeout: 10000,
     });
     request.done(function(data) {
+        $(".logo-container").fadeOut("fast");
         parseData(data, title);
         getSavedFlags();
         calculateUnits();
@@ -59,11 +61,10 @@ function getSavedFlags() {
 
 
 function setupChart(title) {
-    var season = "Summer";
-    
     $(".header-title").text(title);
     $(".block, .degree-path h2").removeClass("hide-block");
     $(".block").remove();
+    $(".add-block-button").hide();
 }
 
 
@@ -140,107 +141,132 @@ function newBlock(key, data, index) {
     return block;
 }
 
-function addBlock(block, blockSpot, id) {
+function addBlock(data, quarter, id) {
     var element =  `
-        <div class="block show-block ${block.block_type}" id="${id}-block" name="${block.ge_type}" value="${block.credit_type}">
+        <div class="block show-block ${data.block_type}" id="${id}-block" name="${data.ge_type}" value="${data.credit_type}">
             <div class="delete-block">
-                <p id="${id}delete-block" onclick="addFlag(this.id)">&times;</p>
                 <i class="material-icons" id="${id}mark-complete" onclick="editBlock(this.id)">mode_edit</i>
             </div>
             <div class="ribbon"></div>
             <div class="block-title">
-                <h6>${block.title}</h6>
+                <h6>${data.title}</h6>
             </div>
             <div class="block-catalog">
-                <h5>${block.catalog_type} (${block.credit_type})</h5>
-            </div>
-            <div class="block-option-container">
-                <i class="material-icons" id="${id}mark-complete" onclick="addFlag(this.id)">done</i>
-                <i class="material-icons" id="${id}mark-retake" onclick="addFlag(this.id)">settings_backup_restore</i>
-                <i class="material-icons" id="${id}mark-next-quarter" onclick="addFlag(this.id)">call_made</i>
-                <i class="material-icons" id="${id}mark-in-progress" onclick="addFlag(this.id)">schedule</i>
+                <h5>${data.catalog_type} (${data.credit_type})</h5>
             </div>
         </div>
     `;
-    blockSpot.append(element);
+    quarter.append(element);
 }
 
 var year = 1;
 function toggleEditMode() {
-    if(!$(".block").hasClass("editable")) {
+    if(!($(".block").hasClass("editable"))) {
+        $(".base").addClass("base-editable");
+        $(".edit-palette").removeClass("hidden");
+//        $(".add-block-button").show();
+        $(".edit-button").text("check");
+        setupSortable(".block",  ".block-option-container, .delete-block, .quarter-head", 
+                      ".quarter, .block-drop");
         $(".block").addClass("editable");
-        $(".edit-button").text("done");
-        $(".tab").sortable({
-            connectWith: ".quarter",
-            over: function(event, ui) {
-                $(".tab").css("background","red");
-                if ($(this).hasClass("right")) {
-                    year = year == 4 ? year : year+1;
-                    $('.tabs').tabs('select_tab', "year"+year);
-                } else {
-                    year = year == 1 ? year : year-1;
-                    $('.tabs').tabs('select_tab', "year"+year); 
-                }
-            },
-        })
-        $(".quarter").sortable({
-            items: ".block",
-            revert: true,
-            scroll: false,
-            disabled: false,
-            cancel: ".block-option-container, .delete-block, .quarter-head",
-            connectWith: ".quarter, .block-drop",
-            helper: function (e, item) {
-                if(!item.hasClass('checked'))
-                   item.addClass('checked');
-                var elements = $('.checked').clone();
-                elements.addClass("dragging");
-                var helper = $('<ul/>');
-                item.siblings('.checked').addClass('hidden');
-                return helper.append(elements);
-            },
-            /* Start function is used to center div on mouse pointer */
-            start: function(e, ui) {
-                var elements = ui.item.siblings('.checked.hidden');
-                var marginsToSet = ui.item.data().sortableItem.margins;
-                ui.item.css('margin-left', marginsToSet.left);
-                ui.item.css('margin-top', marginsToSet.top);
-                ui.item.data('items', elements);
-            },
-            receive: function(e, ui) {
-                ui.item.before(ui.item.data('items'));
-            },
-            stop: function(e, ui) {
-                ui.item.css('margin', '.5em auto');
-                ui.item.siblings('.checked').removeClass('hidden');
-                $('.checked .block-select').prop("checked", false);
-                $('.checked').removeClass('checked');
-                calculateUnits();
-            },
-        }).disableSelection();
     }
     else {
-        $(".block").removeClass("editable show-block");
+        $(".base").removeClass("base-editable");
+        $(".edit-palette").addClass("hidden");
+        $(".block").removeClass("editable");
         $(".edit-button").text("mode_edit");
         $(".quarter").sortable({
             disabled: true,
         });
+        $(".block").removeClass("selected-block");
+        $(".add-block-button").hide();
     }
-    $(".block").removeClass("show-block");
+    calculateUnits();
+
+}
+
+$(document).on('click', '.editable', (function() {
+    if (!$(this).hasClass("selected-block")) {
+        $(this).addClass("selected-block");
+    } else {
+        $(this).removeClass("selected-block");
+    }
+}));
+
+$(".color-choice").click(function() {
+    var selectedBlocks = $(document).find(".selected-block");
+    selectedBlocks.removeClass("general-class support-class ge-class free-class concentration-class free-class major-class minor-class");
+    selectedBlocks.addClass($(this).attr("id"));
+});
+
+function setupSortable(items, cancel, connectWith) {
+    $(".quarter").sortable({
+        items: items,
+        revert: true,
+        scroll: false,
+        disabled: false,
+        cancel: cancel,
+        connectWith: connectWith,
+        helper: function (e, item) {
+            if(!item.hasClass('checked'))
+               item.addClass('checked');
+            var elements = $('.checked').clone();
+            elements.addClass("dragging");
+            var helper = $('<ul/>');
+            item.siblings('.checked').addClass('hidden');
+            return helper.append(elements);
+        },
+        
+        /* Start function is used to center div on mouse pointer */
+        start: function(e, ui) {
+            var elements = ui.item.siblings('.checked.hidden');
+            var marginsToSet = ui.item.data().sortableItem.margins;
+            ui.item.css('margin-left', marginsToSet.left);
+            ui.item.css('margin-top', marginsToSet.top);
+            ui.item.data('items', elements);
+        },
+        
+        receive: function(e, ui) {
+            ui.item.before(ui.item.data('items'));
+        },
+        
+        stop: function(e, ui) {
+            ui.item.css('margin', '.5em auto');
+            ui.item.siblings('.checked').removeClass('hidden');
+            $('.checked .block-select').prop("checked", false);
+            $('.checked').removeClass('checked');
+            calculateUnits();
+        },
+    }).disableSelection();
 }
 
 function calculateUnits() {
     var unitCount;
+    var value;
+    completedGECount = 0;
+    completedSupportCount = 0;
+    completedMajorCount = 0;
     $(".quarter").each(function() {
         unitCount = 0;
         $(this).children(".block").each(function() {
-            unitCount += parseInt($(this).attr("value"));
+            value = parseInt($(this).attr("value"));
+            unitCount += value;
+            if ($(this).hasClass("general-class mark-complete")) {
+                completedGECount += value;
+            } else if ($(this).hasClass("support-class mark-complete")) {
+                completedSupportCount += value;
+            } else if ($(this).hasClass("major-class mark-complete")) {
+                completedMajorCount += value;
+            }
         })
         $(this).children(".quarter-head").children(".quarter-unit-count").text(`[${unitCount}]`);
-    })
+    });
+    $("#ge-count").text("GE's: " + completedGECount);
+    $("#support-count").text("Support: " + completedSupportCount);
+    $("#major-count").text("Major: " + completedMajorCount);
 }
 
-function addFlag(id) {
+function addFlag(id, remove=false) {
     var blockId = parseInt(id),
         option = id.replace(/[0-9]/g, ''),
         blockEl = $("#"+blockId+"-block"),
@@ -248,7 +274,8 @@ function addFlag(id) {
         value = parseInt(blockEl.attr("value")),
         flag = {id:blockId, flag:option, courseType:type, value:value};
     
-    if (option == 'delete-block') {
+    if (remove) {
+        blockEl = $(document).find(".selected-block");
         blockEl.css({
             visibility: 'hidden',
             display: 'block'
@@ -310,19 +337,30 @@ function updateUnitCount(el, value) {
     }
     switch(type) {
         case 'General Ed':
-            completedUnits.ge += value;
+            completedGECount += value;
             break;
         case 'Support':
-            completedUnits.support += value;
+            completedSupportCount += value;
             break;
         case 'Major':
-            completedUnits.major += value;
+            completedMajorCount += value;
                }
-    console.log(completedUnits);
+    calculateUnits();
 }
 
 function editBlock(id) {
-    var el = $("#"+id+"-block");
+    var selectedBlocks = $(document).find(".selected-block");
+    selectedBlocks.removeClass("mark-complete mark-retake mark-next-quarter mark-in-progress");
+    selectedBlocks.each(function() {
+        var blockId = parseInt(id),
+            option = id.replace(/[0-9]/g, ''),
+            blockEl = $("#"+blockId+"-block"),
+            type = blockEl.attr("name"),
+            value = parseInt(blockEl.attr("value")),
+            flag = {id:blockId, flag:option, courseType:type, value:value};
+        checkExistingFlag(blockEl, option, flag);
+        $(this).addClass(id);
+    })
 }
 
 function closeSiteNav() {
