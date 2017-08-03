@@ -10,7 +10,7 @@ $(document).on('click', '.tab', function() {
     $(".year").removeClass("slide-in-right");
     if (newTabIndex > tabIndex) {
         $("#year"+newTabIndex).addClass("slide-in-right");
-        
+
     } else {
         $("#year"+newTabIndex).addClass("slide-in-left");
     }
@@ -77,7 +77,7 @@ function parseData(data, title) {
     $.each(data, function(key, data) {
         block = newBlock(key, data, i);
         blockSpot = $(".year-holder").children().eq(block.year-1).children().eq(1).children().eq(block.quarter);
-        addBlock(block, blockSpot, key); 
+        addBlock(block, blockSpot, key);
     });
 }
 
@@ -90,7 +90,7 @@ function newBlock(key, data, index) {
         credit_type = data.credits,
         ge_type = data.ge_type,
         quarter = data.time[1];
-    
+
     switch(quarter) {
         case 'Fall':
             quarter = 0;
@@ -108,36 +108,36 @@ function newBlock(key, data, index) {
             console.log("NO QUARTER");
             break;
     }
-    
+
     switch(block_type) {
         case 'Free Elective':
             type = "free-class";
             break;
-        case 'General Ed': 
+        case 'General Ed':
             type = "general-class";
             break;
-        case 'Support': 
+        case 'Support':
             type = "support-class";
             break;
-        case 'Minor': 
+        case 'Minor':
             type = "minor-class";
             break;
-        case 'Major': 
+        case 'Major':
             type = "major-class";
             break;
-        case 'Concentration': 
+        case 'Concentration':
             type = "concentration-class";
             break;
         default:
             type = "blank";
     }
-    
+
     ge_type = (ge_type ? ""+ge_type+"" : "");
     id = key;
-    
-    block = {block_type:type, title:data.title, year:data.time[0], quarter:quarter, id:id, index:index, course_type:data.course_type, catalog_type:data.catalog, credit_type:data.credits, 
+
+    block = {block_type:type, title:data.title, year:data.time[0], quarter:quarter, id:id, index:index, course_type:data.course_type, catalog_type:data.catalog, credit_type:data.credits,
     ge_type:block_type}
-    
+
     return block;
 }
 
@@ -166,7 +166,7 @@ function toggleEditMode() {
         $(".edit-palette").removeClass("hidden");
 //        $(".add-block-button").show();
         $(".edit-button").text("check");
-        setupSortable(".block",  ".block-option-container, .delete-block, .quarter-head", 
+        setupSortable(".block",  ".block-option-container, .delete-block, .quarter-head",
                       ".quarter, .block-drop");
         $(".block").addClass("editable");
     }
@@ -216,7 +216,7 @@ function setupSortable(items, cancel, connectWith) {
             item.siblings('.checked').addClass('hidden');
             return helper.append(elements);
         },
-        
+
         /* Start function is used to center div on mouse pointer */
         start: function(e, ui) {
             var elements = ui.item.siblings('.checked.hidden');
@@ -225,11 +225,11 @@ function setupSortable(items, cancel, connectWith) {
             ui.item.css('margin-top', marginsToSet.top);
             ui.item.data('items', elements);
         },
-        
+
         receive: function(e, ui) {
             ui.item.before(ui.item.data('items'));
         },
-        
+
         stop: function(e, ui) {
             ui.item.css('margin', '.5em auto');
             ui.item.siblings('.checked').removeClass('hidden');
@@ -273,7 +273,7 @@ function addFlag(id, remove=false) {
         type = blockEl.attr("name"),
         value = parseInt(blockEl.attr("value")),
         flag = {id:blockId, flag:option, courseType:type, value:value};
-    
+
     if (remove) {
         blockEl = $(document).find(".selected-block");
         blockEl.css({
@@ -381,3 +381,7 @@ function closeSiteNav() {
 //        });
 //    }
 //}
+
+function alertClassInfo(block_id) {
+    alert("This will give class info! Block " + block_id + " was clicked!");
+}

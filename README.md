@@ -1,4 +1,5 @@
-# FlowChamp
+# Orio 
 
-Goals:
-- Finalize name
+## Goals:
+- Better polling for the kernel info
+- Better name
