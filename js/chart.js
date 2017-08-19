@@ -168,7 +168,7 @@ function closeEditMode() {
     chartContainer.removeClass("base-editing");
     $(".selected-block").removeClass("selected-block");
     $(".menu-nav-buttons").fadeIn();
-    $(".edit-container").hide();
+    $(".edit-container").fadeOut("fast");
     $(".quarter").sortable("destroy");
     
     toggleColorPalette(true);
@@ -198,6 +198,7 @@ function setupSortable(items, cancel, connectWith) {
         },
         
         helper: function (event, item) {
+            item.addClass("selected-block");
             var $helper = $("<li class='sortable-helper'><ul></ul></li>");
             var $selected = $(".selected-block");
             var $cloned = $selected.clone();

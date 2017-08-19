@@ -40,6 +40,7 @@ $(window).resize(function() {
 });
 
 function loadTasks() {
+    checkWindowSize();
     getLastChart();
     getSettings();
     getAvailableCharts();
