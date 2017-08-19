@@ -50,7 +50,7 @@ function openMenu() {
     if (menuStack.length > 0) {
         $(".back-button").show();
     };
-    $(".logo-container").fadeOut("fast");
+    $(".welcome-container").addClass("fade-white");
     $(".popup-message").remove();
     $("#menu-button").addClass("open").removeClass("closed");
     $("#edit-flowchart").addClass("unclickable");
@@ -194,7 +194,7 @@ function newSettingsView(val) {
         <h3 class="toggle-button slide-in-right" id="toggle-summerQuarter">Show Summer Quarter
             <label class="switch">
                 <input type="checkbox" ${val}>
-                <div class="toggle round"></div>
+                <div class="toggle round" onclick="changeSetting('summerQuarter', this)"></div>
             </label>
         </h3>`;
     return element;

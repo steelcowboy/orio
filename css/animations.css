@@ -111,6 +111,13 @@
 @keyframes spinner {
   to {transform: rotate(360deg);}
 }
+
+@keyframes welcome-fade {
+    0% {
+        opacity: 0;
+        transform: translateY(50%);
+    }
+}
  
 .spinner:before {
     z-index: 100;
@@ -676,6 +683,8 @@
 
 #toast-container {
     position: absolute;
+    bottom: 4em;
+    left: 4em;
 }
 
 .z-depth-0 {

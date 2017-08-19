@@ -1,3 +1,6 @@
+var savedSettings = localStorage.settings ? JSON.parse(localStorage.settings) : null;
+var settings = savedSettings ? savedSettings : {summerQuarter: false};
+
 function getSettings() {
     var settingsOptions = [
         'summerQuarter',
@@ -11,21 +14,29 @@ function getSettings() {
 
 function checkSetting(setting, value) {
     console.log("Setting: "+setting);
-    if (setting === "summerQuarter") {
-//        toggleSummerQuarter(value);
-    }
+    toggleSummerQuarter(settings.summerQuarter)
 }
 
-//function toggleSummerQuarter(toggled) {
-//    if (toggled) {
-//        $(".summer-quarter").show();
-//        localStorage.setItem("summerQuarter", true);
-//    } else {
-//        $(".summer-quarter").hide();
-//        $(".summer-quarter").sortable({
-//            disabled: true
-//        });
-//        localStorage.setItem("summerQuarter", false);
-//    }
-//}
+function changeSetting(setting, value) {
+    switch(setting) {
+        case 'summerQuarter':
+//            value = $(value).prop("checked");
+//            alert(value);
+//            settings.summerQuarter = value;
+//            toggleSummerQuarter(value);
+            break;
+                  }
+    localStorage.settings =  JSON.stringify(settings);
+}
+
+function toggleSummerQuarter(value) {
+    if (value == true) {
+        $(".summer-quarter").show();
+    } else {
+        $(".summer-quarter").hide();
+        $(".summer-quarter").sortable({
+            disabled: true
+        });
+    }
+}
 

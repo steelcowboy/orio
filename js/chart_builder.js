@@ -9,16 +9,6 @@ $(document).on('click', '.add-block-button', function() {
     }
 });
 
-$(document).on('click', '.department-item', function() {
-    fetchDepartmentCourses($(this).attr("name"));
-//    changeWindow($(".menu-modal").children(), "course-selector", $(this).attr("name"));
-});
-
-$(document).on('click', '.course-item', function() {
-    fetchCourse($(this).attr("name"));
-    closeMenu();
-});
-
 function setupBuilder() {
     if (!$("#chart-builder").hasClass("building")) {
         $("#chart-builder").addClass("building");
@@ -30,7 +20,7 @@ function setupBuilder() {
                 $(this).fadeIn("fast");
             });
         });
-        $(".block").fadeOut("fast", function() {
+        $(".block-outline").fadeOut("fast", function() {
             $(".block").remove();
         });
     }
@@ -65,7 +55,7 @@ function newDepartmentSelectorView() {
         </div>`
     element = element.concat(uiWidget);
     $.each(departments, function(index, value) {
-        element = element.concat(`<h3 class="list-item department-item slide-in-right" name="${value}">${value}</h3>`);
+        element = element.concat(`<h3 class="list-item department-item slide-in-right" name="${value}" onclick="fetchDepartmentCourses(this)">${value}</h3>`);
     });
     return element;
 }
@@ -75,7 +65,7 @@ function newCourseSelectorView() {
     $.each(departmentCourses, function(index, value) {
         if (index > 0) {
             element = element.concat(`<h3 class="list-item course-item slide-in-right" 
-             name="${departmentCourses[0] /* Department Name */}/${value}">${value}</h3>`);
+             name="${departmentCourses[0] /* Department Name */}/${value}" onclick="fetchCourse(this)">${value}</h3>`);
         }
     });
     return element;
@@ -94,80 +84,62 @@ function fetchDepartments() {
     });
 }
 
-function fetchDepartmentCourses(department) {
+function fetchDepartmentCourses(departmentItem) {
     departmentCourses = [];
+    var departmentName = $(departmentItem).attr("name");
     var request = $.get({
-        url: `${apiURL}courses/${department}`
+        url: `${apiURL}courses/${departmentName}`
     });
         
     request.done(function(data) { 
-        departmentCourses.push(department);
+        departmentCourses.push(departmentName);
         data.courses.forEach(function(value) {
             departmentCourses.push(value);
         });
     });
+    
     request.then(function() {
-        changeWindow($(".menu-modal").children(), "course-selector", department);
+        changeWindow($(".menu-modal").children(), "course-selector", departmentName);
     })
 }
 
-function fetchCourse(title) {
+function fetchCourse(courseItem) {
+    var courseName = $(courseItem).attr("name");
     var request = $.get({
-        url: `${apiURL}courses/${title}`
+        url: `${apiURL}courses/${courseName}`
     });
         
     request.done(function(data) { 
-        appendBlock(data, title);
+        appendBlock(data, courseName);
     });
+    
+    closeMenu();
 }
 
-function appendBlock(data, title) {
-    var catalogNum = title.split("/").join(" ");
-    console.log(data, title);
+function appendBlock(data, courseName) {
+    var catalogNum = courseName.split("/").join(" ");
     var prereqs = data.prereqs ? data.prereqs : "None";
     var block_type = "support-class",
         id = 0,
         ge_type = "support-class";
      var element =  `
-        <div class="block show-block ${block_type}" id="${id}-block" name="${ge_type}" value="${data.units}">
-            <div class="delete-block">
-                <p id="${id}delete-block" onclick="addFlag(this.id)">&times;</p>
-                <i class="material-icons" id="${id}mark-complete" onclick="editBlock(this.id)">mode_edit</i>
+        <div class="block-outline show-block">
+            <div class="edit-block-button" onclick="select(this)">
+                <i class="material-icons">check</i>
             </div>
-            <div class="ribbon"></div>
-            <div class="block-title">
-                <h6>${data.title}</h6>
-            </div>
-            <div class="block-catalog">
-                <h5>${catalogNum} (${data.units})</h5>
-            </div>
-            <div class="course-info" onclick="popupMessage('${data.title}', '${data.description}', 'true', '${"Prereqs: "+prereqs}')">?</div>
-            <div class="block-option-container">
-                <i class="material-icons" id="${id}mark-complete" onclick="addFlag(this.id)">done</i>
-                <i class="material-icons" id="${id}mark-retake" onclick="addFlag(this.id)">settings_backup_restore</i>
-                <i class="material-icons" id="${id}mark-next-quarter" onclick="addFlag(this.id)">call_made</i>
-                <i class="material-icons" id="${id}mark-in-progress" onclick="addFlag(this.id)">schedule</i>
+            <div class="block ${block_type}" id="${id}-block" name="${ge_type}" value="${data.units}">
+                <div class="ribbon"></div>
+                <div class="block-title">
+                    <h6>${data.title}</h6>
+                </div>
+                <div class="block-catalog">
+                    <h5>${catalogNum} (${data.units})</h5>
+                </div>
+                <div class="course-info" onclick="popupMessage('${data.title}', '${data.description}', 'true', '${"Prereqs: "+prereqs}')">?</div>
             </div>
         </div>
     `;
+    
     $(element).appendTo(".appending");
     calculateUnits();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

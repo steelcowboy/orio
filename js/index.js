@@ -1,8 +1,8 @@
-var apiURL = "https://ssh.marshhouse.tech:5500/",
-    menuStack = [], // Stores the state of each menu view when a new view is 
-    availableCharts = [],
-    departments = [],
-    departmentCourses = [];
+const apiURL = "https://ssh.marshhouse.tech:5500/";
+var menuStack = [];
+var availableCharts = [];
+var departments = [];
+var departmentCourses = [];
 var completedGECount = 0;
 var completedSupportCount = 0;
 var completedMajorCount = 0;
@@ -13,8 +13,8 @@ var savedChartBuilder;
 //var userCharts = [];
 
 $(document).ready(function() {
-    $(".option-modal, .disabled").hide();
     checkWindowSize();
+    $(".option-modal, .disabled, .edit-container").hide();
     $('#menu-button').click(function(){
         if (!$(this).hasClass("open")) {
             $(this).addClass('open');
@@ -26,13 +26,6 @@ $(document).ready(function() {
     });
 });
 
-function loadTasks() {
-    getLastChart();
-    getSettings();
-    getAvailableCharts();
-    fetchDepartments();
-}
-
 $.ajaxSetup({
     beforeSend:function() {
         $(".loading").addClass("progress-bar");
@@ -41,6 +34,17 @@ $.ajaxSetup({
         $(".progress-bar").removeClass("progress-bar");
     }
 });
+
+$(window).resize(function() {
+    checkWindowSize();
+});
+
+function loadTasks() {
+    getLastChart();
+    getSettings();
+    getAvailableCharts();
+    fetchDepartments();
+}
 
 function getAvailableCharts() {
     var request = $.get({
@@ -56,27 +60,31 @@ function getAvailableCharts() {
 }
 
 function checkWindowSize() {
-    if ($(window).width() <= 900){	
+    if ($(window).width() <= 650){	
 		$('ul.tabs').tabs();
+        $("body").removeClass("desktop");
 	} else {
         $("body").addClass("desktop");
         $(".year").show();
     }
 }
 
-$(document).on('click', '.close-popup-message', function() {
+function closeSiteNav() {
+    $(".external-site-modal").fadeOut("fast");
+}
+
+function closePopupMessage() {
     $(".popup-message").remove();
     closeMenu();
-})
+}
 
 function popupMessage(title, message, dismiss=false, postNote=false) {
-    console.log(title, message);
     var element = 
         `<div class="popup-message z-depth-5">
             <h2 class="popup-title">${title}</h2>
             <h3 class="popup-body">`+message+`</h3>
             <h4 class="popup-ps">${postNote ? postNote : ""}</h4>
-            <h4 class="close-popup-message ${dismiss ? "" : "hidden"}">Okay</h4>
+            <h4 class="close-popup-message ${dismiss ? "" : "hidden"}" onclick="closePopupMessage()">Okay</h4>
          </div>`;
     $(".disabled").show();
     $("body").append(element);
