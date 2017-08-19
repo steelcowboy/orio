@@ -154,8 +154,7 @@ function openEditMode() {
     if (!chartContainer.hasClass("base-editing")) {
         block.removeClass("show-block");
         chartContainer.addClass("base-editing");
-        setupSortable(".block-outline",  ".block-option-container, .delete-block, .quarter-head, .edit-block-button", 
-                      ".quarter, .block-drop");
+        setupSortable(".block-outline",  ".block-option-container, .delete-block, .quarter-head, .edit-block-button", ".quarter, .block-drop");
         $(".menu-nav-buttons").hide();
         $(".edit-container").fadeIn("fast");
     }
@@ -190,39 +189,36 @@ function setupSortable(items, cancel, connectWith) {
         scroll: false,
         cancel: cancel,
         connectWith: connectWith,
-        helper: function (e, item) {
-            if(!item.hasClass('checked'))
-               item.addClass('checked');
-            var elements = $('.checked').clone();
-            elements.addClass("dragging");
-            elements.removeClass("selected-block");
-            var helper = $('<ul/>');
-            item.siblings('.checked').addClass('hidden');
-            return helper.append(elements);
+        
+        start: function(e, ui) {
+            $(this).sortable('instance').offset.click = {
+                left: Math.floor(ui.helper.width() / 2),
+                top: Math.floor(ui.helper.height() / 2)
+            }
         },
         
-        /* Centers div on mouse pointer */
-        start: function(e, ui) {
-            var elements = ui.item.siblings('.checked.hidden');
-            var marginsToSet = ui.item.data().sortableItem.margins;
-            ui.item.css( {
-                'margin-left': marginsToSet.left,
-                'margin-top': marginsToSet.top,
-                'items': elements,
-            });
+        helper: function (event, item) {
+            var $helper = $("<li class='sortable-helper'><ul></ul></li>");
+            var $selected = $(".selected-block");
+            var $cloned = $selected.clone();
+            $helper.find("ul").append($cloned);
+            $selected.hide();
+            item.data("multi-sortable", $cloned);
+
+            return $helper;
+        },
+
+        stop: function (event, ui) {
+            var $cloned = ui.item.data("multi-sortable");
+            ui.item.removeData("multi-sortable");
+            ui.item.after($cloned);
+            ui.item.siblings(":hidden").remove();
+            ui.item.remove();
+            $(".selected-block").removeClass("selected-block");
         },
         
         receive: function(e, ui) {
             ui.item.before(ui.item.data('items'));
-        },
-        
-        stop: function(e, ui) {
-            ui.item.css('margin', '.5em auto');
-            ui.item.siblings('.checked').removeClass('hidden');
-            $('.checked .block-select').prop("checked", false);
-            $('.checked').removeClass('checked');
-            $(".tabs").removeClass("droppable");
-            calculateUnits();
         },
     }).disableSelection();
 }
@@ -282,8 +278,8 @@ function changeSelectedBlockColor(colorItem) {
     var colorClass = $(colorItem).attr("id");
     var selectedBlocks = $(".selected-block .block");
     var colorPalette = $(".color-palette");
-
-    selectedBlocks.removeClass("general-class support-class ge-class free-class concentration-class free-class major-class minor-class");
+    
+    selectedBlocks.removeClass("general-ed support free-class concentration major minor");
     selectedBlocks.addClass(colorClass);
     colorPalette.addClass("hidden");
 }

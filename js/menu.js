@@ -50,12 +50,14 @@ function openMenu() {
     if (menuStack.length > 0) {
         $(".back-button").show();
     };
+    
     $(".welcome-container").addClass("fade-white");
-    $(".popup-message").remove();
-    $("#menu-button").addClass("open").removeClass("closed");
     $("#edit-flowchart").addClass("unclickable");
     $(".header").addClass("shrink-header");
+    $("#menu-button").addClass("open").removeClass("closed");
     $(".menu-modal").removeClass("slide-out-left");
+    
+    $(".popup-message").remove();
     $(".menu-modal, .disabled").show();
 }
 
@@ -65,7 +67,6 @@ function closeMenu() {
     $(".checked").removeClass("checked");
     $("#edit-flowchart").removeClass("unclickable");
     $(".header").removeClass("shrink-header");
-    $('.checked .block-select').prop("checked", false);
     $(".menu-modal").addClass("slide-out-left");
     $(".menu-modal, .popup-message, .disabled, .back-button, .block-menu").fadeOut("fast");
 }

@@ -11,7 +11,7 @@ var savedChartBuilder;
 //var loggedIn = false;
 //var signupURL = "";
 //var userCharts = [];
-
+    
 $(document).ready(function() {
     checkWindowSize();
     $(".option-modal, .disabled, .edit-container").hide();

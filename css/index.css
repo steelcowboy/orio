@@ -191,6 +191,9 @@ ul {
   transition: all .15s ease-in-out;
   padding: .5em 0 .5em .75em; }
 
+.sortable-helper {
+  list-style: none; }
+
 .add-block-button {
   display: none;
   height: 3.5em;
@@ -371,20 +374,6 @@ ul {
           .base .year-holder .year .quarter-holder .quarter .editable {
             position: relative;
             cursor: move !important; }
-          .base .year-holder .year .quarter-holder .quarter .major {
-            background: #FFFF99; }
-          .base .year-holder .year .quarter-holder .quarter .free-class {
-            background: lightskyblue; }
-          .base .year-holder .year .quarter-holder .quarter .support {
-            background: #FFE0B2; }
-          .base .year-holder .year .quarter-holder .quarter .general-ed {
-            background: #AAFCA3; }
-          .base .year-holder .year .quarter-holder .quarter .minor {
-            background: #EEAEEE; }
-          .base .year-holder .year .quarter-holder .quarter .concentration {
-            background: #EA80FC; }
-          .base .year-holder .year .quarter-holder .quarter .blank {
-            box-shadow: none; }
           .base .year-holder .year .quarter-holder .quarter .faded {
             background: rgba(40, 40, 50, 0.5);
             transition: all .15s ease-in-out; }
@@ -437,18 +426,6 @@ ul {
       margin: 0.4em; }
     .color-palette .color-choice:active, .color-palette .flag-choice:active, .flag-palette .color-choice:active, .flag-palette .flag-choice:active {
       filter: brightness(75%); }
-  .color-palette #major-class, .flag-palette #major-class {
-    background: #FFFF99; }
-  .color-palette #support-class, .flag-palette #support-class {
-    background: #FFE0B2; }
-  .color-palette #general-class, .flag-palette #general-class {
-    background: #AAFCA3; }
-  .color-palette #minor-class, .flag-palette #minor-class {
-    background: #EEAEEE; }
-  .color-palette #concentration-class, .flag-palette #concentration-class {
-    background: #EA80FC; }
-  .color-palette #free-class, .flag-palette #free-class {
-    background: lightskyblue; }
   .color-palette #mark-complete, .flag-palette #mark-complete {
     background: #0ac814; }
   .color-palette #mark-in-progress, .flag-palette #mark-in-progress {
@@ -459,6 +436,24 @@ ul {
     background: red; }
   .color-palette #mark-none, .flag-palette #mark-none {
     color: #646464; }
+
+.major {
+  background: #FFFF99; }
+
+.free-class {
+  background: lightskyblue; }
+
+.support {
+  background: #FFE0B2; }
+
+.general-ed {
+  background: #AAFCA3; }
+
+.minor {
+  background: #EEAEEE; }
+
+.concentration {
+  background: #EA80FC; }
 
 .modal-header {
   text-align: left;

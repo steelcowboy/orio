@@ -265,6 +265,10 @@ ul {
     }
 }
 
+.sortable-helper {
+    list-style: none;
+}
+
 .add-block-button {
     display: none;
     height: 3.5em;
@@ -509,34 +513,6 @@ ul {
                         position: relative;
                         cursor: move !important;
                     }
-                    
-                    .major {
-                        background: #FFFF99;
-                    }
-
-                    .free-class {
-                        background: lightskyblue;
-                    }
-
-                    .support {
-                        background: #FFE0B2;
-                    }
-
-                    .general-ed {
-                        background: #AAFCA3;
-                    }
-
-                    .minor {
-                        background: #EEAEEE;
-                    }
-
-                    .concentration {
-                        background: #EA80FC;
-                    }
-
-                    .blank {
-                        box-shadow: none;
-                    }
 
                     .faded {
                         background: rgba(40,40,50, .5);
@@ -627,30 +603,6 @@ ul {
         }
     }
     
-    #major-class {
-        background: $major-color;
-    }
-
-    #support-class {
-        background: $support-color;
-    }
-
-    #general-class {
-        background: $general-color;
-    }
-
-    #minor-class {
-        background: $minor-color;
-    }
-
-    #concentration-class {
-        background: $concentration-color;
-    }
-
-    #free-class {
-        background: $free-color;
-    }
-    
     #mark-complete {
         background: rgb(10,200,20);
     }
@@ -671,6 +623,30 @@ ul {
     #mark-none {
         color: rgb(100,100,100);
     }
+}
+
+.major {
+    background: $major-color;
+}
+
+.free-class {
+    background: $free-color;
+}
+
+.support {
+    background: $support-color;
+}
+
+.general-ed {
+    background: $general-color;
+}
+
+.minor {
+    background: $minor-color;
+}
+
+.concentration {
+    background: $concentration-color;
 }
 
 .modal-header {
