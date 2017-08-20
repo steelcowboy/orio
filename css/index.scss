@@ -307,8 +307,10 @@ ul {
     -webkit-overflow-scrolling: touch;
     transition: all .15s ease-in-out;
     
-    &.base-editable {
-        bottom: 9em;
+    &.base-editing {
+        .edit-block-button {
+            visibility: visible !important;
+        }
     }
     
     .block-drop {
@@ -349,7 +351,6 @@ ul {
             min-height: 50em;
             display: flex;
             flex-direction: column;
-//            justify-content: space-around;
             background: white;
             
             &:first-child {
@@ -364,6 +365,7 @@ ul {
                 
                 h3 {
                     margin: auto;
+                    font-family: 'julius sans one';
                 }
             }
             
@@ -374,6 +376,7 @@ ul {
                 
                 .quarter-divider {
                     z-index: 0;
+                    margin-top: 3em;
                     border-left: 1px solid rgba(0,0,0,.12);
                 }
                 
@@ -383,7 +386,6 @@ ul {
                     text-align: center;
                     display: flex;
                     flex-direction: column;
-                    padding-bottom: 10em;
                     
                     &:first-child {
                         border-left: none;
@@ -391,10 +393,17 @@ ul {
                     
                     .quarter-head {
                         display: flex;
-                        justify-content: center;
+                        flex-direction: column;
                         
-                        h5 {
+                        h4 {
+                            line-height: 0;
+                            margin: 0.7em;
+                            color: rgb(100,100,100);
                             margin-left: .5em;
+                            
+                            &:last-child {
+                                color: rgba(0,0,0,.12);
+                            }
                         }
                     }
                     
@@ -435,7 +444,7 @@ ul {
                                 background: dodgerblue;
                                 color: white;
                                 border: 2px solid transparent;
-                                visibility: visible;
+                                visibility: visible !important;
                                 transition: all .15s ease-in-out;
                             }
                             background: rgba(0,0,0,0.08);
@@ -444,7 +453,7 @@ ul {
                         
                         &:hover {
                             .edit-block-button {
-                                visibility: visible;
+                                visibility: visible !important;
                             }
                         }
                                                 
@@ -1077,6 +1086,11 @@ ul {
 }
 
 .desktop {
+    .base-editing {
+        .edit-block-button {
+            visibility: hidden !important;
+        }
+    }
     .show-block {
         animation: show-block-desktop .55s;
     }

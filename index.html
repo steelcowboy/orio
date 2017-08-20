@@ -33,7 +33,7 @@
                 <span></span>
                 <span></span>
             </div>
-            <img class="back-button" src="img/arrow.svg">
+            <img class="back-button" src="img/arrow.svg" onclick="popStack()">
         </div>
         <div class="header">
             <div class=header-contents>
@@ -60,10 +60,10 @@
                 </div>
             </div>
             <ul class="tabs">
-                <li class="tab" id="1-tab" value="1"><a href="#year1">Freshman</a></li>
-                <li class="tab" id="2-tab" value="2"><a href="#year2">Sophomore</a></li>
-                <li class="tab" id="3-tab" value="3"><a href="#year3">Junior</a></li>
-                <li class="tab" id="4-tab" value="4"><a href="#year4">Senior</a></li>
+                <li class="tab" id="1-tab" value="1" onclick="changeTab(this.id)"><a href="#year1">Freshman</a></li>
+                <li class="tab" id="2-tab" value="2" onclick="changeTab(this.id)"><a href="#year2">Sophomore</a></li>
+                <li class="tab" id="3-tab" value="3" onclick="changeTab(this.id)"><a href="#year3">Junior</a></li>
+                <li class="tab" id="4-tab" value="4" onclick="changeTab(this.id)"><a href="#year4">Senior</a></li>
             </ul>
         </div>
         <div class="color-palette hidden">
@@ -98,151 +98,14 @@
         </div>
         <div class="base">
             <div class="year-holder">
-                <div class="year" id="year1">
-                    <div class="head">
-                        <h3>Freshman</h3>
-                    </div>
-                    <div class="quarter-holder" id="f2">
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Fall</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Winter</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Spring</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-<!--
-                        <div class="quarter summer-quarter">
-                            <h5 class='quarter-head'>Summer</h5>
-                        </div>
--->
-                    </div>
-                </div>
-                <div class="year" id="year2">
-                    <div class="head">
-                        <h3>Sophomore</h3>
-                    </div>
-                    <div class="quarter-holder">
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Fall</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Winter</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Spring</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-<!--
-                        <div class="quarter summer-quarter">
-                            <h5 class='quarter-head'>Summer</h5>
-                        </div>
--->
-                    </div>
-                </div>
-                <div class="year" id="year3">
-                    <div class="head">
-                        <h3>Junior</h3>
-                    </div>
-                    <div class="quarter-holder">
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Fall</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Winter</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Spring</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-<!--
-                        <div class="quarter summer-quarter">
-                            <h5 class='quarter-head'>Summer</h5>
-                        </div>
--->
-                    </div>
-                </div>
-                <div class="year" id="year4">
-                    <div class="head">
-                        <h3>Senior</h3>
-                    </div>
-                    <div class="quarter-holder">
-                       <div class="quarter">
-                           <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Fall</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Winter</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-                        <div class="quarter-divider"></div>
-                        <div class="quarter">
-                            <div class="add-block-button" name="${index}"><p>&plus; Add</p></div>
-                            <div class='quarter-head'>
-                                <h5 class="season">Spring</h5>
-                                <h5 class="quarter-unit-count"></h5>
-                            </div>
-                        </div>
-<!--
-                        <div class="quarter summer-quarter">
-                            <h5 class='quarter-head'>Summer</h5>
-                        </div>
--->
-                    </div>
-                </div>
+
             </div>
         </div>
-        <div class="disabled"></div>
+        
+        <div class="disabled" onclick="closeMenu()"></div>
         <div class="option-modal"></div>
         <div class="block-menu"></div>
+        
         <div class="menu-modal">
             <div class="menu-logo-container">
                 <div class="logo menu-logo">
@@ -253,18 +116,21 @@
                     <div class="bottom-text">flowchamp</div>
                 </div>
             </div>
-            <h3 class="menu-option slide-right" id="chart-browser">Choose Flowchart</h3>
-            <h3 class="menu-option slide-right" id="chart-builder">Chart Builder</h3>
-            <h3 class="menu-option slide-right" id="utilities-browser">Degree Info</h3>
-            <h3 class="menu-option slide-right" id="settings-button">Settings</h3>
+            <h3 class="menu-option slide-right" id="chart-browser" onclick="changeWindow(this.id)">Choose Flowchart</h3>
+            <h3 class="menu-option slide-right" id="chart-builder" onclick="setupBuilder()">Chart Builder</h3>
+            <h3 class="menu-option slide-right" id="utilities-browser" onclick="changeWindow(this.id)">Degree Info</h3>
+            <h3 class="menu-option slide-right" id="settings-button" onclick="changeWindow(this.id)">Settings</h3>
         </div>
+        
         <div class="external-site-modal">
             <div class="external-site-nav">
                 <p onclick="closeSiteNav()">&times;</p>
             </div>
             <div class="site-container"></div>
         </div>
+        
         <script src="js/index.js"></script>
+        <script src="js/components.js"></script>
         <script src="js/chart.js"></script>
         <script src="js/settings.js"></script>
         <script src="js/menu.js"></script>

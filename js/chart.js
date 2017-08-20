@@ -3,19 +3,16 @@ var savedFlags = [];
 var savedEdits = [];
 var completedUnits = {ge: 0, support: 0, major: 0};
 
-$(document).on('click', '.tab', function() {
+function changeTab(tabId) {
     $(".block-outline").removeClass("show-block");
     $(".year").removeClass("slide-in-left slide-in-right");
-    newTabIndex = parseInt($(this).attr("id"));
+    newTabIndex = parseInt(tabId);
     
-    if (newTabIndex > tabIndex) {
-        $("#year"+newTabIndex).addClass("slide-in-right");
-        
-    } else {
-        $("#year"+newTabIndex).addClass("slide-in-left");
-    }
+    var newClass = newTabIndex > tabIndex ? "slide-in-right" : "slide-in-left";
+    $("#year"+newTabIndex).addClass(newClass);
+
     tabIndex = newTabIndex;
-})
+}
 
 function getLastChart() {
     var savedChart = localStorage.getItem("savedChart");
@@ -23,6 +20,17 @@ function getLastChart() {
         $(".welcome-container").hide();
         loadChart(savedChart);
     }
+}
+
+function setupChartComponents() {
+    var yearComponents = `
+        ${newYearComponent("year1", "Freshman")}
+        ${newYearComponent("year2", "Sophomore")}
+        ${newYearComponent("year3", "Junior")}
+        ${newYearComponent("year4", "Senior")}
+    `;
+    $(".year-holder").append(yearComponents);
+    checkWindowSize();
 }
 
 function loadChart(chartName) {
@@ -69,7 +77,6 @@ function setupChart(title) {
     $(".add-block-button").hide();
 }
 
-
 function parseData(data, title) {
     var blockData;
     var blockSpot;
@@ -108,25 +115,6 @@ function getBlockData(key, data, index) {
         course_type:course_type, title:data.title, year:data.time[0], quarter:quarter,
         id:key, index:index, catalog_id:data.catalog, credit_size:data.credits, ge_type:data.course_type
     };
-}
-
-function newBlockComponent(data, id) {
-    return `
-        <div class="block-outline show-block">
-            <div class="edit-block-button" onclick="select(this)">
-                <i class="material-icons">check</i>
-            </div>
-            <div class="block ${data.course_type}" id="${id}-block" name="${data.course_type}" value="${data.credit_size}">
-                <div class="ribbon"></div>
-                <div class="block-title">
-                    <h6>${data.title}</h6>
-                </div>
-                <div class="block-catalog">
-                    <h5>${data.catalog_id} (${data.credit_size})</h5>
-                </div>
-            </div>
-        </div>
-    `;
 }
 
 function select(editButton) {  
@@ -216,6 +204,7 @@ function setupSortable(items, cancel, connectWith) {
             ui.item.siblings(":hidden").remove();
             ui.item.remove();
             $(".selected-block").removeClass("selected-block");
+            calculateUnits();
         },
         
         receive: function(e, ui) {
@@ -243,18 +232,19 @@ function calculateUnits() {
     
     $(".quarter").each(function() {
         unitCount = 0;
-        $(this).children(".block").each(function() {
+        var blocks = $(this).children(".block-outline").children(".block");
+        blocks.each(function() {
             value = parseInt($(this).attr("value"));
             unitCount += value;
-            if ($(this).hasClass("general-class mark-complete")) {
+            if ($(this).hasClass("general-ed mark-complete")) {
                 completedGECount += value;
-            } else if ($(this).hasClass("support-class mark-complete")) {
+            } else if ($(this).hasClass("support mark-complete")) {
                 completedSupportCount += value;
-            } else if ($(this).hasClass("major-class mark-complete")) {
+            } else if ($(this).hasClass("major mark-complete")) {
                 completedMajorCount += value;
             }
         });
-        $(this).children(".quarter-head").children(".quarter-unit-count").text(`[${unitCount}]`);
+        $(this).children(".quarter-head").children(".quarter-unit-count").text(`${unitCount} units`);
     });
     
     $("#ge-count").text("GE's: " + completedGECount);

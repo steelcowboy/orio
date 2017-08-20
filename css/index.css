@@ -227,8 +227,8 @@ ul {
   background-color: white;
   -webkit-overflow-scrolling: touch;
   transition: all .15s ease-in-out; }
-  .base.base-editable {
-    bottom: 9em; }
+  .base.base-editing .edit-block-button {
+    visibility: visible !important; }
   .base .block-drop {
     z-index: 50;
     position: absolute;
@@ -265,28 +265,34 @@ ul {
         height: 2em;
         text-align: center; }
         .base .year-holder .year .head h3 {
-          margin: auto; }
+          margin: auto;
+          font-family: 'julius sans one'; }
       .base .year-holder .year .quarter-holder {
         width: 100%;
         display: flex;
         text-align: center; }
         .base .year-holder .year .quarter-holder .quarter-divider {
           z-index: 0;
+          margin-top: 3em;
           border-left: 1px solid rgba(0, 0, 0, 0.12); }
         .base .year-holder .year .quarter-holder .quarter {
           height: 100%;
           width: 100%;
           text-align: center;
           display: flex;
-          flex-direction: column;
-          padding-bottom: 10em; }
+          flex-direction: column; }
           .base .year-holder .year .quarter-holder .quarter:first-child {
             border-left: none; }
           .base .year-holder .year .quarter-holder .quarter .quarter-head {
             display: flex;
-            justify-content: center; }
-            .base .year-holder .year .quarter-holder .quarter .quarter-head h5 {
+            flex-direction: column; }
+            .base .year-holder .year .quarter-holder .quarter .quarter-head h4 {
+              line-height: 0;
+              margin: 0.7em;
+              color: #646464;
               margin-left: .5em; }
+              .base .year-holder .year .quarter-holder .quarter .quarter-head h4:last-child {
+                color: rgba(0, 0, 0, 0.12); }
           .base .year-holder .year .quarter-holder .quarter .block-outline {
             position: relative;
             box-sizing: border-box;
@@ -321,10 +327,10 @@ ul {
                 background: dodgerblue;
                 color: white;
                 border: 2px solid transparent;
-                visibility: visible;
+                visibility: visible !important;
                 transition: all .15s ease-in-out; }
             .base .year-holder .year .quarter-holder .quarter .block-outline:hover .edit-block-button {
-              visibility: visible; }
+              visibility: visible !important; }
             .base .year-holder .year .quarter-holder .quarter .block-outline.dragging {
               position: absolute;
               top: -1em;
@@ -772,6 +778,8 @@ ul {
   0% {
     opacity: 0;
     transform: translateY(25%); } }
+.desktop .base-editing .edit-block-button {
+  visibility: hidden !important; }
 .desktop .show-block {
   animation: show-block-desktop .55s; }
 .desktop .block-drop {

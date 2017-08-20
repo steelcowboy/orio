@@ -41,6 +41,7 @@ $(window).resize(function() {
 
 function loadTasks() {
     checkWindowSize();
+    setupChartComponents();
     getLastChart();
     getSettings();
     getAvailableCharts();

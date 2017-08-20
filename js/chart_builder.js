@@ -24,15 +24,16 @@ function setupBuilder() {
             $(".block").remove();
         });
     }
+    closeMenu();
 }
 
 function showCourseSelector() {
-    changeWindow($(".menu-modal").children(), "department-selector", "Departments");
-    setAutocomplete();
+    changeWindow("department-selector", "Departments");
+    setupAutocomplete();
     openMenu();
 }
 
-function setAutocomplete() {
+function setupAutocomplete() {
     $( "#departmentSearch" ).autocomplete({
         source: departments,
         appendTo: ".menu-modal",
@@ -99,7 +100,7 @@ function fetchDepartmentCourses(departmentItem) {
     });
     
     request.then(function() {
-        changeWindow($(".menu-modal").children(), "course-selector", departmentName);
+        changeWindow("course-selector", departmentName);
     })
 }
 
