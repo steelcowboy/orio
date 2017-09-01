@@ -1,4 +1,4 @@
-const apiURL = "https://ssh.marshhouse.tech:5500/";
+const apiURL = "https://flowchamp.org/api/cpslo/"
 var menuStack = [];
 var availableCharts = [];
 var departments = [];
