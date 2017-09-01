@@ -32,7 +32,7 @@ function closeMenu() {
     $(".menu-modal, .popup-message, .disabled, .back-button, .block-menu").fadeOut("fast");
 }
 
-function changeWindow(target, title=null) {
+function changeWindow(target, title=null, optionalData = null) {
     var element = "";
     var view;
     var currentWindow = $(".menu-modal").children();
@@ -61,6 +61,12 @@ function changeWindow(target, title=null) {
             break;
         case "course-selector":
             view = newCourseSelectorView();
+            break;
+        case "multi-course-selector":
+            view = newMultiCourseSelectorView(optionalData);
+            break;
+        case "year-selector":
+            view = newYearSelectorView();
             break;
                  }
     $(".back-button").show();

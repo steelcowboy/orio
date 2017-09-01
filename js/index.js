@@ -1,4 +1,4 @@
-const apiURL = "https://ssh.marshhouse.tech:5500/";
+const apiURL = "https://ssh.marshhouse.tech:5500/cpslo/";
 var menuStack = [];
 var availableCharts = [];
 var departments = [];
@@ -62,7 +62,7 @@ function getAvailableCharts() {
 }
 
 function checkWindowSize() {
-    if ($(window).width() <= 650){	
+    if ($(window).width() <= 750){	
 		$('ul.tabs').tabs();
         $("body").removeClass("desktop");
 	} else {
@@ -71,12 +71,22 @@ function checkWindowSize() {
     }
 }
 
+function openUrlInNewTab(url) {
+  var win = window.open(url, '_blank');
+  win.focus();
+}
+
 function closeSiteNav() {
     $(".external-site-modal").fadeOut("fast");
 }
 
 function closePopupMessage() {
-    $(".popup-message").remove();
+    $(".popup-message").animate({
+        opacity: 0,
+        top: "-=150",
+      }, 100, function() {
+        $(this).remove();
+      });
     closeMenu();
 }
 

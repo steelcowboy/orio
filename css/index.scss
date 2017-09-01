@@ -36,7 +36,7 @@ ul {
     position: fixed;
     z-index: 20;
     background: white;
-    top: 6em;
+    top: 4em;
     padding-top: 5em;
     bottom: 0;
     left: 0;
@@ -277,7 +277,6 @@ ul {
     background: rgba(0, 0, 0, .08);
     margin: 1em auto;
     margin-top: 0;
-    margin-bottom: -.5em;
     border-radius: 4px;
     box-shadow: $bottom-box-shadow;
     cursor: pointer;
@@ -311,6 +310,10 @@ ul {
         .edit-block-button {
             visibility: visible !important;
         }
+        
+        .course-info, .course-specifier-button {
+            display: none;
+        }
     }
     
     .block-drop {
@@ -341,7 +344,6 @@ ul {
 //        height: 100%;
         display: flex;
         flex-wrap: wrap;
-        margin-top: 2em;
         
         .year {
             position: relative;
@@ -365,7 +367,6 @@ ul {
                 
                 h3 {
                     margin: auto;
-                    font-family: 'julius sans one';
                 }
             }
             
@@ -373,19 +374,22 @@ ul {
                 width: 100%;
                 display: flex;
                 text-align: center;
+                padding-top: 2em;
                 
                 .quarter-divider {
                     z-index: 0;
-                    margin-top: 3em;
+                    margin-top: 2em;
                     border-left: 1px solid rgba(0,0,0,.12);
                 }
                 
                 .quarter {
                     height: 100%;
                     width: 100%;
+                    margin-top: -1em;
                     text-align: center;
                     display: flex;
                     flex-direction: column;
+                    padding-bottom: 10em;
                     
                     &:first-child {
                         border-left: none;
@@ -499,21 +503,21 @@ ul {
                             height: 3em;
                         }
                         
-                        .course-info {
+                        .course-info, .course-specify-button {
                             position: absolute;
-                            background: rgba(0,0,0,.2);
+                            background: rgba(0,0,0,.15);
                             width: 2em;
                             margin: auto;
                             right: 0.5em;
                             bottom: 0.5em;
                             border-radius: 4px;
-                            box-shadow: $bottom-box-shadow;
                             color: white;
                             cursor: pointer;
                             transition: all .15s ease-in-out;
                             
                             &:hover {
-                                background: rgba(0,0,0,.4)
+                                background: rgba(0,0,0,.4);
+                                box-shadow: $bottom-box-shadow;
                             }
                         }
                     }
@@ -578,7 +582,7 @@ ul {
     animation: movingDown 0.15s;
     
             
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 750px) {
         top: 6em;
         p {
             display: none;
@@ -830,7 +834,7 @@ ul {
         height: 1.8em;
         width: 3.2em;
         top: -.1em;
-        left: 6em;;
+        left: 1em;;
         background-color: #ccc;
         -webkit-transition: .4s;
         transition: .15s;
@@ -879,6 +883,11 @@ ul {
     transition: all .15s ease-in-out;
     cursor: pointer;
     touch-action: manipulation;
+}
+
+.menu-option, .major-option, .list-item {
+    display: flex;
+    justify-content: space-between;
 }
 
 .modal-sub-header, .modal-statistic {
@@ -959,13 +968,13 @@ ul {
 
 @keyframes movingUp {
     0% {
-        transform: translateY(50px);
+        transform: translateY(100px) rotate(-2deg);
     }
 }
 
 @keyframes movingDown {
     0% {
-        transform: translateY(-50px);
+        transform: translateY(-50px) rotate(2deg);
     }
 }
 
@@ -1086,6 +1095,10 @@ ul {
 }
 
 .desktop {
+    .base {
+        top: 4em;
+    }
+    
     .base-editing {
         .edit-block-button {
             visibility: hidden !important;
