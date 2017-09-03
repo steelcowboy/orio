@@ -78,6 +78,7 @@ function changeWindow(target, title=null, optionalData = null) {
 function popStack() {
     var window = menuStack.pop();
     $(".menu-modal").html(window);
+    $(".menu-modal").children().addClass("slide-in-left");
     if (menuStack.length == 0) {
         $(".back-button").fadeOut("fast");
     }
@@ -96,13 +97,13 @@ function emptyStack() {
 function fetchCharts() {
     $(".menu-modal").empty().append("<h2 class='modal-header slide-in-right'>New Flowchart</h2>");
     if (!availableCharts) {
-        $(".menu-modal").append(`<h3 class="major-option slide-in-right">Couldn't Get Majors</h3>`);
+        $(".menu-modal").append(`<h3 class="menu-option slide-in-right">Couldn't Get Majors</h3>`);
     }
     $.each(availableCharts, function(index, value) {   
         var major = value;
         major = major.split('_').join(" ");
         if (major != $(".degree-name").text()) {
-            $(".menu-modal").append("<h3 class='major-option slide-in-right' id='"+value+"' onclick='changeStockFlowchart(this.id)'>"+major+"</h3>");
+            $(".menu-modal").append("<h3 class='menu-option slide-in-right' id='"+value+"' onclick='changeStockFlowchart(this.id)'>"+major+"</h3>");
         }
     });
 }

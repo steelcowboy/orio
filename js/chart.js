@@ -143,6 +143,7 @@ function countSelected() {
 }
 
 function openMultiCourseSelector(block) {
+    emptyStack();
     openMenu();
     var id = $(block).attr("id");
     var courseList = [];

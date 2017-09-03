@@ -10,7 +10,7 @@ function newYearComponent(id, yearTitle, year = startYear) {
     return `
         <div class="year" id="${id}" name="${year}">
             <div class="head">
-                <h3>${yearTitle}</h3>
+                <h2>${yearTitle}</h2>
             </div>
             <div class="quarter-holder">
                 ${newQuarterComponent("Fall", year)}
@@ -121,19 +121,15 @@ function newElectiveBlockComponent(block_metadata) {
 
 /* Menu Views */ 
 function newChartBrowserView() {
-    var element = "<h2 class='modal-header slide-in-right'>New Flowchart</h2>";
-    if (!availableCharts) {
-        element = element.concat("<h3 class='major-option slide-in-right'>Couldn't Get Majors</h3>");
-    }
+    var view = "<h2 class='modal-header slide-in-right'>New Flowchart</h2>";
     $.each(availableCharts, function(index, value) {
         var major = value;
         major = major.split('_').join(" ");
         if (major != $(".degree-name").text()) {
-            element = element.concat("<h3 class='major-option slide-in-right' id='"+value+"' onclick='changeStockFlowchart(this.id)'>"+major+"</h3>");
+            view = view.concat("<h3 class='menu-option slide-in-right' id='"+value+"' onclick='changeStockFlowchart(this.id)'>"+major+"</h3>");
         }
     });
-    element = element.concat("<h3 class='list-item slide-in-right'>Don't see yours?</h3>");
-    return element;
+    return view;
 }
 
 function newMultiCourseSelectorView(courseNames) {
@@ -143,7 +139,7 @@ function newMultiCourseSelectorView(courseNames) {
         if (index > 0) {
             var courseUrl = course.split(' ').join('/');
             view = view.concat(`
-                <h3 class="list-item slide-in-right" onclick="replaceBlock('${id}', '${courseUrl}')">${course}
+                <h3 class="menu-option slide-in-right" onclick="replaceBlock('${id}', '${courseUrl}')">${course}
                     <i class="material-icons">keyboard_arrow_right</i>
                 </h3>
             `);
@@ -153,9 +149,9 @@ function newMultiCourseSelectorView(courseNames) {
 }
 
 function newUtilitiesView() {
-    var element = `
+    return `
         <h2 class="modal-header slide-in-right">Degree Information</h2>
-        <h3 class="list-item slide-in-right" onclick="showCurriculumSheet()">Get Curriculum Sheet
+        <h3 class="menu-option slide-in-right" onclick="showCurriculumSheet()">Get Curriculum Sheet
             <i class="material-icons">keyboard_arrow_right</i>
         </h3>
         <h4 class="modal-sub-header">Completed Units</h4>
@@ -163,11 +159,10 @@ function newUtilitiesView() {
         <h4 class="modal-statistic" id="support-count">Support: ${completedSupportCount}</h4>
         <h4 class="modal-statistic" id="major-count">Major: ${completedMajorCount}</h4>
     `;
-    return element;
 }
 
 function newLoginView() {
-    var element = `
+    return `
         <h2 class="modal-header slide-in-right">Log In</h2>
         <form name="signup" class="slide-in-right" method="POST" action="">
             <input id="login-username" type="text" placeholder="Username" required">
@@ -175,7 +170,6 @@ function newLoginView() {
         </form>
         <button type="button" class="slide-in-right">Submit</button>
     `;
-    return element;
 }
 
 function newSignupView() {
@@ -192,13 +186,13 @@ function newSignupView() {
 function newSettingsView(val) {
     return `
         <h2 class="modal-header slide-in-right">Settings</h2>
-        <h3 class="toggle-button slide-in-right" id="toggle-summerQuarter">Show Summer Quarter
+        <h3 class="menu-option slide-in-right" id="toggle-summerQuarter">Summer Quarter
             <label class="switch">
                 <input type="checkbox" ${val}>
                 <div class="toggle round" onclick="changeSetting('summerQuarter', this)"></div>
             </label>
         </h3>
-        <h3 class="list-item slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Choose Start Year
+        <h3 class="menu-option slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Choose Start Year
             <i class="material-icons">keyboard_arrow_right</i>
         </h3>
     `;
@@ -211,7 +205,7 @@ function newYearSelectorView() {
     var date = new Date();
     var year = date.getFullYear();
     for(i = 2020; i >= year-4; i--){
-        element = element.concat(`<h3 class="list-item slide-in-right" value="${i}" onclick="changeStartYear(this)">${i}</h3>`);
+        element = element.concat(`<h3 class="menu-option slide-in-right" value="${i}" onclick="changeStartYear(this)">${i}</h3>`);
     }
     return element;
 }

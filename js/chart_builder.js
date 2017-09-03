@@ -51,12 +51,12 @@ function setupAutocomplete() {
 function newDepartmentSelectorView() {
     var element = "";
     var uiWidget = `
-        <div class = "ui-widget list-item slide-in-right">
+        <div class = "ui-widget menu-option slide-in-right">
             <input class="input-field" id ="departmentSearch" placeholder="Search" maxlength="4">
         </div>`
     element = element.concat(uiWidget);
     $.each(departments, function(index, value) {
-        element = element.concat(`<h3 class="list-item department-item slide-in-right" name="${value}" onclick="fetchDepartmentCourses(this)">${value}</h3>`);
+        element = element.concat(`<h3 class="menu-option department-item slide-in-right" name="${value}" onclick="fetchDepartmentCourses(this)">${value}</h3>`);
     });
     return element;
 }
@@ -65,7 +65,7 @@ function newCourseSelectorView() {
     var element = "";
     $.each(departmentCourses, function(index, value) {
         if (index > 0) {
-            element = element.concat(`<h3 class="list-item course-item slide-in-right" 
+            element = element.concat(`<h3 class="menu-option course-item slide-in-right" 
              name="${departmentCourses[0] /* Department Name */}/${value}" onclick="fetchCourse(this)">${value}</h3>`);
         }
     });

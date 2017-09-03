@@ -362,11 +362,11 @@ ul {
             .head {
                 display: none;
                 position: relative;
-                height: 2em;
+                line-height: 0;
                 text-align: center;
                 
-                h3 {
-                    margin: auto;
+                h2 {
+                    margin: 0.5em auto;
                 }
             }
             
@@ -406,7 +406,7 @@ ul {
                             margin-left: .5em;
                             
                             &:last-child {
-                                color: rgba(0,0,0,.12);
+                                color: rgba(0,0,0,.3);
                             }
                         }
                     }
@@ -677,61 +677,6 @@ ul {
     color: rgba(0,0,0,.52);
 }
 
-.block-menu {
-    z-index: 23;
-    display: none;
-    position: fixed;
-    margin: auto;
-    top: 4em;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-width: 30em;
-    max-height: 30em;
-    background: white;
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-    border-radius: 4px;
-    color: black;
-    overflow: auto;
-    animation: slide-up .15s;
-    
-    .block-menu-option {
-        margin-left: 1em;
-        animation: none;
-    }
-}
-
-.option-modal {
-    z-index: 100;
-    position: fixed;
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    max-width: 30em;
-    left: 0;
-    right: 0;
-    margin: auto;
-    border-radius: 8px;
-    background: rgba(255,255,255,.5);
-    justify-content: center;
-    box-shadow: $bottom-box-shadow;
-    
-    img {
-        margin: 1em;
-        border: 1em solid rgb(30,30,30);
-        height: 2em;
-        width: auto;
-        background: rgb(30,30,30);
-        border-radius: 20px;
-    }
-    
-    #close-options {
-        background: rgb(200,0,0);
-        border: 1em solid rgb(200,0,0);
-    }
-}
-
 .menu-nav-buttons {
     position: fixed;
     display: flex;
@@ -764,6 +709,7 @@ ul {
     bottom: 0;
     background: white;
     animation: slide-right .25s;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
     -webkit-overflow-scrolling: touch;
     
     .menu-logo-container {
@@ -820,6 +766,8 @@ ul {
         display: inline-block;
         width: 60px;
         height: 34px;
+        top: 0.75em;
+        right: 0.5em;
         
         input {
             position: absolute;
@@ -834,10 +782,7 @@ ul {
         margin: auto;
         height: 1.8em;
         width: 3.2em;
-        top: -.1em;
-        left: 1em;;
         background-color: #ccc;
-        -webkit-transition: .4s;
         transition: .15s;
         
         &:before {
@@ -848,7 +793,6 @@ ul {
           left: 4px;
           bottom: 4px;
           background-color: white;
-          -webkit-transition: .4s;
           transition: .3s;
         }
     }
@@ -875,7 +819,8 @@ ul {
     }
 }
 
-.menu-option, .block-menu-option, .major-option, .toggle-button, .list-item, .ui-autocomplete li, .modal-sub-header {
+.menu-option, .ui-autocomplete li, .modal-sub-header {
+    position: relative;
     text-align: left;
     margin: 0;
     padding: 1em;
@@ -886,7 +831,7 @@ ul {
     touch-action: manipulation;
 }
 
-.menu-option, .major-option, .list-item {
+.menu-option {
     display: flex;
     justify-content: space-between;
 }
@@ -905,7 +850,7 @@ ul {
     margin: .5em;
 }
 
-.menu-option:hover, .block-menu-option:hover, .major-option:hover, .list-item:hover, .ui-autocomplete li:hover {
+.menu-option:hover, .ui-autocomplete li:hover {
     background: rgb(245,245,245);
 }
 
@@ -1023,6 +968,7 @@ ul {
     0% {
         opacity: 0;
         transform: translateX(-50%);
+        -webkit-transform: translateX(-50%);
     }
 }
 
