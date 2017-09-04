@@ -62,7 +62,7 @@ function newBlockCourseDataView(course_data) {
         <div class="block-catalog">
             <h5 class="block-catalog-info">${course_data.department} ${course_data.course_number} (${course_data.units})</h5>
         </div>
-        <div class="course-info" onclick="popupMessage('${course_data.title}', '${course_data.description}', 'true', '${"Prereqs: "+course_data.prereqs}')">?</div>
+        <div class="course-info" onclick="popupCourseInfo('${course_data.title}', '${course_data.description}', '${course_data.prereqs}', '${course_data.department}', '${course_data.course_number}')">?</div>
     `;
 }
 
@@ -164,24 +164,14 @@ function newUtilitiesView() {
 function newLoginView() {
     return `
         <h2 class="modal-header slide-in-right">Log In</h2>
-        <form name="signup" class="slide-in-right" method="POST" action="">
+        <form class="slide-in-right" id="login-form" action="javascript:submitLoginInfo()">
             <input id="login-username" type="text" placeholder="Username" required">
             <input id="login-password" type="password" placeholder="Password" required">
         </form>
-        <button type="button" class="slide-in-right">Submit</button>
+        <button type="button" class="slide-in-right" onclick="submitLoginInfo()">Submit</button>
     `;
 }
 
-function newSignupView() {
-    return `
-        <h2 class="modal-header slide-in-right">Sign up</h2>
-        <form name="signup" class="slide-in-right" method="POST" action="">
-            <input id="signup-username" type="text" placeholder="Username" required">
-            <input id="signup-password" type="password" placeholder="Password" required">
-        </form>
-        <button type="button" class="slide-in-right">Submit</button>
-    `;
-}
 
 function newSettingsView(val) {
     return `

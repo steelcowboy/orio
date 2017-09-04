@@ -355,6 +355,21 @@ function updateUnitCount(el, value) {
     calculateUnits();
 }
 
+function popupCourseInfo(title, description, prereqs, dept, num) {
+    var element = 
+        `<div class="popup-message z-depth-5">
+            <h2 class="popup-title">${title}</h2>
+            <h3 class="popup-body">`+description+`</h3>
+            <h4 class="popup-ps">Prereqs: ${prereqs ? prereqs : "none"}</h4>
+            <h4 class="close-popup-message" onclick="closePopupMessage()">Okay</h4>
+            <h4 class="close-popup-message" onclick="window.open('http://polyratings.com/search.php?type=Class&terms=${dept}+${num}&format=long&sort=rating');">PolyRatings</h4>
+         </div>`;
+    $(".disabled").show();
+    console.log(dept, num);
+    $("body").append(element);
+}
+
+
 function editBlock(id) {
     var selectedBlocks = $(".selected-block");
     

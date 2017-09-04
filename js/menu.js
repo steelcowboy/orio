@@ -56,6 +56,9 @@ function changeWindow(target, title=null, optionalData = null) {
         case "settings-button":
             view = newSettingsView();
             break;
+        case "login-button":
+            view = newLoginView();
+            break;
         case "department-selector":
             view = newDepartmentSelectorView();
             break;
@@ -123,70 +126,51 @@ function showCurriculumSheet() {
 }
 
 /* Takes JSON and translates it into an HTML element */
-//
-//function submitLoginInfo() {
-//    var usernameEntered = $("#login-username").val();
-//    var password = $("#login-password").val();
-//    var header = window.btoa(usernameEntered+":"+password);
-//    console.log("Header: "+header);
-//    var request = $.ajax({
-//        type: "GET",
-//        url: apiURL+"/authorize",
-//        beforeSend: function (xhr) {
-//            xhr.setRequestHeader ("Authorization", "Basic " + header);
-//        },
-//    });
-//
-//    request.done(function() {
-//        popStack();
-//        $("#signup-button, #login-button").hide();
-//        userName = usernameEntered;
-//        loggedIn = true;
-//        alert("Welcome, "+userName);
-//        getUserCharts();
-//    })
-//
-//    request.fail(function(jqXHR, textStatus, errorThrown) {
-//        console.log(jqXHR);
-//        console.log(textStatus);
-//        console.log(errorThrown);
-//        alert("Username or password may be incorrect :/")
-//    });
-//}
-//
-//function submitSignupInfo() {
-//    var username = $("#signup-username").val();
-//    var password = $("#signup-password").val();
-//    var header = window.btoa(username+":"+password);
-//    console.log("Header: "+header);
-//    var request = $.ajax({
-//        type: "POST",
-//        url: apiURL+"/useradd",
-//        beforeSend: function (xhr) {
-//            xhr.setRequestHeader ("Authorization", "Basic " + header);
-//        },
-//    });
-//
-//    request.done(function() {
-//        popStack();
-//        $("#signup-button, #login-button").hide();
-//    });
-//
-//    request.fail(function(jqXHR, textStatus, errorThrown) {
-//        console.log(jqXHR);
-//        console.log(textStatus);
-//        console.log(errorThrown);
-//        if (errorThrown == "CONFLICT") {
-//            alert("'"+username +"' is taken. Please choose a different username.");
-//        }
-//    });
-//}
-//
-//function validateForm(form) {
-//    var isValid = true;
-//    form.each(function() {
-//        if ( $(this).val() === '' )
-//            isValid = false;
-//    });
-//    return isValid;
-//}
+
+function submitLoginInfo() {
+    var loginForm = $("#login-form");
+    var usernameEntered = $("#login-username").val();
+    var password = $("#login-password").val();
+    var header = window.btoa(usernameEntered+":"+password);
+    
+    var request = $.ajax({
+        type: "GET",
+        url: apiURL+"authorize",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader ("Authorization", "Basic " + header);
+        },
+    });
+
+    request.done(function(response) {
+        emptyStack();
+        console.log(document.cookie);
+        $("#login-username, #login-password").val("");
+        $("#login-button").hide();
+        getUserCharts();
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+        alert("Username or password may be incorrect :/")
+    });
+}
+
+function getUserCharts() {
+    var request = $.ajax({
+        type: "GET",
+        url: apiURL+"users/tvillare",
+    });
+    
+    request.done(function(data) {
+        console.log("User charts");
+        console.log(data);
+    });
+    
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+    });
+}

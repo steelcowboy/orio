@@ -307,6 +307,9 @@ ul {
     transition: all .15s ease-in-out;
     
     &.base-editing {
+        .block {
+            cursor: move;
+        }
         .edit-block-button {
             visibility: visible !important;
         }
@@ -344,7 +347,7 @@ ul {
 //        height: 100%;
         display: flex;
         flex-wrap: wrap;
-        
+
         .year {
             position: relative;
 //            height: 100%;

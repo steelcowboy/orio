@@ -226,6 +226,8 @@ ul {
   background-color: white;
   -webkit-overflow-scrolling: touch;
   transition: all .15s ease-in-out; }
+  .base.base-editing .block {
+    cursor: move; }
   .base.base-editing .edit-block-button {
     visibility: visible !important; }
   .base.base-editing .course-info, .base.base-editing .course-specifier-button {
