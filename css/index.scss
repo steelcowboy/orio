@@ -718,30 +718,38 @@ ul {
     .menu-logo-container {
         position: relative;
         height: 10em;
-//        width: 15em;
         margin-bottom: 1em;
         animation: slide-right .35s;
     }
     
-    form {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+    .login-error-text {
+        margin-top: 1em;
+        color: red;
+        margin-bottom: -0.5em;
+    }
+    
+    #login-form.menu-form {
+        width: 80%;
+        margin-left: 1.6em;
         
-        input[type=text], input[type=password] {
-            appearance: none;
-            -webkit-appearance: none;
-            font-size: 1.5em;
-            height: 2em;
-            margin-left: 1em;
-            border: none;
-            border-bottom: 1px solid rgba(0,0,0,.12);
-            transition: all .15s ease-in-out;
+        input {
+            margin: 0;
         }
         
-        input[type=text]:focus, input[type=password]:focus {
+        input[type=submit], button {
+            appearance: none;
+            -webkit-appearance: none;
+            font-size: 1.3em;
+            height: 2em;
+            width: 6em;
+            margin: 1em 0 0 0;
+            border: none;
+            border-radius: 2px;
+            background: rgb(50, 150, 230);
+            color: white;
+            box-shadow: 0 2px 1px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
             outline: none;
-            border-bottom: 3px solid dodgerblue;
+            cursor: pointer;
         }
         
         input[type=submit]:active, button:active {
@@ -749,19 +757,14 @@ ul {
         }
     }
     
-    input[type=submit], button {
-        appearance: none;
-        -webkit-appearance: none;
-        font-size: 1.3em;
-        height: 2em;
-        width: 6em;
-        margin: 1em;
-        border: none;
-        border-radius: 2px;
-        background: rgb(50, 150, 230);
-        color: white;
-        box-shadow: 0 2px 1px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-        outline: none;
+    #submit-progress {
+        top: auto !important;
+        width: 7.8em;
+        margin-top: -.2em;
+        border-radius: 1px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        animation: slide-up 0.35s;
     }
     
     .switch {
@@ -822,7 +825,7 @@ ul {
     }
 }
 
-.menu-option, .ui-autocomplete li, .modal-sub-header {
+.menu-option, .ui-autocomplete li, .modal-sub-header, .menu-sub-header {
     position: relative;
     text-align: left;
     margin: 0;
@@ -845,6 +848,18 @@ ul {
     padding-left: 1.5em;
     animation: slide-in-right .35s;
     cursor: default;
+}
+
+.login-img-container {
+    display: flex;
+    justify-content: center;
+    height: 3em;
+    width: 100%;
+}
+
+.login-img {
+    height: 90%;
+    width: auto;
 }
 
 .modal-statistic {

@@ -514,37 +514,39 @@ ul {
     height: 10em;
     margin-bottom: 1em;
     animation: slide-right .35s; }
-  .menu-modal form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; }
-    .menu-modal form input[type=text], .menu-modal form input[type=password] {
+  .menu-modal .login-error-text {
+    margin-top: 1em;
+    color: red;
+    margin-bottom: -0.5em; }
+  .menu-modal #login-form.menu-form {
+    width: 80%;
+    margin-left: 1.6em; }
+    .menu-modal #login-form.menu-form input {
+      margin: 0; }
+    .menu-modal #login-form.menu-form input[type=submit], .menu-modal #login-form.menu-form button {
       appearance: none;
       -webkit-appearance: none;
-      font-size: 1.5em;
+      font-size: 1.3em;
       height: 2em;
-      margin-left: 1em;
+      width: 6em;
+      margin: 1em 0 0 0;
       border: none;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-      transition: all .15s ease-in-out; }
-    .menu-modal form input[type=text]:focus, .menu-modal form input[type=password]:focus {
+      border-radius: 2px;
+      background: #3296e6;
+      color: white;
+      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
       outline: none;
-      border-bottom: 3px solid dodgerblue; }
-    .menu-modal form input[type=submit]:active, .menu-modal form button:active {
+      cursor: pointer; }
+    .menu-modal #login-form.menu-form input[type=submit]:active, .menu-modal #login-form.menu-form button:active {
       background: #288cdc; }
-  .menu-modal input[type=submit], .menu-modal button {
-    appearance: none;
-    -webkit-appearance: none;
-    font-size: 1.3em;
-    height: 2em;
-    width: 6em;
-    margin: 1em;
-    border: none;
-    border-radius: 2px;
-    background: #3296e6;
-    color: white;
-    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    outline: none; }
+  .menu-modal #submit-progress {
+    top: auto !important;
+    width: 7.8em;
+    margin-top: -.2em;
+    border-radius: 1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    animation: slide-up 0.35s; }
   .menu-modal .switch {
     position: absolute;
     display: inline-block;
@@ -586,7 +588,7 @@ ul {
     -ms-transform: translateX(26px);
     transform: translateX(26px); }
 
-.menu-option, .ui-autocomplete li, .modal-sub-header {
+.menu-option, .ui-autocomplete li, .modal-sub-header, .menu-sub-header {
   position: relative;
   text-align: left;
   margin: 0;
@@ -607,6 +609,16 @@ ul {
   padding-left: 1.5em;
   animation: slide-in-right .35s;
   cursor: default; }
+
+.login-img-container {
+  display: flex;
+  justify-content: center;
+  height: 3em;
+  width: 100%; }
+
+.login-img {
+  height: 90%;
+  width: auto; }
 
 .modal-statistic {
   padding-left: 2em;

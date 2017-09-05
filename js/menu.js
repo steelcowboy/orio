@@ -138,6 +138,7 @@ function submitLoginInfo() {
         url: apiURL+"authorize",
         beforeSend: function (xhr) {
             xhr.setRequestHeader ("Authorization", "Basic " + header);
+            $("#submit-progress").removeClass("hidden");
         },
     });
 
@@ -145,15 +146,14 @@ function submitLoginInfo() {
         emptyStack();
         console.log(document.cookie);
         $("#login-username, #login-password").val("");
-        $("#login-button").hide();
+        $("#logout-button").removeClass("hidden");
+        $("#submit-progress, .login-error-text, #login-button").addClass("hidden");
         getUserCharts();
     });
 
     request.fail(function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-        alert("Username or password may be incorrect :/")
+        $(".login-error-text").removeClass("hidden");
+        $("#submit-progress").addClass("hidden");
     });
 }
 

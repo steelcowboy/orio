@@ -164,11 +164,24 @@ function newUtilitiesView() {
 function newLoginView() {
     return `
         <h2 class="modal-header slide-in-right">Log In</h2>
-        <form class="slide-in-right" id="login-form" action="javascript:submitLoginInfo()">
-            <input id="login-username" type="text" placeholder="Username" required">
-            <input id="login-password" type="password" placeholder="Password" required">
+        <div class="login-img-container">
+            <img class="school-logo login-img slide-in-right" src="img/school_logos/cpslo.png">
+        </div>
+        <form class="menu-form slide-in-right" id="login-form" action="javascript:submitLoginInfo()">
+            <div class="input-field col s6">
+                <input id="login-username" type="text" class="validate">
+                <label for="login-username">Username</label>
+            </div>
+            <div class="input-field col s6">
+                <input id="login-password" type="password" class="validate">
+                <label for="login-password">Password</label>
+            </div>
+            <p class="login-error-text slide-in-right hidden">Incorrect Username or Password</p>
+            <button type="button" class="slide-in-right" onclick="submitLoginInfo()">Submit</button>
+            <div class="progress-bar hidden" id="submit-progress">
+                <div class="indeterminate"></div>
+            </div>
         </form>
-        <button type="button" class="slide-in-right" onclick="submitLoginInfo()">Submit</button>
     `;
 }
 
