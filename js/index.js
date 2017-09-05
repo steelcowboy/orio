@@ -1,6 +1,6 @@
 const apiURL = "https://flowchamp.org/api/cpslo/"
-//const apiURL = "http://127.0.0.1:4500/api/cpslo/"
-var menuStack = [];;
+
+var menuStack = [];
 var availableCharts = [];
 var departments = [];
 var departmentCourses = [];
