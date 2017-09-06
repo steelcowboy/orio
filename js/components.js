@@ -6,31 +6,29 @@
 /* Flowchart Components */
 var startYear = 2015;
 
-function newYearComponent(id, yearTitle, year = startYear) {
+function newYearComponent(id, yearTitle, year = startYear, chartBuilder=false) {
     return `
         <div class="year" id="${id}" name="${year}">
             <div class="head">
                 <h2>${yearTitle}</h2>
             </div>
             <div class="quarter-holder">
-                ${newQuarterComponent("Fall", year)}
-                ${newQuarterComponent("Winter", year+1)}
-                ${newQuarterComponent("Spring", year+1, /* lastQuarter */ true)}
+                ${newQuarterComponent("Fall", year, false, chartBuilder)}
+                ${newQuarterComponent("Winter", year+1, false, chartBuilder)}
+                ${newQuarterComponent("Spring", year+1, /* lastQuarter */ true, chartBuilder)}
             </div>
         </div>
     `;
 }
 
-function newQuarterComponent(season, year, lastQuarter = false) {
+function newQuarterComponent(season, year, lastQuarter = false, chartBuilder=false) {
     var quarter =  `
         <div class="quarter" name="${season} ${year}">
-            <div class="add-block-button">
-                <p>&plus; Add</p>
-            </div>
             <div class='quarter-head'>
                 <h4 class="season">${season}</h4>
                 <h4 class="quarter-unit-count"></h4>
             </div>
+            ${chartBuilder ? newChartBuilderAddComponent() : ""}
         </div>
     `;
     if (!lastQuarter) {
@@ -40,7 +38,7 @@ function newQuarterComponent(season, year, lastQuarter = false) {
 }
 
 function newBlockComponent(block_metadata, course_data) {
-    var course_type = block_metadata.course_type.toLowerCase().split(' ').join("-");
+    var course_type = block_metadata ? block_metadata.course_type.toLowerCase().split(' ').join("-") : "major";
     return `
         <div class="block-outline show-block">
             <div class="edit-block-button" onclick="select(this)">
@@ -119,6 +117,51 @@ function newElectiveBlockComponent(block_metadata) {
     `;
 }
 
+/* Chart Builder Components */
+
+function newChartBuilderAddComponent() {
+    return `
+        <div class="add-block-count-container show-block">
+            <div class="input-field col s6">
+                <input type="text" class="add-block-input" maxlength="1" placeholder="# Courses">
+            </div>
+            <div class="add-block-amount-button" onclick="addCourseSpecifier(this.parentNode)">
+                <i class="material-icons">add</i>
+            </div>
+        </div>
+    `;
+}
+
+const course_types = ['Major', 'Free Class', 'Support', 'General Ed', 'Minor', 'Concentration'];
+
+function newCourseSpecifierComponent() {
+    var component =  `
+        <div class="course-specifier-container show-block">
+            <h3>Enter Course: </h3>
+            <div class="course-specifier-input-container">
+                <div class="input-field col s6">
+                    <input type="text" class="department-specifier-input" placeholder="DEPT" onchange="fetchFullCourse(this.parentNode)">
+                </div>
+                <div class="input-field col s6">
+                    <input type="text" class="number-specifier-input" placeholder="#">
+                </div>
+            </div>
+            <select class="course-type-dropdown">
+    `;
+    course_types.forEach(function(course_type) {
+        component = component.concat(`<option value="${course_type}">${course_type}</option>`)
+    });
+                
+    component = component.concat (
+        `</select>
+            <div class="add-course-button" onclick="fetchFullCourse(this.parentNode)">
+                <i class="material-icons">add</i>
+            </div>
+        </div>
+    `);
+    return component;
+}
+
 /* Menu Views */ 
 function newChartBrowserView() {
     var view = "<h2 class='modal-header slide-in-right'>New Flowchart</h2>";
@@ -185,7 +228,6 @@ function newLoginView() {
     `;
 }
 
-
 function newSettingsView(val) {
     return `
         <h2 class="modal-header slide-in-right">Settings</h2>
@@ -212,8 +254,6 @@ function newYearSelectorView() {
     }
     return element;
 }
-
-
 
 
 

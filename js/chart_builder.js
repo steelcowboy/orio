@@ -10,20 +10,22 @@ $(document).on('click', '.add-block-button', function() {
 });
 
 function setupBuilder() {
+    var yearComponents = `
+        ${newYearComponent("year1", "Freshman", 2015, true)}
+        ${newYearComponent("year2", "Sophomore", 2016, true)}
+        ${newYearComponent("year3", "Junior", 2017, true)}
+        ${newYearComponent("year4", "Senior", 2018, true)}
+    `;
+    $(".year-holder").append(yearComponents);
+    $(".welcome-container").fadeOut("fast");
     if (!$("#chart-builder").hasClass("building")) {
         $("#chart-builder").addClass("building");
         $(".header-title").text("New Flowchart");
-        $(".quarter").each(function(index, element) {
-            $(this).find(".quarter-unit-count").text("[0]");
-            $(this).fadeOut("fast", function() {
-                $(".add-block-button").show();
-                $(this).fadeIn("fast");
-            });
-        });
-        $(".block-outline").fadeOut("fast", function() {
-            $(".block").remove();
-        });
+        $(".year-holder").empty().append(
+            yearComponents
+        );
     }
+    checkWindowSize();
     closeMenu();
 }
 
@@ -85,24 +87,26 @@ function fetchDepartments() {
     });
 }
 
-function fetchDepartmentCourses(departmentItem) {
-    departmentCourses = [];
-    var departmentName = $(departmentItem).attr("name");
-    var request = $.get({
-        url: `${apiURL}courses/${departmentName}`
-    });
-        
-    request.done(function(data) { 
-        departmentCourses.push(departmentName);
-        data.courses.forEach(function(value) {
-            departmentCourses.push(value);
-        });
-    });
-    
-    request.then(function() {
-        changeWindow("course-selector", departmentName);
-    })
+function fetchDepartmentCourses(location) {
+    var dept = $(location).find(".department-specifier-input").val();
+    var numInput = $(location).parent().find(".number-specifier-input");
+//    var nums = testAjax(dept);
+//    numInput.autocomplete({
+//        source: nums,
+//    });
 }
+//
+//    function testAjax(dept) {
+//        var result= [];
+//        $.ajax({
+//            url: `${apiURL}courses/${dept}`,
+//            async: false,  
+//            success:function(data) {
+//                result = data; 
+//            }
+//        });
+//        return result;
+//    }
 
 function fetchCourse(courseItem) {
     var courseName = $(courseItem).attr("name");
@@ -117,30 +121,30 @@ function fetchCourse(courseItem) {
     closeMenu();
 }
 
-function appendBlock(data, courseName) {
-    var catalogNum = courseName.split("/").join(" ");
-    var prereqs = data.prereqs ? data.prereqs : "None";
-    var block_type = "support-class",
-        id = 0,
-        ge_type = "support-class";
-     var element =  `
-        <div class="block-outline show-block">
-            <div class="edit-block-button" onclick="select(this)">
-                <i class="material-icons">check</i>
-            </div>
-            <div class="block ${block_type}" id="${id}-block" name="${ge_type}" value="${data.units}">
-                <div class="ribbon"></div>
-                <div class="block-title">
-                    <h6>${data.title}</h6>
-                </div>
-                <div class="block-catalog">
-                    <h5>${catalogNum} (${data.units})</h5>
-                </div>
-                <div class="course-info" onclick="popupMessage('${data.title}', '${data.description}', 'true', '${"Prereqs: "+prereqs}')">?</div>
-            </div>
-        </div>
-    `;
-    
-    $(element).appendTo(".appending");
-    calculateUnits();
+function addCourseSpecifier(addComponent) {
+    var numCourses = parseInt($(addComponent).find(".add-block-input").val());
+    var quarter = $(addComponent).parent(".quarter");
+    for (var i=0; i<numCourses && i < 8; i++) {
+        quarter.append(newCourseSpecifierComponent());
+    }
+    $(".department-specifier-input").autocomplete({
+        source: departments,
+    });
+}
+
+function fetchFullCourse(location) {
+    var dept = $(location).find(".department-specifier-input").val().toUpperCase();
+    var num = $(location).find(".number-specifier-input").val();
+    var serialized = `${dept}/${num}`;
+    var courseType = $(location).find(".course-type-dropdown").val();
+    console.log(courseType);
+
+    var request = $.get({
+        url: `${apiURL}courses/${serialized}`
+    });
+        
+    request.done(function(data) { 
+        var block = newBlockComponent(/* block_data */ {course_type: courseType}, data);
+        $(location).replaceWith(block);
+    });
 }
