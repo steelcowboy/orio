@@ -254,7 +254,6 @@ ul {
     .base .year-holder .year {
       position: relative;
       width: 100%;
-      max-width: 40em;
       min-height: 50em;
       display: flex;
       flex-direction: column;
@@ -565,7 +564,7 @@ ul {
   display: none;
   position: fixed;
   overflow: auto;
-  z-index: 22;
+  z-index: 23;
   top: 0;
   left: 0;
   right: 0;
@@ -836,6 +835,10 @@ ul {
   0% {
     opacity: 0;
     transform: translateY(25%); } }
+@keyframes height {
+  0% {
+    height: 0;
+    opacity: 0; } }
 .desktop .base {
   top: 4em; }
 .desktop .base-editing .edit-block-button {
@@ -863,7 +866,7 @@ ul {
   margin: 0 auto; }
 .desktop .year {
   padding-top: 1em;
-  min-width: 30em;
+  min-width: 35em;
   margin-left: 1.5em; }
 .desktop .head {
   display: block !important; }

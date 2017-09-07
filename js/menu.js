@@ -1,9 +1,9 @@
-function changeStockFlowchart(newMajor) {
+function changeStockFlowchart(newMajor, startYear = null) {
     $(".block-outline").addClass("hide-block");
     localStorage.setItem("savedFlowChart", newMajor);
     loadChart(newMajor);
     closeMenu();
-    popStack();
+    emptyStack();
 }
 
 function openMenu() {
@@ -41,6 +41,9 @@ function changeWindow(target, title=null, optionalData = null) {
         element = `<h2 class="modal-header slide-in-right">${title}</h2>`;
     }
     switch(target) {
+        case "chart-year-browser":
+            view = newYearSelectorView(/* chartBrowser */ true);
+            break;
         case "chart-browser":
             view = newChartBrowserView();
             break;

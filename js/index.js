@@ -1,5 +1,6 @@
 const apiURL = "https://flowchamp.org/api/cpslo/"
 //const apiURL = "http://127.0.0.1:4500/api/cpslo/";
+const course_types = ['Major', 'Free Class', 'Support', 'General Ed', 'Minor', 'Concentration'];
 
 var menuStack = [];
 var availableCharts = [];
@@ -9,10 +10,7 @@ var completedGECount = 0;
 var completedSupportCount = 0;
 var completedMajorCount = 0;
 var savedChartBuilder;
-//var userName;
-//var loggedIn = false;
-//var signupURL = "";
-//var userCharts = [];
+var startYear = localStorage.startYear ? parseInt(localStorage.startYear) : (new Date()).getFullYear();
     
 $(document).ready(function() {
     checkWindowSize();
@@ -38,15 +36,17 @@ $.ajaxSetup({
     },
 });
 
-$(window).resize(function() {
+
+var resizeTimeout;
+$(window).resize(function(){
+  if(!!resizeTimeout){ clearTimeout(resizeTimeout); }
+  resizeTimeout = setTimeout(function(){
     checkWindowSize();
+  },200);
 });
 
 function loadTasks() {
-    checkWindowSize();
-    setupChartComponents();
     getLastChart();
-    getSettings();
     getAvailableCharts();
     fetchDepartments();
 }

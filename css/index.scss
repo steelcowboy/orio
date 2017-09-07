@@ -344,15 +344,12 @@ ul {
     }
     
     .year-holder {  
-//        height: 100%;
         display: flex;
         flex-wrap: wrap;
 
         .year {
             position: relative;
-//            height: 100%;
             width: 100%;
-            max-width: 40em;
             min-height: 50em;
             display: flex;
             flex-direction: column;
@@ -794,7 +791,7 @@ ul {
     display: none;
     position: fixed;
     overflow: auto;
-    z-index: 22;
+    z-index: 23;
     top: 0;
     left: 0;
     right: 0;
@@ -1217,7 +1214,7 @@ ul {
     
     .year {
         padding-top: 1em;
-        min-width: 30em;
+        min-width: 35em;
         margin-left: 1.5em;
     }
     .head {
@@ -1229,4 +1226,15 @@ ul {
     .site-container {
         top: 7em;
     }
+}
+
+@media print{
+    .base {
+        overflow: auto;
+    }
+    .year-holder {
+        flex-direction: column;
+    }
+    
+    .page-break	{ display: block; page-break-before: always; }
 }

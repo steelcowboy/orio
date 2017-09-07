@@ -23,13 +23,14 @@ function getLastChart() {
 }
 
 function setupChartComponents() {
+    console.log(startYear);
     var yearComponents = `
-        ${newYearComponent("year1", "Freshman", 2015)}
-        ${newYearComponent("year2", "Sophomore", 2016)}
-        ${newYearComponent("year3", "Junior", 2017)}
-        ${newYearComponent("year4", "Senior", 2018)}
+        ${newYearComponent("year1", "Freshman", startYear)}
+        ${newYearComponent("year2", "Sophomore", startYear + 1)}
+        ${newYearComponent("year3", "Junior", startYear + 2)}
+        ${newYearComponent("year4", "Senior", startYear + 3)}
     `;
-    $(".year-holder").append(yearComponents);
+    $(".year-holder").empty().append(yearComponents);
     checkWindowSize();
 }
 
@@ -47,6 +48,7 @@ function loadChart(chartName) {
     request.done(function(data) {
         localStorage.savedChart = chartName;
         $(".welcome-container").fadeOut("fast");
+        setupChartComponents();
         parseData(data, title);
         getSavedFlags();
         calculateUnits();
@@ -106,7 +108,7 @@ function parseData(data, title) {
 function parseBlockLocation(block_metadata) {
     var course_type = block_metadata.course_type.toLowerCase().split(' ').join("-");
     var quarter = block_metadata.time[1];
-    
+
     switch(quarter) {
         case 'Fall':
             quarter = 0;

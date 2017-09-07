@@ -12,38 +12,36 @@ function getSettings() {
     });
 }
 
-function checkSetting(setting, value) {
-    console.log("Setting: "+setting);
-    toggleSummerQuarter(settings.summerQuarter)
-}
-
-function changeSetting(setting, value) {
-    switch(setting) {
-        case 'summerQuarter':
-//            value = $(value).prop("checked");
-//            alert(value);
-//            settings.summerQuarter = value;
-//            toggleSummerQuarter(value);
-            break;
-                  }
-    localStorage.settings =  JSON.stringify(settings);
-}
-
-function toggleSummerQuarter(value) {
-    if (value == true) {
-        $(".summer-quarter").show();
+function toggleSummerQuarter(toggle) {
+    var value = !($(toggle).find("input").prop('checked'));
+    if (value) {
+        localStorage.summerQuarter = true;
     } else {
-        $(".summer-quarter").hide();
-        $(".summer-quarter").sortable({
-            disabled: true
-        });
+        localStorage.removeItem('summerQuarter');
     }
+    loadTasks();
 }
 
-function changeStartYear(yearItem) {
+function changeStartYear(yearItem, chartBrowser = false) {
+    startYear = parseInt($(yearItem).text());
+    localStorage.startYear = startYear;
+    
+    if (chartBrowser) {
+        changeWindow('chart-browser');
+    } else {
+        closeMenu();
+        emptyStack();
+    }
     $(".year").each(function(key, el) {
         $(this).attr("name", parseInt($(yearItem).text())+key);
     });
-    closeMenu();
-    $(".back-button").trigger("click");
+    $(".quarter").each(function(key, quarter) {
+        var season = $(this).find(".season").text();
+        var year = $(this).parent(".quarter-holder").parent(".year").attr("name");
+        year = parseInt(year);
+        if (season === 'Winter' || season === 'Spring') {
+            year += 1;
+        }
+        $(this).attr("name", `${season} ${year}`);
+    });
 }

@@ -4,10 +4,10 @@
  */
 
 /* Flowchart Components */
-var startYear = 2015;
 
 function newYearComponent(id, yearTitle, year = startYear, chartBuilder=false) {
-    return `
+    summerQuarter = localStorage.summerQuarter ? true : false;
+    var component = `
         <div class="year" id="${id}" name="${year}">
             <div class="head">
                 <h2>${yearTitle}</h2>
@@ -15,10 +15,16 @@ function newYearComponent(id, yearTitle, year = startYear, chartBuilder=false) {
             <div class="quarter-holder">
                 ${newQuarterComponent("Fall", year, false, chartBuilder)}
                 ${newQuarterComponent("Winter", year+1, false, chartBuilder)}
-                ${newQuarterComponent("Spring", year+1, /* lastQuarter */ true, chartBuilder)}
+                ${newQuarterComponent("Spring", year+1, /* lastQuarter */ summerQuarter ? false : true, chartBuilder)}
+        `;
+        if (summerQuarter) {
+            component = component.concat(`${newQuarterComponent("Summer", year+1, /* lastQuarter */ true, chartBuilder)}`);
+        }
+    component = component.concat(`
             </div>
         </div>
-    `;
+    `);
+    return component;
 }
 
 function newQuarterComponent(season, year, lastQuarter = false, chartBuilder=false) {
@@ -132,8 +138,6 @@ function newChartBuilderAddComponent() {
     `;
 }
 
-const course_types = ['Major', 'Free Class', 'Support', 'General Ed', 'Minor', 'Concentration'];
-
 function newCourseSpecifierComponent() {
     var component =  `
         <div class="course-specifier-container show-block">
@@ -169,7 +173,7 @@ function newChartBrowserView() {
         var major = value;
         major = major.split('_').join(" ");
         if (major != $(".degree-name").text()) {
-            view = view.concat("<h3 class='menu-option slide-in-right' id='"+value+"' onclick='changeStockFlowchart(this.id)'>"+major+"</h3>");
+            view = view.concat(`<h3 class="menu-option slide-in-right" id="${value}" onclick="changeStockFlowchart(this.id)">${major}</h3>`);
         }
     });
     return view;
@@ -233,8 +237,8 @@ function newSettingsView(val) {
         <h2 class="modal-header slide-in-right">Settings</h2>
         <h3 class="menu-option slide-in-right" id="toggle-summerQuarter">Summer Quarter
             <label class="switch">
-                <input type="checkbox" ${val}>
-                <div class="toggle round" onclick="changeSetting('summerQuarter', this)"></div>
+                <input type="checkbox" ${localStorage.summerQuarter ? 'checked' : ''}>
+                <div class="toggle round" onclick="toggleSummerQuarter(this.parentNode)"></div>
             </label>
         </h3>
         <h3 class="menu-option slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Choose Start Year
@@ -243,14 +247,14 @@ function newSettingsView(val) {
     `;
 }
 
-function newYearSelectorView() {
+function newYearSelectorView(chartBrowser = false) {
     var element =  `
-        <h2 class="modal-header slide-in-right">Choose Start Year</h2>
+        <h2 class="modal-header slide-in-right">Change Start Year</h2>
     `;
     var date = new Date();
     var year = date.getFullYear();
-    for(i = 2020; i >= year-4; i--){
-        element = element.concat(`<h3 class="menu-option slide-in-right" value="${i}" onclick="changeStartYear(this)">${i}</h3>`);
+    for(i = (new Date()).getFullYear()+1; i >= year-6; i--){
+        element = element.concat(`<h3 class="menu-option slide-in-right" value="${i}" onclick="changeStartYear(this, '${chartBrowser ? true : false}')">${i}</h3>`);
     }
     return element;
 }

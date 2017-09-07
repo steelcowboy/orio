@@ -11,10 +11,10 @@ $(document).on('click', '.add-block-button', function() {
 
 function setupBuilder() {
     var yearComponents = `
-        ${newYearComponent("year1", "Freshman", 2015, true)}
-        ${newYearComponent("year2", "Sophomore", 2016, true)}
-        ${newYearComponent("year3", "Junior", 2017, true)}
-        ${newYearComponent("year4", "Senior", 2018, true)}
+        ${newYearComponent("year1", "Freshman", startYear, true)}
+        ${newYearComponent("year2", "Sophomore", startYear + 1, true)}
+        ${newYearComponent("year3", "Junior", startYear + 2, true)}
+        ${newYearComponent("year4", "Senior", startYear + 3, true)}
     `;
     $(".year-holder").append(yearComponents);
     $(".welcome-container").fadeOut("fast");
@@ -137,7 +137,6 @@ function fetchFullCourse(location) {
     var num = $(location).find(".number-specifier-input").val();
     var serialized = `${dept}/${num}`;
     var courseType = $(location).find(".course-type-dropdown").val();
-    console.log(courseType);
 
     var request = $.get({
         url: `${apiURL}courses/${serialized}`
