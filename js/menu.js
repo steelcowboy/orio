@@ -34,8 +34,8 @@ function closeMenu() {
 
 function changeWindow(target, title=null, optionalData = null) {
     var element = "";
-    var view;
     var currentWindow = $(".menu-modal").children();
+    var view = currentWindow;
     
     if (title != null) {
         element = `<h2 class="modal-header slide-in-right">${title}</h2>`;
