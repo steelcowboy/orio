@@ -41,11 +41,11 @@ function changeWindow(target, title=null, optionalData = null) {
         element = `<h2 class="modal-header slide-in-right">${title}</h2>`;
     }
     switch(target) {
-        case "chart-year-browser":
-            view = newYearSelectorView(/* chartBrowser */ true);
-            break;
         case "chart-browser":
             view = newChartBrowserView();
+            break;
+        case "chart-year-browser":
+            view = newYearSelectorView(/* chartBrowser */ true);
             break;
         case "utilities-browser":
             view = newUtilitiesView();
