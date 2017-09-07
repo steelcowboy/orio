@@ -11,6 +11,7 @@ var completedSupportCount = 0;
 var completedMajorCount = 0;
 var savedChartBuilder;
 var startYear = localStorage.startYear ? parseInt(localStorage.startYear) : (new Date()).getFullYear();
+var username = localStorage.username ? localStorage.username : "";
     
 $(document).ready(function() {
     checkWindowSize();
@@ -47,8 +48,27 @@ $(window).resize(function(){
 
 function loadTasks() {
     getLastChart();
+    getCurrentQuarter();
     getAvailableCharts();
     fetchDepartments();
+}
+
+function getCurrentSeason() {
+    var month = (new Date()).getMonth();
+    var year = (new Date()).getFullYear();
+    var season;
+
+    if (month >= 3 && month < 5) {
+        console.log("HERE");
+        season = 'Spring';
+    } else if (month >= 5 && month < 8) {
+        season = 'Summer';
+    } else if (month >= 8 && month <= 11) {
+        season = 'Fall';
+    } else {
+        season = "Winter";   
+    }
+    return `${season} ${year}`;
 }
 
 function getAvailableCharts() {

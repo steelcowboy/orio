@@ -16,14 +16,11 @@ function setupBuilder() {
         ${newYearComponent("year3", "Junior", startYear + 2, true)}
         ${newYearComponent("year4", "Senior", startYear + 3, true)}
     `;
-    $(".year-holder").append(yearComponents);
+    $(".year-holder").empty().append(yearComponents);
     $(".welcome-container").fadeOut("fast");
     if (!$("#chart-builder").hasClass("building")) {
         $("#chart-builder").addClass("building");
         $(".header-title").text("New Flowchart");
-        $(".year-holder").empty().append(
-            yearComponents
-        );
     }
     checkWindowSize();
     closeMenu();
@@ -88,25 +85,23 @@ function fetchDepartments() {
 }
 
 function fetchDepartmentCourses(location) {
-    var dept = $(location).find(".department-specifier-input").val();
-    var numInput = $(location).parent().find(".number-specifier-input");
-//    var nums = testAjax(dept);
-//    numInput.autocomplete({
-//        source: nums,
-//    });
+    departmentCourses = [];
+    var departmentName = $(location).attr("name");
+    var request = $.get({
+        url: `${apiURL}courses/${departmentName}`
+    });
+        
+    request.done(function(data) { 
+        departmentCourses.push(departmentName);
+        data.courses.forEach(function(value) {
+            departmentCourses.push(value);
+        });
+    });
+    
+    request.then(function() {
+        changeWindow("course-selector", departmentName);
+    })
 }
-//
-//    function testAjax(dept) {
-//        var result= [];
-//        $.ajax({
-//            url: `${apiURL}courses/${dept}`,
-//            async: false,  
-//            success:function(data) {
-//                result = data; 
-//            }
-//        });
-//        return result;
-//    }
 
 function fetchCourse(courseItem) {
     var courseName = $(courseItem).attr("name");
@@ -115,7 +110,9 @@ function fetchCourse(courseItem) {
     });
         
     request.done(function(data) { 
-        appendBlock(data, courseName);
+        var course = newBlockComponent(null, data);
+        $(course).insertBefore(".appending .add-block-button");
+        emptyStack();
     });
     
     closeMenu();

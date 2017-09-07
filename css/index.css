@@ -195,19 +195,16 @@ ul {
   list-style: none; }
 
 .add-block-button {
-  display: none;
-  height: 3.5em;
+  visibility: hidden;
+  height: 5em;
   width: 100%;
+  line-height: 5.5em;
   max-width: 9em;
-  background: rgba(0, 0, 0, 0.08);
-  margin: 1em auto;
-  margin-top: 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: all .15s ease-in-out; }
+  margin: 0.5em auto;
+  color: #969696;
+  cursor: pointer; }
   .add-block-button:hover {
-    background: rgba(0, 0, 0, 0.12); }
+    background: rgba(0, 0, 0, 0.05); }
 
 .pulse {
   background: blue; }
@@ -230,6 +227,8 @@ ul {
     cursor: move; }
   .base.base-editing .edit-block-button {
     visibility: visible !important; }
+  .base.base-editing .add-block-button {
+    display: none; }
   .base.base-editing .course-info, .base.base-editing .course-specifier-button {
     display: none; }
   .base .block-drop {
@@ -286,6 +285,10 @@ ul {
           padding-bottom: 10em; }
           .base .year-holder .year .quarter-holder .quarter:first-child {
             border-left: none; }
+          .base .year-holder .year .quarter-holder .quarter:hover .add-block-button {
+            visibility: visible; }
+          .base .year-holder .year .quarter-holder .quarter.current-quarter .quarter-head h4 {
+            color: #3290ff; }
           .base .year-holder .year .quarter-holder .quarter .quarter-head {
             display: flex;
             flex-direction: column; }
@@ -417,7 +420,6 @@ ul {
             position: absolute;
             overflow: hidden; }
             .base .year-holder .year .quarter-holder .quarter .block .ribbon {
-              z-index: 1;
               position: absolute;
               bottom: 0;
               left: 0;
@@ -835,10 +837,6 @@ ul {
   0% {
     opacity: 0;
     transform: translateY(25%); } }
-@keyframes height {
-  0% {
-    height: 0;
-    opacity: 0; } }
 .desktop .base {
   top: 4em; }
 .desktop .base-editing .edit-block-button {
@@ -874,5 +872,16 @@ ul {
   top: 4em; }
 .desktop .site-container {
   top: 7em; }
+
+@media print {
+  .base {
+    overflow: auto; }
+
+  .year-holder {
+    flex-direction: column; }
+
+  .page-break {
+    display: block;
+    page-break-before: always; } }
 
 /*# sourceMappingURL=index.css.map */

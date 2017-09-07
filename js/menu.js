@@ -146,10 +146,11 @@ function submitLoginInfo() {
     });
 
     request.done(function(response) {
+        localStorage.username = $("#login-username").val();
+        username = localStorage.username;
         emptyStack();
         console.log(document.cookie);
-        $("#login-username, #login-password").val("");
-        $("#logout-button").removeClass("hidden");
+        $("#logout-button").removeClass("hidden").html(`Log Out (${username}) <i class="material-icons">keyboard_arrow_right</i>`);
         $("#submit-progress, .login-error-text, #login-button").addClass("hidden");
         getUserCharts();
     });

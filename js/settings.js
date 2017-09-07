@@ -22,11 +22,11 @@ function toggleSummerQuarter(toggle) {
     loadTasks();
 }
 
-function changeStartYear(yearItem, chartBrowser = false) {
+function changeStartYear(yearItem, chartBrowser) {
     startYear = parseInt($(yearItem).text());
-    localStorage.startYear = startYear;
+    localStorage.setItem("startYear", startYear);
     
-    if (chartBrowser) {
+    if (chartBrowser == 'true') {
         changeWindow('chart-browser');
     } else {
         closeMenu();
@@ -44,4 +44,5 @@ function changeStartYear(yearItem, chartBrowser = false) {
         }
         $(this).attr("name", `${season} ${year}`);
     });
+    getCurrentQuarter()
 }

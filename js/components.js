@@ -28,8 +28,10 @@ function newYearComponent(id, yearTitle, year = startYear, chartBuilder=false) {
 }
 
 function newQuarterComponent(season, year, lastQuarter = false, chartBuilder=false) {
+    var currentSeason = getCurrentSeason();
+    var quarterSeason = `${season} ${year}`;
     var quarter =  `
-        <div class="quarter" name="${season} ${year}">
+        <div class="quarter ${quarterSeason == currentSeason ? "current-quarter" : ''}" name="${quarterSeason}">
             <div class='quarter-head'>
                 <h4 class="season">${season}</h4>
                 <h4 class="quarter-unit-count"></h4>
@@ -50,7 +52,7 @@ function newBlockComponent(block_metadata, course_data) {
             <div class="edit-block-button" onclick="select(this)">
                 <i class="material-icons">check</i>
             </div>
-            <div class="block ${course_type}" id="${course_data._id}" value="${course_data.units}">
+            <div class="block ${course_type}" id="${course_data._id}" value="${course_data.units}" data-courseType="${course_type}">
                 ${newBlockCourseDataView(course_data)}
             </div>
         </div>
@@ -198,7 +200,7 @@ function newMultiCourseSelectorView(courseNames) {
 function newUtilitiesView() {
     return `
         <h2 class="modal-header slide-in-right">Degree Information</h2>
-        <h3 class="menu-option slide-in-right" onclick="showCurriculumSheet()">Get Curriculum Sheet
+        <h3 class="menu-option slide-in-right ${$(".header-title").text() == 'New Flowchart' ? 'hidden' : ''}" onclick="showCurriculumSheet()">Get Curriculum Sheet
             <i class="material-icons">keyboard_arrow_right</i>
         </h3>
         <h4 class="modal-sub-header">Completed Units</h4>
@@ -249,7 +251,7 @@ function newSettingsView(val) {
 
 function newYearSelectorView(chartBrowser = false) {
     var element =  `
-        <h2 class="modal-header slide-in-right">Change Start Year</h2>
+        <h2 class="modal-header slide-in-right">Choose Start Year</h2>
     `;
     var date = new Date();
     var year = date.getFullYear();

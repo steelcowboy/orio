@@ -14,6 +14,16 @@ function changeTab(tabId) {
     tabIndex = newTabIndex;
 }
 
+function getCurrentQuarter() {
+    var currentSeason = getCurrentSeason();
+    $(".quarter").removeClass("current-quarter");
+    $(".quarter").each(function() {
+        if ($(this).attr("name") == currentSeason) {
+            $(this).addClass("current-quarter");
+        }
+    })
+}
+
 function getLastChart() {
     var savedChart = localStorage.getItem("savedChart");
     if (savedChart) {
@@ -23,7 +33,6 @@ function getLastChart() {
 }
 
 function setupChartComponents() {
-    console.log(startYear);
     var yearComponents = `
         ${newYearComponent("year1", "Freshman", startYear)}
         ${newYearComponent("year2", "Sophomore", startYear + 1)}
@@ -62,12 +71,10 @@ function loadChart(chartName) {
 }
 
 function getSavedFlags() {
-    if (localStorage.savedFlags) {
-        savedFlags = JSON.parse(localStorage.savedFlags);
-    }
+    savedFlags = localStorage.savedFlags ? JSON.parse(localStorage.savedFlags) : [];
     
-    savedFlags.forEach(function(obj, num, arr) {
-        $("#"+obj.id+"-block").addClass(obj.flag);
+    savedFlags.forEach(function(flagInfo) {
+        $("#"+flagInfo.id).addClass(flagInfo.flag);
     });
 }
 
@@ -76,7 +83,6 @@ function setupChart(title) {
     $(".header-title").text(title);
     $(".block, .degree-path h2").removeClass("hide-block");
     $(".block-outline").remove();
-    $(".add-block-button").hide();
 }
 
 function parseData(data, title) {
@@ -103,6 +109,7 @@ function parseData(data, title) {
             quarter.append(newElectiveBlockComponent(block_metadata));
         }
     });
+    $(".quarter").append(`<div class="add-block-button"><i class="large material-icons">add</i></div>`);
 }
 
 function parseBlockLocation(block_metadata) {
@@ -240,6 +247,7 @@ function setupSortable(items, cancel, connectWith) {
             ui.item.remove();
             $(".selected-block").removeClass("selected-block");
             calculateUnits();
+            countSelected();
         },
         
         receive: function(e, ui) {
@@ -372,49 +380,48 @@ function popupCourseInfo(title, description, prereqs, dept, num) {
 }
 
 
-function editBlock(id) {
+function addBlockFlag(flagId) {
     var selectedBlocks = $(".selected-block");
     
     selectedBlocks.removeClass("mark-complete mark-retake mark-next-quarter mark-in-progress");
-    selectedBlocks.each(function() {
-        var blockId = parseInt(id),
-            option = id.replace(/[0-9]/g, ''),
-            blockEl = $("#"+blockId+"-block"),
-            type = blockEl.attr("name"),
-            value = parseInt(blockEl.attr("value")),
-            flag = {id:blockId, flag:option, courseType:type, value:value};
-        checkExistingFlag(blockEl, option, flag);
-        $(this).addClass(id);
+    selectedBlocks.each(function(key, block) {
+        block = $(block).children(".block");
+        var blockId = block.attr("id");
+        console.log(blockId);
+        var flagOption = flagId.replace(/[0-9]/g, '');
+        var courseType = block.attr("data-courseType");
+        var value = parseInt(block.attr("value"));
+        var flag = {id: blockId, flag: flagOption, courseType: courseType, value: value};
+        
+        checkExistingFlag(block, flagOption, flag);
+        $(this).addClass(flagId);
     });
-    displayToast(id, false);
+    displayFlagMessage(flagId, false);
     toggleFlagPalette(true);
 }
 
-function checkExistingFlag(blockEl, className, flag) {
-    var removing;
-    savedFlags.forEach(function(obj, i) {
-        if (obj.id == flag.id) {
-            savedFlags.splice(i, 1);
+function checkExistingFlag(block, flagOption, flag) {
+    savedFlags.forEach(function(flagInfo, key) {
+        if (flagInfo.id == flag.id) {
+            savedFlags.splice(key, 1);
         }
     });
     
-    if (blockEl.hasClass(className)) {
-        blockEl.removeClass(className);
-        if (className == "mark-complete") {
-            updateUnitCount(blockEl, className);
+    if (block.parent(".block-outline").hasClass(flagOption)) {
+        block.parent(".block-outline").removeClass(flagOption);
+        if (flagOption == "mark-complete") {
+            updateUnitCount(block, flagOption);
         }
-        removing = true;
     } else {
-        blockEl.removeClass("mark-complete mark-in-progress mark-next-quarter mark-retake");
-        blockEl.addClass(className);
+        block.parent(".block-outline").removeClass("mark-complete mark-in-progress mark-next-quarter mark-retake");
+        block.parent(".block-outline").addClass(flagOption);
         savedFlags.push(flag);
     }
     
     localStorage.savedFlags = JSON.stringify(savedFlags);
-    toggleFlagPalette();
 }
 
-function displayToast(option, removing) {
+function displayFlagMessage(option, removing) {
     var message;
     switch(option) {
         case 'mark-complete':
@@ -437,17 +444,3 @@ function displayToast(option, removing) {
     message = message;
     Materialize.toast(message, 2000);
 }
-
-//function getUserCharts() {
-//    if (loggedIn) {
-//        $("#login-button, #signup-button").hide();
-//        var request = $.get({
-//            url: API+userName+"/charts"
-//        });
-//
-//        /* Successful response from the server */
-//        request.done(function(data) {
-
-//        });
-//    }
-//}
