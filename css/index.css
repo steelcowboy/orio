@@ -687,6 +687,8 @@ ul {
 .menu-option {
   display: flex;
   justify-content: space-between; }
+  .menu-option:active {
+    background: #f0f0f0; }
 
 .modal-sub-header, .modal-statistic {
   border: none;
@@ -709,9 +711,6 @@ ul {
   padding-left: 2em;
   margin: .5em;
   margin: .5em; }
-
-.menu-option:hover, .ui-autocomplete li:hover {
-  background: whitesmoke; }
 
 .external-site-modal {
   display: none;
@@ -873,6 +872,10 @@ ul {
   top: 4em; }
 .desktop .site-container {
   top: 7em; }
+.desktop .menu-option:hover, .desktop .ui-autocomplete li:hover {
+  background: whitesmoke; }
+.desktop .menu-option:active, .desktop .ui-autocomplete li:active {
+  background: #f0f0f0; }
 
 @media print {
   .base {

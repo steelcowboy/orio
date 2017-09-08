@@ -249,9 +249,7 @@ function setupSortable(items, cancel, connectWith) {
             ui.item.after($cloned);
             ui.item.siblings(":hidden").remove();
             ui.item.remove();
-            $(".selected-block").removeClass("selected-block");
             calculateUnits();
-            countSelected();
         },
         
         receive: function(e, ui) {

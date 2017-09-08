@@ -249,7 +249,7 @@ function newSettingsView(val) {
                 <div class="toggle round" onclick="toggleSuperSenior(this.parentNode)"></div>
             </label>
         </h3>
-        <h3 class="menu-option slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Change Start Year
+        <h3 class="menu-option slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Starting Year
             <i class="material-icons">keyboard_arrow_right</i>
         </h3>
         <h3 class="menu-option slide-in-right" id="about" onclick="changeWindow(this.id);">About
@@ -260,7 +260,7 @@ function newSettingsView(val) {
 
 function newYearSelectorView(chartBrowser = false) {
     var element =  `
-        <h2 class="modal-header slide-in-right">Choose Start Year</h2>
+        <h2 class="modal-header slide-in-right">Starting Year</h2>
     `;
     var date = new Date();
     var year = date.getFullYear();
@@ -282,7 +282,7 @@ function newAboutView() {
             </div>
         </div>
         <h3 class="modal-sub-header">FlowChamp was created out of a desire to make college planning easier and more connected.</h3>
-        <h3 class="modal-sub-header">Creators:</h3>
+        <h3 class="modal-sub-header">Development of this project was done by two students attending Cal Poly, San Luis Obispo.</h3>
         <h3 class="menu-option slide-in-right" onclick="openUrlInNewTab('http://devjimheald.com')">Jim Heald (Backend)
             <i class="material-icons">open_in_new</i>
         </h3>

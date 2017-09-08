@@ -37,13 +37,8 @@ $.ajaxSetup({
     },
 });
 
-
-var resizeTimeout;
 $(window).resize(function(){
-  if(!!resizeTimeout){ clearTimeout(resizeTimeout); }
-  resizeTimeout = setTimeout(function(){
     checkWindowSize();
-  },200);
 });
 
 function loadTasks() {

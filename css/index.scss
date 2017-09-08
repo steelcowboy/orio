@@ -962,6 +962,10 @@ ul {
 .menu-option {
     display: flex;
     justify-content: space-between;
+    
+    &:active {
+        background: rgb(240,240,240);
+    }
 }
 
 .modal-sub-header, .modal-statistic {
@@ -988,10 +992,6 @@ ul {
     padding-left: 2em;
     margin: .5em;
     margin: .5em;
-}
-
-.menu-option:hover, .ui-autocomplete li:hover {
-    background: rgb(245,245,245);
 }
 
 .external-site-modal {
@@ -1240,6 +1240,16 @@ ul {
     }
     .site-container {
         top: 7em;
+    }
+    
+    .menu-option, .ui-autocomplete li {
+        &:hover {
+            background: rgb(245,245,245);   
+        }
+        
+        &:active {
+            background: rgb(240,240,240);
+        }
     }
 }
 
