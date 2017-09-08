@@ -39,6 +39,10 @@ function setupChartComponents() {
         ${newYearComponent("year3", "Junior", startYear + 2)}
         ${newYearComponent("year4", "Senior", startYear + 3)}
     `;
+    if (localStorage.superSenior) {
+        $("#5-tab").removeClass("hidden");
+        yearComponents = yearComponents.concat(`${newYearComponent("year5", "Super Senior", startYear + 4)}`);
+    }
     $(".year-holder").empty().append(yearComponents);
     checkWindowSize();
 }

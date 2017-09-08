@@ -243,7 +243,16 @@ function newSettingsView(val) {
                 <div class="toggle round" onclick="toggleSummerQuarter(this.parentNode)"></div>
             </label>
         </h3>
-        <h3 class="menu-option slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Choose Start Year
+        <h3 class="menu-option slide-in-right" id="toggle-superSenior">Five Years
+            <label class="switch">
+                <input type="checkbox" ${localStorage.superSenior ? 'checked' : ''}>
+                <div class="toggle round" onclick="toggleSuperSenior(this.parentNode)"></div>
+            </label>
+        </h3>
+        <h3 class="menu-option slide-in-right" id="year-selector" onclick="changeWindow(this.id);">Change Start Year
+            <i class="material-icons">keyboard_arrow_right</i>
+        </h3>
+        <h3 class="menu-option slide-in-right" id="about" onclick="changeWindow(this.id);">About
             <i class="material-icons">keyboard_arrow_right</i>
         </h3>
     `;
@@ -261,7 +270,26 @@ function newYearSelectorView(chartBrowser = false) {
     return element;
 }
 
-
-
+function newAboutView() {
+    return `
+        <div class="menu-logo-container slide-in-right">
+            <div class="logo menu-logo">
+                <div class="logo-letter">
+                    <div id="top-f"></div>
+                    <div id="bottom-f"></div>
+                </div>
+                <div class="bottom-text">flowchamp</div>
+            </div>
+        </div>
+        <h3 class="modal-sub-header">FlowChamp was created out of a desire to make college planning easier and more connected.</h3>
+        <h3 class="modal-sub-header">Creators:</h3>
+        <h3 class="menu-option slide-in-right" onclick="openUrlInNewTab('http://devjimheald.com')">Jim Heald (Backend)
+            <i class="material-icons">open_in_new</i>
+        </h3>
+        <h3 class="menu-option slide-in-right" onclick="openUrlInNewTab('http://tannerv.com')">Tanner Villarete (Frontend)
+            <i class="material-icons">open_in_new</i>
+        </h3>
+    `
+}
 
 

@@ -22,6 +22,18 @@ function toggleSummerQuarter(toggle) {
     loadTasks();
 }
 
+function toggleSuperSenior(toggle) {
+    var value = !($(toggle).find("input").prop('checked'));
+    if (value) {
+        localStorage.superSenior = true;
+    } else {
+        $("#5-tab").addClass("hidden");
+        localStorage.removeItem('superSenior');
+        checkWindowSize();
+    }
+    loadTasks();
+}
+
 function changeStartYear(yearItem, chartBrowser) {
     startYear = parseInt($(yearItem).text());
     localStorage.setItem("startYear", startYear);
@@ -44,5 +56,5 @@ function changeStartYear(yearItem, chartBrowser) {
         }
         $(this).attr("name", `${season} ${year}`);
     });
-    getCurrentQuarter()
+    getCurrentQuarter();
 }

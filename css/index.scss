@@ -231,6 +231,10 @@ ul {
         color: rgba(0,0,0,.2);
         pointer-events: none;
     }
+    
+    .tabs {
+        overflow-x: auto;
+    }
 }
 
 .course-selector-modal {
@@ -819,7 +823,6 @@ ul {
         position: relative;
         height: 10em;
         margin-bottom: 1em;
-        animation: slide-right .35s;
     }
     
     .login-error-text {

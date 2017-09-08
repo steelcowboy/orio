@@ -166,6 +166,8 @@ ul {
     background: rgba(0, 0, 0, 0.12);
     color: rgba(0, 0, 0, 0.2);
     pointer-events: none; }
+  .header .tabs {
+    overflow-x: auto; }
 
 .course-selector-modal {
   position: absolute;
@@ -580,8 +582,7 @@ ul {
   .menu-modal .menu-logo-container {
     position: relative;
     height: 10em;
-    margin-bottom: 1em;
-    animation: slide-right .35s; }
+    margin-bottom: 1em; }
   .menu-modal .login-error-text {
     margin-top: 1em;
     color: red;

@@ -74,6 +74,9 @@ function changeWindow(target, title=null, optionalData = null) {
         case "year-selector":
             view = newYearSelectorView();
             break;
+        case "about":
+            view = newAboutView();
+            break;
                  }
     $(".back-button").show();
     element = element.concat(view);
