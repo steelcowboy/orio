@@ -76,12 +76,17 @@ function newMultiBlockComponent(block_metadata, course_data) {
     var fullTitle = ``;
     var numCourses = course_data.length;
     var course_type = block_metadata.course_type.toLowerCase().split(' ').join("-");
+    var id = '';
+    course_data.forEach(function(val, index) {
+        id = id.concat(`${index > 0 ? '-' : ''}${val._id}`);
+    });
+    console.log(id);
     var block = `
         <div class="block-outline show-block">
             <div class="edit-block-button" onclick="select(this)">
                 <i class="material-icons">check</i>
             </div>
-            <div class="block ${course_type}" id="${course_data[0]._id}" value="${course_data.units}">
+            <div class="block ${course_type}" id="${id}" value="${course_data[0].units}">
                 <div class="ribbon"></div>
                 <div class="block-title">
                     <h6>Choose</h6>
@@ -112,7 +117,7 @@ function newElectiveBlockComponent(block_metadata) {
             <div class="edit-block-button" onclick="select(this)">
                 <i class="material-icons">check</i>
             </div>
-            <div class="block ${course_type}" value=0>
+            <div class="block ${course_type}" value="4">
                 <div class="ribbon"></div>
                 <div class="block-title">
                     <h6>${block_metadata.elective_title}</h6>
@@ -143,7 +148,6 @@ function newChartBuilderAddComponent() {
 function newCourseSpecifierComponent() {
     var component =  `
         <div class="course-specifier-container show-block">
-            <h3>Enter Course: </h3>
             <div class="course-specifier-input-container">
                 <div class="input-field col s6">
                     <input type="text" class="department-specifier-input" placeholder="DEPT" onchange="fetchFullCourse(this.parentNode)">

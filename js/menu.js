@@ -167,11 +167,10 @@ function submitLoginInfo() {
 function getUserCharts() {
     var request = $.ajax({
         type: "GET",
-        url: apiURL+"users/tvillare",
+        url: apiURL+"users/tvillare/charts",
     });
     
     request.done(function(data) {
-        console.log("User charts");
         console.log(data);
     });
     
