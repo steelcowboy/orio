@@ -8,7 +8,7 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="css/materialize.css">
         <link rel="stylesheet" href="css/animations.css">
-        <link rel="icon" href="/img/icon48.png?v=1.1"> 
+        <link rel="icon" href="/img/icon48.png?v=1.1">
         <script src="js/plugins/jquery.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=0.8 user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -77,11 +77,11 @@
             <div class="flag-choice" id="mark-complete" onclick="addBlockFlag(this.id)">
                 <i class="material-icons">check</i>
                 <p>Complete</p>
-            </div>   
+            </div>
             <div class="flag-choice" id="mark-next-quarter" onclick="addBlockFlag(this.id)">
                 <i class="material-icons">call_made</i>
                 <p>Next quarter</p>
-            </div>   
+            </div>
             <div class="flag-choice" id="mark-in-progress" onclick="addBlockFlag(this.id)">
                 <i class="material-icons" >schedule</i>
                 <p>In Progress</p>
@@ -107,29 +107,32 @@
                     <div class="bottom-text">flowchamp</div>
                 </div>
             </div>
-            <h3 class="menu-option slide-right" id="pp-connector-link" onclick="openUrlInNewTab('https://chrome.google.com/webstore/detail/flowchamp-connector-tool/ieaomdjhdichopdhgbdnlggooafonahh')">PolyPlanner Connector 
+            <h3 class="menu-option slide-right" id="pp-connector-link" onclick="openUrlInNewTab('https://chrome.google.com/webstore/detail/flowchamp-connector-tool/ieaomdjhdichopdhgbdnlggooafonahh')">PolyPlanner Connector
                 <i class="material-icons">open_in_new</i>
             </h3>
-            <h3 class="menu-option slide-right" id="chart-year-browser" onclick="changeWindow(this.id)">Choose Flowchart  
+            <h3 class="menu-option slide-right hidden" id="user-chart-browser" onclick="changeWindow(this.id)">Your Charts
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
-            <h3 class="menu-option slide-right" id="utilities-browser" onclick="changeWindow(this.id)">Supplements 
+            <h3 class="menu-option slide-right" id="chart-year-browser" onclick="changeWindow(this.id)">Choose Flowchart
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
-            <h3 class="menu-option slide-right" id="chart-builder" onclick="setupBuilder()">Chart Builder 
+            <h3 class="menu-option slide-right" id="utilities-browser" onclick="changeWindow(this.id)">Supplements
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
-            <h3 class="menu-option slide-right" id="settings-button" onclick="changeWindow(this.id)">Settings 
+            <h3 class="menu-option slide-right" id="chart-builder" onclick="setupBuilder()">Chart Builder
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
-            <h3 class="menu-option slide-right" id="login-button" onclick="changeWindow(this.id)">Log In 
+            <h3 class="menu-option slide-right" id="settings-button" onclick="changeWindow(this.id)">Settings
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
-            <h3 class="menu-option slide-right hidden" id="logout-button" onclick="location.reload()">Log Out 
+            <h3 class="menu-option slide-right" id="login-button" onclick="changeWindow(this.id)">Log In
+                <i class="material-icons">keyboard_arrow_right</i>
+            </h3>
+            <h3 class="menu-option slide-right hidden" id="logout-button" onclick="location.reload()">Log Out
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
         </div>
-        
+
         <div class="external-site-modal">
             <div class="external-site-nav">
                 <p onclick="closeSiteNav()">&times;</p>

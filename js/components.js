@@ -99,7 +99,7 @@ function newMultiBlockComponent(block_metadata, course_data) {
         } else {
             block = block.concat(`<h5 class="course-catalog-title">${val.department} ${val.course_number}</h5>`);
         }
-        
+
     });
     block = block.concat(`
                 </div>
@@ -161,7 +161,7 @@ function newCourseSpecifierComponent() {
     course_types.forEach(function(course_type) {
         component = component.concat(`<option value="${course_type}">${course_type}</option>`)
     });
-                
+
     component = component.concat (
         `</select>
             <div class="add-course-button" onclick="fetchFullCourse(this.parentNode)">
@@ -172,7 +172,7 @@ function newCourseSpecifierComponent() {
     return component;
 }
 
-/* Menu Views */ 
+/* Menu Views */
 function newChartBrowserView() {
     var view = "<h2 class='modal-header slide-in-right'>New Flowchart</h2>";
     $.each(availableCharts, function(index, value) {
@@ -181,6 +181,19 @@ function newChartBrowserView() {
         if (major != $(".degree-name").text()) {
             view = view.concat(`<h3 class="menu-option slide-in-right" id="${value}" onclick="changeStockFlowchart(this.id)">${major}</h3>`);
         }
+    });
+    return vie;
+}
+
+function newUserChartBrowserView() {
+    var view = `<h2 class="modal-header slide-in-right">Your Charts</h2>`;
+    $.each(userChartNames, function(index, value) {
+        view = view.concat(`
+            <h3 class="menu-option slide-in-right" name=`${value}` onclick="loadChart(this.name, true)">${value}
+                <i class="material-icons">keyboard_arrow_right</i>
+            </h3>
+
+        `);
     });
     return view;
 }

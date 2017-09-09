@@ -1,13 +1,14 @@
 var tabIndex = 1;
 var savedFlags = [];
 var savedEdits = [];
+var userChartNames = [];
 var completedUnits = {ge: 0, support: 0, major: 0};
 
 function changeTab(tabId) {
     $(".block-outline").removeClass("show-block");
     $(".year").removeClass("slide-in-left slide-in-right");
     newTabIndex = parseInt(tabId);
-    
+
     var newClass = newTabIndex > tabIndex ? "slide-in-right" : "slide-in-left";
     $("#year"+newTabIndex).addClass(newClass);
 
@@ -47,17 +48,19 @@ function setupChartComponents() {
     checkWindowSize();
 }
 
-function loadChart(chartName) {
+function loadChart(chartName, userChart = false) {
     var title;
     var request;
-    
+    url = userChart ? `${apiURL}users/tvillare/charts/cscbsu` :
+     `${apiURL}stock_charts/15-17/${chartName}`;
+
     title = chartName.split('_').join(" ");
-    
+
     request = $.get({
-        url: apiURL+"stock_charts/15-17/"+chartName,
+        url: url,
         timeout: 10000,
     });
-    
+
     request.done(function(data) {
         localStorage.savedChart = chartName;
         $(".welcome-container").fadeOut("fast");
@@ -66,7 +69,7 @@ function loadChart(chartName) {
         getSavedFlags();
         calculateUnits();
     });
-    
+
     request.fail(function() {
         var title = "Oops",
             message = "It looks like the server isn't responding. Please try again in a little bit.";
@@ -76,7 +79,7 @@ function loadChart(chartName) {
 
 function getSavedFlags() {
     savedFlags = localStorage.savedFlags ? JSON.parse(localStorage.savedFlags) : [];
-    
+
     savedFlags.forEach(function(flagInfo) {
         $("#"+flagInfo.id).addClass(flagInfo.flag);
     });
@@ -95,16 +98,16 @@ function parseData(data, title) {
     var i = 0;
     var id = 0;
     setupChart(title);
-    
+
     $.each(data, function(key, value) {
         var quarter;
         var blockLocation
         var block_metadata = value.block_metadata;
         var course_data = value.course_data;
-        
+
         blockLocation = parseBlockLocation(block_metadata);
         quarter = $(".year-holder").children().eq(blockLocation[1]-1).children().eq(1).children(".quarter").eq(blockLocation[0]);
-        
+
         if (course_data && course_data.length) {
             quarter.append(newMultiBlockComponent(block_metadata, course_data));
         } else if (course_data) {
@@ -137,21 +140,21 @@ function parseBlockLocation(block_metadata) {
     return [quarter, block_metadata.time[0]];
 }
 
-function select(editButton) {  
+function select(editButton) {
     $(editButton).parent().toggleClass("selected-block");
-    
+
     openEditMode();
-    
+
     $("#selected-count-container").text(`${countSelected()} selected`);
 }
 
 function countSelected() {
     var count = $(".selected-block").length;
-    
+
     if (count == 0) {
         closeEditMode();
     }
-    
+
     return count;
 }
 
@@ -164,7 +167,7 @@ function openMultiCourseSelector(block) {
     $("#" + id + " .course-catalog-title").each(function() {
         courseList.push($(this).text());
     });
-    
+
     changeWindow('multi-course-selector', "Choose a Course", courseList);
 }
 
@@ -172,19 +175,19 @@ function replaceBlock(blockId, courseUrl) {
     var request = $.get({
         url: `${apiURL}courses/${courseUrl}`
     });
-        
-    request.done(function(data) { 
+
+    request.done(function(data) {
         $("#"+blockId).html(newBlockCourseDataView(data));
         $("#"+blockId).attr("id", data._id);
     });
-    
+
     closeMenu();
 }
 
 function openEditMode() {
     var chartContainer = $(".base");
     var block = $(".block-outline");
-    
+
     if (!chartContainer.hasClass("base-editing")) {
         block.removeClass("show-block");
         chartContainer.addClass("base-editing");
@@ -192,19 +195,19 @@ function openEditMode() {
         $(".menu-nav-buttons").hide();
         $(".edit-container").fadeIn("fast");
     }
-    
+
     calculateUnits();
 }
 
 function closeEditMode() {
     var chartContainer = $(".base");
-    
+
     chartContainer.removeClass("base-editing");
     $(".selected-block").removeClass("selected-block");
     $(".menu-nav-buttons").fadeIn();
     $(".edit-container").fadeOut("fast");
     $(".quarter").sortable("destroy");
-    
+
     toggleColorPalette(true);
     toggleFlagPalette(true);
 }
@@ -223,14 +226,14 @@ function setupSortable(items, cancel, connectWith) {
         scroll: false,
         cancel: cancel,
         connectWith: connectWith,
-        
+
         start: function(e, ui) {
             $(this).sortable('instance').offset.click = {
                 left: Math.floor(ui.helper.width() / 2),
                 top: Math.floor(ui.helper.height() / 2)
             }
         },
-        
+
         helper: function (event, item) {
             item.addClass("selected-block");
             var $helper = $("<li class='sortable-helper'><ul></ul></li>");
@@ -251,7 +254,7 @@ function setupSortable(items, cancel, connectWith) {
             ui.item.remove();
             calculateUnits();
         },
-        
+
         receive: function(e, ui) {
             ui.item.before(ui.item.data('items'));
         },
@@ -260,11 +263,11 @@ function setupSortable(items, cancel, connectWith) {
 
 function checkQuarterHeight() {
     var max = 0;
-    
+
     $(".quarter").each(function() {
         max = (max == 0 || max < $(this).height()) ? $(this).height() : max;
     });
-    
+
     $(".quarter").css("height", max+"px");
 }
 
@@ -274,7 +277,7 @@ function calculateUnits() {
     completedGECount = 0;
     completedSupportCount = 0;
     completedMajorCount = 0;
-    
+
     $(".quarter").each(function() {
         unitCount = 0;
         var blocks = $(this).children(".block-outline").children(".block");
@@ -293,7 +296,7 @@ function calculateUnits() {
         });
         $(this).children(".quarter-head").children(".quarter-unit-count").text(`${unitCount} units`);
     });
-    
+
     $("#ge-count").text("GE's: " + completedGECount);
     $("#support-count").text("Support: " + completedSupportCount);
     $("#major-count").text("Major: " + completedMajorCount);
@@ -301,14 +304,14 @@ function calculateUnits() {
 
 function deleteSelectedBlocks() {
     var selectedBlocks = $(".selected-block");
-    
+
     selectedBlocks.css({
         visibility: 'hidden',
         display: 'block'
     }).slideUp("fast", function() {
         selectedBlocks.remove();
     });
-    
+
     closeEditMode();
 }
 
@@ -316,7 +319,7 @@ function changeSelectedBlockColor(colorItem) {
     var colorClass = $(colorItem).attr("id");
     var selectedBlocks = $(".selected-block .block");
     var colorPalette = $(".color-palette");
-    
+
     selectedBlocks.removeClass("general-ed support free-class concentration major minor");
     selectedBlocks.addClass(colorClass);
     colorPalette.addClass("hidden");
@@ -325,20 +328,20 @@ function changeSelectedBlockColor(colorItem) {
 function toggleColorPalette(toggleOff = false) {
     var colorPalette = $(".color-palette");
     var flagPalette = $(".flag-palette");
-    
+
     if (colorPalette.hasClass("hidden")  && !toggleOff) {
         colorPalette.removeClass("hidden");
     } else {
         colorPalette.addClass("hidden");
     }
-    
+
     flagPalette.addClass("hidden");
 }
 
 function toggleFlagPalette(toggleOff = false) {
     var colorPalette = $(".color-palette");
     var flagPalette = $(".flag-palette");
-    
+
     if (flagPalette.hasClass("hidden") && !toggleOff) {
         flagPalette.removeClass("hidden");
     } else {
@@ -363,12 +366,12 @@ function updateUnitCount(el, value) {
         case 'Major':
             completedMajorCount += value;
                }
-    
+
     calculateUnits();
 }
 
 function popupCourseInfo(title, description, prereqs, dept, num) {
-    var element = 
+    var element =
         `<div class="popup-message z-depth-5">
             <h2 class="popup-title">${title}</h2>
             <div class="popup-description-container">
@@ -388,7 +391,7 @@ function popupCourseInfo(title, description, prereqs, dept, num) {
 
 function addBlockFlag(flagId) {
     var selectedBlocks = $(".selected-block");
-    
+
     selectedBlocks.removeClass("mark-complete mark-retake mark-next-quarter mark-in-progress");
     selectedBlocks.each(function(key, block) {
         block = $(block).children(".block");
@@ -398,7 +401,7 @@ function addBlockFlag(flagId) {
         var courseType = block.attr("data-courseType");
         var value = parseInt(block.attr("value"));
         var flag = {id: blockId, flag: flagOption, courseType: courseType, value: value};
-        
+
         checkExistingFlag(block, flagOption, flag);
         $(this).addClass(flagId);
     });
@@ -412,7 +415,7 @@ function checkExistingFlag(block, flagOption, flag) {
             savedFlags.splice(key, 1);
         }
     });
-    
+
     if (block.parent(".block-outline").hasClass(flagOption)) {
         block.parent(".block-outline").removeClass(flagOption);
         if (flagOption == "mark-complete") {
@@ -423,7 +426,7 @@ function checkExistingFlag(block, flagOption, flag) {
         block.parent(".block-outline").addClass(flagOption);
         savedFlags.push(flag);
     }
-    
+
     localStorage.savedFlags = JSON.stringify(savedFlags);
 }
 
@@ -446,7 +449,7 @@ function displayFlagMessage(option, removing) {
             message = "Removed flag";
             break;
                  }
-    
+
     message = message;
     Materialize.toast(message, 2000);
 }

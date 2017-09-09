@@ -11,13 +11,13 @@ function openMenu() {
     if (menuStack.length > 0) {
         $(".back-button").show();
     };
-    
+
     $(".welcome-container").addClass("fade-white");
     $("#edit-flowchart").addClass("unclickable");
     $(".header").addClass("shrink-header");
     $("#menu-button").addClass("open").removeClass("closed");
     $(".menu-modal").removeClass("slide-out-left");
-    
+
     $(".popup-message").remove();
     $(".menu-modal, .disabled").show();
 }
@@ -36,7 +36,7 @@ function changeWindow(target, title=null, optionalData = null) {
     var element = "";
     var currentWindow = $(".menu-modal").children();
     var view = currentWindow;
-    
+
     if (title != null) {
         element = `<h2 class="modal-header slide-in-right">${title}</h2>`;
     }
@@ -46,6 +46,9 @@ function changeWindow(target, title=null, optionalData = null) {
             break;
         case "chart-year-browser":
             view = newYearSelectorView(/* chartBrowser */ true);
+            break;
+        case "user-chart-browser":
+            view = newUserChartBrowserView();
             break;
         case "utilities-browser":
             view = newUtilitiesView();
@@ -108,7 +111,7 @@ function fetchCharts() {
     if (!availableCharts) {
         $(".menu-modal").append(`<h3 class="menu-option slide-in-right">Couldn't Get Majors</h3>`);
     }
-    $.each(availableCharts, function(index, value) {   
+    $.each(availableCharts, function(index, value) {
         var major = value;
         major = major.split('_').join(" ");
         if (major != $(".degree-name").text()) {
@@ -123,12 +126,12 @@ function showCurriculumSheet() {
     var url = "http://flowcharts.calpoly.edu/downloads/curric/15-17."+major+".pdf";
     closeMenu();
     $(".external-site-modal").show();
-    var element = 
+    var element =
         `<object data="${url}" type="application/pdf" width="100%" height="100%">
             <p>Hmm.. There doesn't seem to be a curriculum sheet available</p>
         </object>`
     $(".site-container").html(element);
-    
+
 }
 
 /* Takes JSON and translates it into an HTML element */
@@ -138,7 +141,7 @@ function submitLoginInfo() {
     var usernameEntered = $("#login-username").val();
     var password = $("#login-password").val();
     var header = window.btoa(usernameEntered+":"+password);
-    
+
     var request = $.ajax({
         type: "GET",
         url: apiURL+"authorize",
@@ -152,8 +155,8 @@ function submitLoginInfo() {
         localStorage.username = $("#login-username").val();
         username = localStorage.username;
         emptyStack();
-        console.log(document.cookie);
         $("#logout-button").removeClass("hidden").html(`Log Out (${username}) <i class="material-icons">keyboard_arrow_right</i>`);
+        $("#user-chart-browser").removeClass("hidden");
         $("#submit-progress, .login-error-text, #login-button").addClass("hidden");
         getUserCharts();
     });
@@ -169,11 +172,11 @@ function getUserCharts() {
         type: "GET",
         url: apiURL+"users/tvillare/charts",
     });
-    
+
     request.done(function(data) {
-        console.log(data);
+        userChartNames = data;
     });
-    
+
     request.fail(function(jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
         console.log(textStatus);
