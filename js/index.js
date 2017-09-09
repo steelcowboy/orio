@@ -1,4 +1,4 @@
-const apiURL = "https://flowchamp.org/api/cpslo/"
+const apiURL = "/api/cpslo/"
 //const apiURL = "http://127.0.0.1:4500/api/cpslo/";
 const course_types = ['Major', 'Free Class', 'Support', 'General Ed', 'Minor', 'Concentration'];
 
