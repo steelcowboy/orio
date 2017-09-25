@@ -1,9 +1,23 @@
 function changeStockFlowchart(newMajor, startYear = null) {
     $(".block-outline").addClass("hide-block");
-    localStorage.setItem("savedFlowChart", newMajor);
-    loadChart(newMajor);
-    closeMenu();
-    emptyStack();
+    changeWindow("chart-namer", "Give It a Name", newMajor);
+}
+
+function saveChartInfo(newMajor) {
+    var chartName = $("#chart-name-input").val();
+    if (userConfigExists()) {
+        userConfig.charts[`${chartName}`] = newMajor;
+        userConfig.active_chart = chartName;
+        postChart(newMajor, chartName);
+    } else {
+        console.log('here');
+        if (!guestConfig) {
+            guestConfig = {charts: {}};
+        }
+        guestConfig.charts[`${chartName}`] = newMajor;
+        guestConfig.active_chart = chartName;
+        localStorage.guestConfig = JSON.stringify(guestConfig);
+    }
 }
 
 function openMenu() {
@@ -44,6 +58,9 @@ function changeWindow(target, title=null, optionalData = null) {
         case "chart-browser":
             view = newChartBrowserView();
             break;
+        case "chart-namer":
+            view = newChartNamerView(optionalData);
+            break;
         case "chart-year-browser":
             view = newYearSelectorView(/* chartBrowser */ true);
             break;
@@ -66,7 +83,7 @@ function changeWindow(target, title=null, optionalData = null) {
             view = newLoginView();
             break;
         case "department-selector":
-            view = newDepartmentSelectorView();
+            view = newDepartmentSelectorView(optionalData);
             break;
         case "course-selector":
             view = newCourseSelectorView();
@@ -123,7 +140,8 @@ function fetchCharts() {
 function showCurriculumSheet() {
     var major = $(".header-title").text();
     major = major.split(' ').join("%20");
-    var url = "http://flowcharts.calpoly.edu/downloads/curric/15-17."+major+".pdf";
+    var url = "https://flowcharts.calpoly.edu/downloads/curric/15-17."+major+".pdf";
+    console.log(url);
     closeMenu();
     $(".external-site-modal").show();
     var element =
@@ -134,52 +152,17 @@ function showCurriculumSheet() {
 
 }
 
-/* Takes JSON and translates it into an HTML element */
-
-function submitLoginInfo() {
-    var loginForm = $("#login-form");
-    var usernameEntered = $("#login-username").val();
-    var password = $("#login-password").val();
-    var header = window.btoa(usernameEntered+":"+password);
-
-    var request = $.ajax({
-        type: "GET",
-        url: apiURL+"authorize",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader ("Authorization", "Basic " + header);
-            $("#submit-progress").removeClass("hidden");
-        },
-    });
-
-    request.done(function(response) {
-        localStorage.username = $("#login-username").val();
-        username = localStorage.username;
-        emptyStack();
-        $("#logout-button").removeClass("hidden").html(`Log Out (${username}) <i class="material-icons">keyboard_arrow_right</i>`);
-        $("#user-chart-browser").removeClass("hidden");
-        $("#submit-progress, .login-error-text, #login-button").addClass("hidden");
-        getUserCharts();
-    });
-
-    request.fail(function(jqXHR, textStatus, errorThrown) {
-        $(".login-error-text").removeClass("hidden");
-        $("#submit-progress").addClass("hidden");
-    });
-}
-
 function getUserCharts() {
-    var request = $.ajax({
-        type: "GET",
-        url: apiURL+"users/tvillare/charts",
-    });
+    $("#submit-progress, .login-error-text, #login-button").addClass("hidden");
+    $("#logout-button").removeClass("hidden").html(`Log Out (${username}) <i class="material-icons">keyboard_arrow_right</i>`);
 
-    request.done(function(data) {
-        userChartNames = data;
-    });
-
-    request.fail(function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-    });
+    if (userConfig.charts) {
+        $("#user-chart-browser").removeClass("hidden");
+        if (userConfig.active_chart) {
+            $(".welcome-container").addClass("fade-white");
+            loadChart(userConfig.active_chart, /* userChart */ true);
+        }
+    } else {
+        console.log("No saved charts");
+    }
 }

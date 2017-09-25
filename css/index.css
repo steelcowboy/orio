@@ -83,8 +83,45 @@ ul {
   right: 0;
   background-color: #3290ff;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); }
+  .header .header-button {
+    text-align: center;
+    font-size: 3em;
+    height: 100%;
+    width: 1.5em;
+    line-height: 1em;
+    cursor: pointer; }
   .header .header-contents {
     height: 3em; }
+    .header .header-contents .chart-menu-open-button {
+      z-index: 2;
+      position: absolute;
+      right: 0;
+      color: white; }
+    .header .header-contents .chart-menu {
+      z-index: 1;
+      position: absolute;
+      top: 0.2em;
+      right: 0.2em;
+      width: 100%;
+      max-width: 15em;
+      padding-top: 3em;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-radius: 2px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      animation: chart-menu-open 0.15s;
+      transform-origin: top center; }
+    .header .header-contents .chart-menu-button {
+      font-size: 1.3em;
+      height: 2em;
+      line-height: 2em;
+      cursor: pointer; }
+      .header .header-contents .chart-menu-button:hover {
+        background: rgba(0, 0, 0, 0.07); }
+    .header .header-contents .active-button {
+      color: dodgerblue; }
   .header .edit-container {
     position: absolute;
     top: 0;
@@ -167,6 +204,7 @@ ul {
     color: rgba(0, 0, 0, 0.2);
     pointer-events: none; }
   .header .tabs {
+    z-index: 0;
     overflow-x: auto; }
 
 .course-selector-modal {
@@ -587,18 +625,18 @@ ul {
     margin-top: 1em;
     color: red;
     margin-bottom: -0.5em; }
-  .menu-modal #login-form.menu-form {
+  .menu-modal #login-form.menu-form, .menu-modal #chart-name-form {
     width: 80%;
     margin-left: 1.6em; }
-    .menu-modal #login-form.menu-form input {
+    .menu-modal #login-form.menu-form input, .menu-modal #chart-name-form input {
       margin: 0; }
-    .menu-modal #login-form.menu-form input[type=submit], .menu-modal #login-form.menu-form button {
+    .menu-modal #login-form.menu-form input[type=submit], .menu-modal #login-form.menu-form button, .menu-modal #chart-name-form input[type=submit], .menu-modal #chart-name-form button {
       appearance: none;
       -webkit-appearance: none;
       font-size: 1.3em;
       height: 2em;
       width: 6em;
-      margin: 1em 0 0 0;
+      margin: 1em 0 0.5em 0;
       border: none;
       border-radius: 2px;
       background: #3296e6;
@@ -606,12 +644,12 @@ ul {
       box-shadow: 0 2px 1px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
       outline: none;
       cursor: pointer; }
-    .menu-modal #login-form.menu-form input[type=submit]:active, .menu-modal #login-form.menu-form button:active {
+    .menu-modal #login-form.menu-form input[type=submit]:active, .menu-modal #login-form.menu-form button:active, .menu-modal #chart-name-form input[type=submit]:active, .menu-modal #chart-name-form button:active {
       background: #288cdc; }
   .menu-modal #submit-progress {
     top: auto !important;
     width: 7.8em;
-    margin-top: -.2em;
+    margin-top: -0.8em;
     border-radius: 1px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -801,6 +839,11 @@ ul {
 @keyframes scale-big {
   0% {
     transform: scale(0.6); } }
+@keyframes chart-menu-open {
+  0% {
+    transform: translateX(10%);
+    width: 3em;
+    opacity: 0; } }
 .moving-up {
   animation: movingUp .35s; }
 

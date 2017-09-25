@@ -1,5 +1,4 @@
 const apiURL = "/api/cpslo/"
-//const apiURL = "http://127.0.0.1:4500/api/cpslo/";
 const course_types = ['Major', 'Free Class', 'Support', 'General Ed', 'Minor', 'Concentration'];
 
 var menuStack = [];
@@ -12,7 +11,12 @@ var completedMajorCount = 0;
 var savedChartBuilder;
 var startYear = localStorage.startYear ? parseInt(localStorage.startYear) : (new Date()).getFullYear();
 var username = localStorage.username ? localStorage.username : "";
-    
+var userConfig = {};
+var guestConfig = {
+    start_year: startYear,
+};
+var chartLoaded = false;
+
 $(document).ready(function() {
     checkWindowSize();
     $(".option-modal, .disabled, .edit-container").hide();
@@ -42,6 +46,7 @@ $(window).resize(function(){
 });
 
 function loadTasks() {
+    //localStorage.removeItem('userConfig');
     getLastChart();
     getCurrentQuarter();
     getAvailableCharts();
@@ -54,14 +59,13 @@ function getCurrentSeason() {
     var season;
 
     if (month >= 3 && month < 5) {
-        console.log("HERE");
         season = 'Spring';
     } else if (month >= 5 && month < 8) {
         season = 'Summer';
     } else if (month >= 8 && month <= 11) {
         season = 'Fall';
     } else {
-        season = "Winter";   
+        season = "Winter";
     }
     return `${season} ${year}`;
 }
@@ -70,20 +74,26 @@ function getAvailableCharts() {
     var request = $.get({
         url: apiURL+"stock_charts/15-17"
     });
-        
-    request.done(function(data) {  
+
+    request.done(function(data) {
         availableCharts = [];
-        $.each(data.charts, function(index, value) {   
+        $.each(data.charts, function(index, value) {
             availableCharts.push(value);
         });
     });
 }
 
 function checkWindowSize() {
-    if ($(window).width() <= 750){	
+    if ($(window).width() <= 750){
 		$('ul.tabs').tabs();
+        if (!chartLoaded) {
+            $('ul.tabs').hide();
+        } else {
+            $('ul.tabs').show();
+        }
         $("body").removeClass("desktop");
 	} else {
+        $('ul.tabs').hide();
         $("body").addClass("desktop");
         $(".year").show();
     }
@@ -109,7 +119,7 @@ function closePopupMessage() {
 }
 
 function popupMessage(title, message, dismiss=false, postNote=false) {
-    var element = 
+    var element =
         `<div class="popup-message z-depth-5">
             <h2 class="popup-title">${title}</h2>
             <h3 class="popup-body">`+message+`</h3>

@@ -26,10 +26,17 @@ function getCurrentQuarter() {
 }
 
 function getLastChart() {
-    var savedChart = localStorage.getItem("savedChart");
-    if (savedChart) {
-        $(".welcome-container").hide();
-        loadChart(savedChart);
+    //localStorage.removeItem('guestConfig');
+    if (localStorage.userConfig) {
+        userConfig = JSON.parse(localStorage.userConfig);
+        username = userConfig.username.split('-')[1];
+        getUserCharts();
+    } else {
+        guestConfig = localStorage.guestConfig;
+        if (guestConfig) {
+            $(".welcome-container").hide();
+            loadChart(guestConfig.active_chart);
+        }
     }
 }
 
@@ -51,9 +58,12 @@ function setupChartComponents() {
 function loadChart(chartName, userChart = false) {
     var title;
     var request;
-    url = userChart ? `${apiURL}users/tvillare/charts/cscbsu` :
-     `${apiURL}stock_charts/15-17/${chartName}`;
 
+    closeMenu();
+    emptyStack();
+
+    var url = userChart ? `${apiURL}users/${username}/charts/${chartName}` :
+     `${apiURL}stock_charts/15-17/${chartName}`;
     title = chartName.split('_').join(" ");
 
     request = $.get({
@@ -62,12 +72,15 @@ function loadChart(chartName, userChart = false) {
     });
 
     request.done(function(data) {
-        localStorage.savedChart = chartName;
         $(".welcome-container").fadeOut("fast");
         setupChartComponents();
         parseData(data, title);
         getSavedFlags();
         calculateUnits();
+        chartLoaded = true;
+        checkWindowSize();
+        setActiveChart(chartName);
+        $(".chart-menu-open-button").removeClass('hidden');
     });
 
     request.fail(function() {
@@ -77,6 +90,11 @@ function loadChart(chartName, userChart = false) {
     });
 }
 
+function setActiveChart(chartName) {
+    userConfig.active_chart = chartName;
+    localStorage.userConfig = JSON.stringify(userConfig);
+}
+
 function getSavedFlags() {
     savedFlags = localStorage.savedFlags ? JSON.parse(localStorage.savedFlags) : [];
 
@@ -84,7 +102,6 @@ function getSavedFlags() {
         $("#"+flagInfo.id).addClass(flagInfo.flag);
     });
 }
-
 
 function setupChart(title) {
     $(".header-title").text(title);
@@ -104,6 +121,7 @@ function parseData(data, title) {
         var blockLocation
         var block_metadata = value.block_metadata;
         var course_data = value.course_data;
+        console.log(key, block_metadata.catalog_id);
 
         blockLocation = parseBlockLocation(block_metadata);
         quarter = $(".year-holder").children().eq(blockLocation[1]-1).children().eq(1).children(".quarter").eq(blockLocation[0]);
@@ -111,7 +129,7 @@ function parseData(data, title) {
         if (course_data && course_data.length) {
             quarter.append(newMultiBlockComponent(block_metadata, course_data));
         } else if (course_data) {
-            quarter.append(newBlockComponent(block_metadata, course_data));
+            quarter.append(newBlockComponent(block_metadata, course_data, null, key));
         } else {
             quarter.append(newElectiveBlockComponent(block_metadata));
         }
@@ -158,6 +176,15 @@ function countSelected() {
     return count;
 }
 
+function openCourseSelector(block) {
+    var id = $(block).attr("id");
+    emptyStack();
+    changeWindow("department-selector", "Departments", id) ;
+    openMenu();
+    $(".block").removeClass('replaceable');
+    $(block).addClass('replaceable');
+}
+
 function openMultiCourseSelector(block) {
     emptyStack();
     openMenu();
@@ -192,6 +219,7 @@ function openEditMode() {
         block.removeClass("show-block");
         chartContainer.addClass("base-editing");
         setupSortable(".block-outline",  ".block-option-container, .delete-block, .quarter-head, .edit-block-button", ".quarter, .block-drop");
+        $(".chart-menu-open-button").addClass('hidden');
         $(".menu-nav-buttons").hide();
         $(".edit-container").fadeIn("fast");
     }
@@ -207,6 +235,8 @@ function closeEditMode() {
     $(".menu-nav-buttons").fadeIn();
     $(".edit-container").fadeOut("fast");
     $(".quarter").sortable("destroy");
+    $(".chart-menu-open-button").removeClass('hidden');
+
 
     toggleColorPalette(true);
     toggleFlagPalette(true);
@@ -303,12 +333,13 @@ function calculateUnits() {
 }
 
 function deleteSelectedBlocks() {
-    var selectedBlocks = $(".selected-block");
-
+    var selectedBlocks = $(".selected-block").eq(0);
+    var id = selectedBlocks.children(".block").attr("id");
     selectedBlocks.css({
         visibility: 'hidden',
         display: 'block'
     }).slideUp("fast", function() {
+        deleteCourse(id);
         selectedBlocks.remove();
     });
 
@@ -384,7 +415,6 @@ function popupCourseInfo(title, description, prereqs, dept, num) {
             </div>
          </div>`;
     $(".disabled").show();
-    console.log(dept, num);
     $("body").append(element);
 }
 
@@ -396,7 +426,6 @@ function addBlockFlag(flagId) {
     selectedBlocks.each(function(key, block) {
         block = $(block).children(".block");
         var blockId = block.attr("id");
-        console.log(blockId);
         var flagOption = flagId.replace(/[0-9]/g, '');
         var courseType = block.attr("data-courseType");
         var value = parseInt(block.attr("value"));
@@ -452,4 +481,16 @@ function displayFlagMessage(option, removing) {
 
     message = message;
     Materialize.toast(message, 2000);
+}
+
+function toggleChartMenu() {
+    var chartMenu = $(".chart-menu");
+    var openChartMenuButton = $(".chart-menu-open-button");
+    if (chartMenu.hasClass('hidden')) {
+        chartMenu.removeClass('hidden');
+        openChartMenuButton.addClass('active-button');
+    } else {
+        chartMenu.addClass('hidden');
+        openChartMenuButton.removeClass('active-button');
+    }
 }

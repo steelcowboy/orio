@@ -49,11 +49,13 @@ function setupAutocomplete() {
 
 function newDepartmentSelectorView() {
     var element = "";
+    /*
     var uiWidget = `
         <div class = "ui-widget menu-option slide-in-right">
             <input class="input-field" id ="departmentSearch" placeholder="Search" maxlength="4">
         </div>`
     element = element.concat(uiWidget);
+   */
     $.each(departments, function(index, value) {
         element = element.concat(`<h3 class="menu-option department-item slide-in-right" name="${value}" onclick="fetchDepartmentCourses(this)">${value}</h3>`);
     });
@@ -64,7 +66,7 @@ function newCourseSelectorView() {
     var element = "";
     $.each(departmentCourses, function(index, value) {
         if (index > 0) {
-            element = element.concat(`<h3 class="menu-option course-item slide-in-right" 
+            element = element.concat(`<h3 class="menu-option course-item slide-in-right"
              name="${departmentCourses[0] /* Department Name */}/${value}" onclick="fetchCourse(this)">${value}</h3>`);
         }
     });
@@ -76,8 +78,8 @@ function fetchDepartments() {
     var request = $.get({
         url: apiURL+"courses"
     });
-        
-    request.done(function(data) { 
+
+    request.done(function(data) {
         data.departments.forEach(function(value) {
             departments.push(value);
         });
@@ -90,14 +92,14 @@ function fetchDepartmentCourses(location) {
     var request = $.get({
         url: `${apiURL}courses/${departmentName}`
     });
-        
-    request.done(function(data) { 
+
+    request.done(function(data) {
         departmentCourses.push(departmentName);
         data.courses.forEach(function(value) {
             departmentCourses.push(value);
         });
     });
-    
+
     request.then(function() {
         changeWindow("course-selector", departmentName);
     })
@@ -108,13 +110,24 @@ function fetchCourse(courseItem) {
     var request = $.get({
         url: `${apiURL}courses/${courseName}`
     });
-        
-    request.done(function(data) { 
-        var course = newBlockComponent(null, data);
-        $(course).insertBefore(".appending .add-block-button");
+
+    request.done(function(data) {
+        if ($('.block').hasClass('replaceable')) {
+            var course_type = $('.block.replaceable').attr('class').split(' ')[1];
+            var course = newBlockComponent(null, data, course_type);
+            var block = $('.block.replaceable').parent();
+            block.replaceWith(course);
+            $('.block.replaceable').removeClass('replaceable');
+        } else {
+            var course = newBlockComponent(null, data);
+            var parentLocation = $(".appending").index()-1;
+            //putBlock(data);
+            console.log(parentLocation);
+            $(course).insertBefore(".appending .add-block-button");
+        }
         emptyStack();
     });
-    
+
     closeMenu();
 }
 
@@ -138,8 +151,8 @@ function fetchFullCourse(location) {
     var request = $.get({
         url: `${apiURL}courses/${serialized}`
     });
-        
-    request.done(function(data) { 
+
+    request.done(function(data) {
         var block = newBlockComponent(/* block_data */ {course_type: courseType}, data);
         $(location).replaceWith(block);
     });

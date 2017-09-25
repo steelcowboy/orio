@@ -45,14 +45,16 @@ function newQuarterComponent(season, year, lastQuarter = false, chartBuilder=fal
     return quarter;
 }
 
-function newBlockComponent(block_metadata, course_data) {
-    var course_type = block_metadata ? block_metadata.course_type.toLowerCase().split(' ').join("-") : "major";
+function newBlockComponent(block_metadata, course_data, course_type = null, id = null) {
+    if (!course_type) {
+        course_type = block_metadata ? block_metadata.course_type.toLowerCase().split(' ').join("-") : "major";
+    }
     return `
         <div class="block-outline show-block">
             <div class="edit-block-button" onclick="select(this)">
                 <i class="material-icons">check</i>
             </div>
-            <div class="block ${course_type}" id="${course_data._id}" value="${course_data.units}" data-courseType="${course_type}">
+            <div class="block ${course_type}" id="${id}" value="${course_data.units}" data-courseType="${course_type}">
                 ${newBlockCourseDataView(course_data)}
             </div>
         </div>
@@ -66,9 +68,9 @@ function newBlockCourseDataView(course_data) {
             <h6>${course_data.title}</h6>
         </div>
         <div class="block-catalog">
-            <h5 class="block-catalog-info">${course_data.department} ${course_data.course_number} (${course_data.units})</h5>
+            <h5 class="block-catalog-info">${course_data.dept} ${course_data.course_number} (${course_data.units})</h5>
         </div>
-        <div class="course-info" onclick="popupCourseInfo('${course_data.title}', '${course_data.description}', '${course_data.prereqs}', '${course_data.department}', '${course_data.course_number}')">?</div>
+        <div class="course-info" onclick="popupCourseInfo('${course_data.title}', '${course_data.description}', '${course_data.prereqs}', '${course_data.dept}', '${course_data.course_number}')">?</div>
     `;
 }
 
@@ -80,7 +82,6 @@ function newMultiBlockComponent(block_metadata, course_data) {
     course_data.forEach(function(val, index) {
         id = id.concat(`${index > 0 ? '-' : ''}${val._id}`);
     });
-    console.log(id);
     var block = `
         <div class="block-outline show-block">
             <div class="edit-block-button" onclick="select(this)">
@@ -95,9 +96,9 @@ function newMultiBlockComponent(block_metadata, course_data) {
         `;
     course_data.forEach(function(val, index) {
         if (index == 0 && numCourses == 2) {
-            block = block.concat(`<h5 class="course-catalog-title">${val.department} ${val.course_number}</h5><h5>or</h5>`);
+            block = block.concat(`<h5 class="course-catalog-title">${val.dept} ${val.course_number}</h5><h5>or</h5>`);
         } else {
-            block = block.concat(`<h5 class="course-catalog-title">${val.department} ${val.course_number}</h5>`);
+            block = block.concat(`<h5 class="course-catalog-title">${val.dept} ${val.course_number}</h5>`);
         }
 
     });
@@ -112,19 +113,22 @@ function newMultiBlockComponent(block_metadata, course_data) {
 
 function newElectiveBlockComponent(block_metadata) {
     var course_type = block_metadata.course_type.toLowerCase().split(' ').join("-");
+    var title = block_metadata.elective_title ? block_metadata.elective_title :
+     block_metadata.course_type;
     return `
         <div class="block-outline show-block">
             <div class="edit-block-button" onclick="select(this)">
                 <i class="material-icons">check</i>
             </div>
-            <div class="block ${course_type}" value="4">
+            <div class="block ${course_type}" id="${block_metadata._id}" value="4">
                 <div class="ribbon"></div>
                 <div class="block-title">
-                    <h6>${block_metadata.elective_title}</h6>
+                    <h6>${title}</h6>
                 </div>
                 <div class="block-catalog">
                     <h5>(4)</h5>
                 </div>
+                <div class="course-specify-button" onclick="openCourseSelector(this.parentNode)">+</div>
             </div>
         </div>
     `;
@@ -182,17 +186,35 @@ function newChartBrowserView() {
             view = view.concat(`<h3 class="menu-option slide-in-right" id="${value}" onclick="changeStockFlowchart(this.id)">${major}</h3>`);
         }
     });
-    return vie;
+    return view;
+}
+
+function newChartNamerView(newMajor) {
+    return `
+        <form class="menu-form slide-in-right" id="chart-name-form">
+            <div class="input-field col s6">
+                <input id="chart-name-input" type="text" class="validate">
+                <label for="chart-name-input">Chart Name</label>
+            </div>
+            <button type="button" class="slide-in-right" onclick="saveChartInfo('${newMajor}')">Submit</button>
+        </form>
+    `;
 }
 
 function newUserChartBrowserView() {
     var view = `<h2 class="modal-header slide-in-right">Your Charts</h2>`;
-    $.each(userChartNames, function(index, value) {
+    if (Object.keys(userConfig.charts).length === 0 && userConfig.charts.constructor === Object) {
         view = view.concat(`
-            <h3 class="menu-option slide-in-right" name=`${value}` onclick="loadChart(this.name, true)">${value}
+            <h3 class="menu-option slide-in-right" onclick="changeWindow('chart-year-browser')">New Flowchart
                 <i class="material-icons">keyboard_arrow_right</i>
             </h3>
-
+        `);
+    }
+    $.each(userConfig.charts, function(index, value) {
+        view = view.concat(`
+            <h3 class="menu-option slide-in-right" name="${value}" onclick="loadChart('${index}', true)">${index}
+                <i class="material-icons">keyboard_arrow_right</i>
+            </h3>
         `);
     });
     return view;
@@ -233,7 +255,7 @@ function newLoginView() {
         <div class="login-img-container">
             <img class="school-logo login-img slide-in-right" src="img/school_logos/cpslo.png">
         </div>
-        <form class="menu-form slide-in-right" id="login-form" action="javascript:submitLoginInfo()">
+        <form class="menu-form slide-in-right" id="login-form" action="javascript:login()">
             <div class="input-field col s6">
                 <input id="login-username" type="text" class="validate">
                 <label for="login-username">Username</label>
@@ -243,11 +265,17 @@ function newLoginView() {
                 <label for="login-password">Password</label>
             </div>
             <p class="login-error-text slide-in-right hidden">Incorrect Username or Password</p>
-            <button type="button" class="slide-in-right" onclick="submitLoginInfo()">Submit</button>
+            <button type="button" class="slide-in-right" onclick="login()">Submit</button>
             <div class="progress-bar hidden" id="submit-progress">
                 <div class="indeterminate"></div>
             </div>
         </form>
+        <h3 class="menu-option slide-in-right" id="toggle-rememberMe">Remember
+            <label class="switch">
+                <input type="checkbox" ${localStorage.rememberMe ? 'checked' : ''}>
+                <div class="toggle round"></div>
+            </label>
+        </h3>
     `;
 }
 
@@ -298,8 +326,8 @@ function newAboutView() {
                 <div class="bottom-text">flowchamp</div>
             </div>
         </div>
-        <h3 class="modal-sub-header">FlowChamp was created out of a desire to make college planning easier and more connected.</h3>
-        <h3 class="modal-sub-header">Development of this project was done by two students attending Cal Poly, San Luis Obispo.</h3>
+        <h3 class="modal-sub-header">FlowChamp was created to make college planning easier and more connected.</h3>
+        <h3 class="modal-sub-header">Development of this project was done by two students attending Cal Poly.</h3>
         <h3 class="menu-option slide-in-right" onclick="openUrlInNewTab('http://devjimheald.com')">Jim Heald (Backend)
             <i class="material-icons">open_in_new</i>
         </h3>

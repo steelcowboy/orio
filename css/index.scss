@@ -44,17 +44,17 @@ ul {
     text-align: center;
     display: flex;
     flex-direction: column;
-    
+
     .logo {
         animation: welcome-fade 2s;
     }
-    
+
     h3 {
         font-family: 'julius sans one';
         color: darkgray;
         animation: 2s ease 0s normal welcome-fade;
     }
-    
+
     &.fade-white {
         .logo, h3, h4 {
             opacity: 0;
@@ -72,14 +72,14 @@ ul {
     font-family: 'julius sans one';
     background: white;
     box-shadow: $bottom-box-shadow;
-    
+
     .logo-letter {
         position: relative;
         height: 100%;
         width: 100%;
         display: flex;
         flex-direction: column;
-        
+
         #top-f {
             background: dodgerblue;
             height: 2.6em;
@@ -88,7 +88,7 @@ ul {
             margin-left: 2em;
             margin-top: 1.1em;
         }
-        
+
         #bottom-f {
             background: dodgerblue;
             height: 2.6em;
@@ -97,7 +97,7 @@ ul {
             margin-left: 2em;
         }
     }
-    
+
     .bottom-text {
         background: dodgerblue;
         position: absolute;
@@ -120,11 +120,60 @@ ul {
     right: 0;
     background-color: $header-color;
     box-shadow: $bottom-box-shadow;
-    
+
+    .header-button {
+        text-align: center;
+        font-size: 3em;
+        height: 100%;
+        width: 1.5em;
+        line-height: 1em;
+        cursor: pointer;
+    }
+
     .header-contents {
         height: 3em;
+
+        .chart-menu-open-button {
+            z-index: 2;
+            position: absolute;
+            right: 0;
+            color: white;
+        }
+
+        .chart-menu {
+            z-index: 1;
+            position: absolute;
+            top: 0.2em;
+            right: 0.2em;
+            width: 100%;
+            max-width: 15em;
+            padding-top: 3em;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            border-radius: 2px;
+            box-shadow: $bottom-box-shadow;
+            animation: chart-menu-open 0.15s;
+            transform-origin: top center;
+        }
+
+        .chart-menu-button {
+            font-size: 1.3em;
+            height: 2em;
+            line-height: 2em;
+            cursor: pointer;
+
+            &:hover {
+                background: rgba(0,0,0,0.07);
+            }
+        }
+
+        .active-button {
+            color: dodgerblue;
+        }
     }
-    
+
     .edit-container {
         position: absolute;
         top: 0;
@@ -135,7 +184,7 @@ ul {
         display: flex;
         justify-content: space-between;
         color: white;
-        
+
         .header-button {
             text-align: center;
             font-size: 3em;
@@ -144,11 +193,11 @@ ul {
             line-height: 1em;
             cursor: pointer;
         }
-        
+
         .left-container {
             display: flex;
             flex-wrap: nowrap;
-            
+
             #selected-count-container {
                 font-size: 1.3em;
                 line-height: 2em;
@@ -160,17 +209,17 @@ ul {
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-            
+
             #close-edit-container-button {
                 line-height: 1.2em;
             }
         }
-        
+
         .edit-action-container {
             display: flex;
         }
     }
-    
+
     h3 {
         position: absolute;
         margin: auto;
@@ -180,7 +229,7 @@ ul {
         max-width: 5em;
         color: white;
     }
-    
+
     .header-title {
         position: absolute;
         margin: auto;
@@ -193,7 +242,7 @@ ul {
         font-size: 25px;
         text-align: center;
     }
-    
+
     .nav-button {
         padding-left: 2em;
         padding-right: 2em;
@@ -202,12 +251,12 @@ ul {
         border-radius: 8px;
         cursor: pointer;
         transition: all .15s ease-in-out;
-        
+
         h3:active {
             color: darkgray;
         }
     }
-    
+
     #edit-flowchart {
         position: fixed;
         top: .6em;
@@ -219,7 +268,7 @@ ul {
         text-align: center;
         touch-action: manipulation;
     }
-    
+
     .unclickable, .unclickable h3 {
         pointer-events: none;
         color: $header-color;
@@ -231,8 +280,9 @@ ul {
         color: rgba(0,0,0,.2);
         pointer-events: none;
     }
-    
+
     .tabs {
+        z-index: 0;
         overflow-x: auto;
     }
 }
@@ -253,7 +303,7 @@ ul {
 .ui-widget {
     &.list-item {
         padding: 0;
-        
+
         &:hover {
             background: white;
         }
@@ -282,7 +332,7 @@ ul {
     margin: 0.5em auto;
     color: rgb(150,150,150);
     cursor: pointer;
-    
+
     &:hover {
         background: rgba(0, 0, 0, .05);
     }
@@ -306,7 +356,7 @@ ul {
     background-color: $background-color;
     -webkit-overflow-scrolling: touch;
     transition: all .15s ease-in-out;
-    
+
     &.base-editing {
         .block {
             cursor: move;
@@ -314,32 +364,32 @@ ul {
         .edit-block-button {
             visibility: visible !important;
         }
-        
+
         .add-block-button {
             display: none;
         }
-        
+
         .course-info, .course-specifier-button {
             display: none;
         }
     }
-    
+
     .block-drop {
         z-index: 50;
         position: absolute;
         top: 0;
         bottom: 0;
         width: 10%;
-        
+
         &.left {
             left: 0;
         }
-        
+
         &.right {
             right: 0;
         }
     }
-    
+
     .degree-path {
         display: flex;
         justify-content: center;
@@ -347,8 +397,8 @@ ul {
         width: 100%;
         background: $background-color;
     }
-    
-    .year-holder {  
+
+    .year-holder {
         display: flex;
         flex-wrap: wrap;
 
@@ -359,34 +409,34 @@ ul {
             display: flex;
             flex-direction: column;
             background: white;
-            
+
             &:first-child {
                 border-left: 0;
             }
-            
+
             .head {
                 display: none;
                 position: relative;
                 line-height: 0;
                 text-align: center;
-                
+
                 h2 {
                     margin: 0.5em auto;
                 }
             }
-            
+
             .quarter-holder {
                 width: 100%;
                 display: flex;
                 text-align: center;
                 padding-top: 2em;
-                
+
                 .quarter-divider {
                     z-index: 0;
                     margin-top: 2em;
                     border-left: 1px solid rgba(0,0,0,.12);
                 }
-                
+
                 .quarter {
                     height: 100%;
                     width: 100%;
@@ -395,39 +445,39 @@ ul {
                     display: flex;
                     flex-direction: column;
                     padding-bottom: 10em;
-                    
+
                     &:first-child {
                         border-left: none;
                     }
-                    
+
                     &:hover {
                         .add-block-button {
                             visibility: visible;
                         }
                     }
-                    
+
                     &.current-quarter {
                         .quarter-head h4 {
                             color: $header-color;
                         }
                     }
-                    
+
                     .quarter-head {
                         display: flex;
                         flex-direction: column;
-                        
+
                         h4 {
                             line-height: 0;
                             margin: 0.7em;
                             color: rgb(100,100,100);
                             margin-left: .5em;
-                            
+
                             &:last-child {
                                 color: rgba(0,0,0,.3);
                             }
                         }
                     }
-                    
+
                     .add-block-count-container {
                         height: 3em;
                         width: 100%;
@@ -436,12 +486,12 @@ ul {
                         margin-bottom: 1em;
                         display: flex;
                         justify-content: space-between;
-                        
+
                         .input-field {
                             margin: 0 !important;
                             width: 5em;
                         }
-                        
+
                         .add-block-amount-button {
                             margin: 1em 0 0 0;
                             cursor: pointer;
@@ -454,13 +504,13 @@ ul {
                             border-radius: 2px;
                             color: white;
                             box-shadow: $bottom-box-shadow;
-                            
+
                             &:active {
                                 filter: brightness(85%);
                             }
                         }
                     }
-                    
+
                     .course-specifier-container {
                         height: 10em;
                         width: 100%;
@@ -472,34 +522,34 @@ ul {
                         justify-content: center;
                         background: rgb(240, 240, 240);
                         box-shadow: $bottom-box-shadow;
-                        
+
                         h3 {
                             margin: 0;
                             width: 100%;
                             text-align: left;
                             padding-left: 0.5em;
                         }
-                        
+
                         .course-type-dropdown {
                             height: 3em;
                             width: 90%;
                             margin: 0.5em auto;
-                            
+
                             &:focus {
                                 box-shadow: none;
                             }
                         }
-                        
+
                         .course-specifier-input-container {
                             display: flex;
-                            
+
                             .input-field {
                                 height: 3em !important;
                                 width: 45%;
                                 margin: 0 auto;
                             }
                         }
-                        
+
                         .add-course-button {
                             cursor: pointer;
                             width: 90%;
@@ -512,14 +562,14 @@ ul {
                             border-radius: 2px;
                             color: white;
                             box-shadow: $bottom-box-shadow;
-                            
+
                             &:active {
                                 filter: brightness(85%);
                             }
                         }
                     }
-                    
-                    .block-outline {   
+
+                    .block-outline {
                         position: relative;
                         box-sizing: border-box;
                         height: 8em;
@@ -527,7 +577,7 @@ ul {
                         max-width: 9em;
                         margin: 0.5em auto;
                         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-                        
+
                         .edit-block-button {
                             z-index: 1;
                             position: absolute;
@@ -541,7 +591,7 @@ ul {
                             border-radius: 50%;
                             color: white;
                         }
-                        
+
                         &.selected-block {
                             .block {
                                 transform: scale(0.8);
@@ -551,7 +601,7 @@ ul {
                                 animation: none;
                                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
                             }
-                            
+
                             .edit-block-button {
                                 background: dodgerblue;
                                 color: white;
@@ -562,13 +612,13 @@ ul {
                             background: rgba(0,0,0,0.08);
                             box-shadow: none;
                         }
-                        
+
                         &:hover {
                             .edit-block-button {
                                 visibility: visible !important;
                             }
                         }
-                                                
+
                         &.dragging {
                             position: absolute;
                             top: -1em;
@@ -581,13 +631,13 @@ ul {
                             transform: scale(1);
                         }
                     }
-                    
+
                     .block {
                         height: 100%;
                         width: 100%;
                         position: absolute;
                         overflow: hidden;
-                        
+
                         .ribbon{
                             position: absolute;
                             bottom: 0;
@@ -595,12 +645,12 @@ ul {
                             right: 0;
                             height: 5px;
                         }
-                        
+
                         h4, h5, h6 {
                             display: block;
                             margin: 0.7em;
                         }
-                        
+
                         .block-title {
                             overflow: hidden;
                             display: -webkit-box;
@@ -609,7 +659,7 @@ ul {
                             text-overflow: ellipsis;
                             height: 3em;
                         }
-                        
+
                         .course-info, .course-specify-button {
                             position: absolute;
                             background: rgba(0,0,0,.15);
@@ -622,14 +672,14 @@ ul {
                             cursor: pointer;
                             transition: all .15s ease-in-out;
                             touch-action: manipulation;
-                            
+
                             &:hover {
                                 background: rgba(0,0,0,.4);
                                 box-shadow: $bottom-box-shadow;
                             }
                         }
                     }
-                    
+
                     .editable {
                         position: relative;
                         cursor: move !important;
@@ -639,7 +689,7 @@ ul {
                         background: rgba(40,40,50, .5);
                         transition: all .15s ease-in-out;
                     }
-                    
+
                     .mark-complete {
                         .ribbon {
                             background: rgb(10,200,20);
@@ -667,7 +717,7 @@ ul {
                 }
             }
         }
-        
+
         .divider {
             border-left: .1em solid lightgray;
         }
@@ -688,15 +738,15 @@ ul {
     border-bottom-right-radius: 4px;
     box-shadow: $bottom-box-shadow;
     animation: movingDown 0.15s;
-    
-            
+
+
     @media screen and (max-width: 750px) {
         top: 6em;
         p {
             display: none;
         }
     }
-    
+
     .color-choice, .flag-choice {
         position: relative;
         height: 2em;
@@ -710,11 +760,11 @@ ul {
         color: white;
         cursor: pointer;
         max-width: 10em;
-        
+
         i {
             margin: 0.15em;
         }
-        
+
         p {
             margin: 0.4em;
         }
@@ -723,7 +773,7 @@ ul {
             filter: brightness(75%);
         }
     }
-    
+
     #mark-complete {
         background: rgb(10,200,20);
     }
@@ -740,7 +790,7 @@ ul {
     #mark-retake {
         background: red;
     }
-    
+
     #mark-none {
         color: rgb(100,100,100);
     }
@@ -790,7 +840,7 @@ ul {
     z-index: 30;
     height: 3em;
     width: 8em;
-    
+
     .back-button {
         cursor: pointer;
         display: none;
@@ -818,34 +868,34 @@ ul {
     animation: slide-right .25s;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
     -webkit-overflow-scrolling: touch;
-    
+
     .menu-logo-container {
         position: relative;
         height: 10em;
         margin-bottom: 1em;
     }
-    
+
     .login-error-text {
         margin-top: 1em;
         color: red;
         margin-bottom: -0.5em;
     }
-    
-    #login-form.menu-form {
+
+    #login-form.menu-form, #chart-name-form {
         width: 80%;
         margin-left: 1.6em;
-        
+
         input {
             margin: 0;
         }
-        
+
         input[type=submit], button {
             appearance: none;
             -webkit-appearance: none;
             font-size: 1.3em;
             height: 2em;
             width: 6em;
-            margin: 1em 0 0 0;
+            margin: 1em 0 0.5em 0;
             border: none;
             border-radius: 2px;
             background: rgb(50, 150, 230);
@@ -854,22 +904,22 @@ ul {
             outline: none;
             cursor: pointer;
         }
-        
+
         input[type=submit]:active, button:active {
             background: rgb(40, 140, 220);
         }
     }
-    
+
     #submit-progress {
         top: auto !important;
         width: 7.8em;
-        margin-top: -.2em;
+        margin-top: -0.8em;
         border-radius: 1px;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         animation: slide-up 0.35s;
     }
-    
+
     .switch {
         position: absolute;
         display: inline-block;
@@ -877,14 +927,14 @@ ul {
         height: 34px;
         top: 0.75em;
         right: 0.5em;
-        
+
         input {
             position: absolute;
             left: 15em;
             display: none;
         }
     }
-    
+
     .toggle {
         position: absolute;
         cursor: pointer;
@@ -893,7 +943,7 @@ ul {
         width: 3.2em;
         background-color: #ccc;
         transition: .15s;
-        
+
         &:before {
           position: absolute;
           content: "";
@@ -905,14 +955,14 @@ ul {
           transition: .3s;
         }
     }
-    
+
     .toggle.round {
         border-radius: 34px;
         &:before {
             border-radius: 50%;
         }
     }
-    
+
     input:checked + .toggle {
         background-color: #2196F3;
     }
@@ -948,7 +998,7 @@ ul {
     border-radius: 4px;
     max-height: 20em;
     overflow: auto;
-    
+
     li {
         font-size: 1.3em;
         height: 2em;
@@ -962,7 +1012,7 @@ ul {
 .menu-option {
     display: flex;
     justify-content: space-between;
-    
+
     &:active {
         background: rgb(240,240,240);
     }
@@ -1003,7 +1053,7 @@ ul {
     right: 0;
     background: white;
     animation: slide-up .35s;
-    
+
     .external-site-nav {
         display: flex;
         height: 1em;
@@ -1011,14 +1061,14 @@ ul {
         justify-content: flex-end;
         font-size: 3em;
         color: rgb(100,100,100);
-        
+
         p {
             margin: .5em;
             line-height: 0;
             cursor: pointer;
         }
     }
-    
+
     .site-container {
         position: fixed;
         top: 9em;
@@ -1132,6 +1182,14 @@ ul {
     }
 }
 
+@keyframes chart-menu-open {
+    0% {
+        transform: translateX(10%);
+        width: 3em;
+        opacity: 0;
+    }
+}
+
 .moving-up {
     animation: movingUp .35s;
 }
@@ -1185,7 +1243,7 @@ ul {
     .base {
         top: 4em;
     }
-    
+
     .base-editing {
         .edit-block-button {
             visibility: hidden !important;
@@ -1194,11 +1252,11 @@ ul {
     .show-block {
         animation: show-block-desktop .55s;
     }
-    
+
     .block-drop {
         display: none;
     }
-    
+
     .dragging {
         left: .5em !important;
     }
@@ -1209,13 +1267,13 @@ ul {
             transform: translateX(25%);
         }
     }
-    
+
     .hide-block {
         transform: translateX(-50%);
         opacity: 0;
         transition: all .15s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .header {
         height: 4em;
     }
@@ -1226,7 +1284,7 @@ ul {
         flex-wrap: nowrap;
         margin: 0 auto;
     }
-    
+
     .year {
         padding-top: 1em;
         min-width: 35em;
@@ -1241,12 +1299,12 @@ ul {
     .site-container {
         top: 7em;
     }
-    
+
     .menu-option, .ui-autocomplete li {
         &:hover {
-            background: rgb(245,245,245);   
+            background: rgb(245,245,245);
         }
-        
+
         &:active {
             background: rgb(240,240,240);
         }
@@ -1260,6 +1318,6 @@ ul {
     .year-holder {
         flex-direction: column;
     }
-    
+
     .page-break	{ display: block; page-break-before: always; }
 }
