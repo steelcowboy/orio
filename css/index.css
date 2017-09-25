@@ -24,7 +24,8 @@ ul {
   right: 0;
   text-align: center;
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  justify-content: center; }
   .welcome-container .logo {
     animation: welcome-fade 2s; }
   .welcome-container h3 {
@@ -34,7 +35,24 @@ ul {
   .welcome-container.fade-white .logo, .welcome-container.fade-white h3, .welcome-container.fade-white h4 {
     opacity: 0;
     transition: all .15s ease-in-out; }
+  .welcome-container .button {
+    font-size: 1.3em;
+    height: 2em;
+    line-height: 2em;
+    width: 6em;
+    margin: 0.5em auto;
+    border-radius: 2px;
+    background: #969696;
+    color: white;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    cursor: pointer;
+    animation: delayed-fade 3s; }
 
+@keyframes delayed-fade {
+  0% {
+    opacity: 0; }
+  80% {
+    opacity: 0; } }
 .logo {
   position: relative;
   height: 10em;

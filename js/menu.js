@@ -10,13 +10,14 @@ function saveChartInfo(newMajor) {
         userConfig.active_chart = chartName;
         postChart(newMajor, chartName);
     } else {
-        console.log('here');
         if (!guestConfig) {
             guestConfig = {charts: {}};
         }
         guestConfig.charts[`${chartName}`] = newMajor;
         guestConfig.active_chart = chartName;
         localStorage.guestConfig = JSON.stringify(guestConfig);
+        console.log(chartName);
+        loadChart(guestConfig.charts[chartName]);
     }
 }
 
@@ -27,13 +28,25 @@ function openMenu() {
     };
 
     $(".welcome-container").addClass("fade-white");
+    $(".welcome-container .button").fadeOut("fast");
     $("#edit-flowchart").addClass("unclickable");
     $(".header").addClass("shrink-header");
     $("#menu-button").addClass("open").removeClass("closed");
     $(".menu-modal").removeClass("slide-out-left");
-
+    closeChartEditMenu();
     $(".popup-message").remove();
     $(".menu-modal, .disabled").show();
+}
+
+$('.base').click(function() {
+    closeChartEditMenu();
+});
+
+function closeChartEditMenu() {
+    $('.chart-menu').fadeOut("fast", function() {
+        $(this).addClass('hidden').show();
+        $('.chart-menu-open-button').removeClass('active-button');
+    });
 }
 
 function closeMenu() {
@@ -160,6 +173,7 @@ function getUserCharts() {
         $("#user-chart-browser").removeClass("hidden");
         if (userConfig.active_chart) {
             $(".welcome-container").addClass("fade-white");
+            $(".welcome-container").fadeOut('fast');
             loadChart(userConfig.active_chart, /* userChart */ true);
         }
     } else {

@@ -30,12 +30,17 @@ function getLastChart() {
     if (localStorage.userConfig) {
         userConfig = JSON.parse(localStorage.userConfig);
         username = userConfig.username.split('-')[1];
+        $(".welcome-container").hide();
         getUserCharts();
     } else {
         guestConfig = localStorage.guestConfig;
         if (guestConfig) {
-            $(".welcome-container").hide();
-            loadChart(guestConfig.active_chart);
+            guestConfig = JSON.parse(guestConfig);
+            if (guestConfig.active_chart) {
+                var activeChart = guestConfig.active_chart;
+                $(".welcome-container").hide();
+                loadChart(guestConfig.charts[activeChart]);
+            }
         }
     }
 }
@@ -91,8 +96,10 @@ function loadChart(chartName, userChart = false) {
 }
 
 function setActiveChart(chartName) {
-    userConfig.active_chart = chartName;
-    localStorage.userConfig = JSON.stringify(userConfig);
+    if (userConfigExists()) {
+        userConfig.active_chart = chartName;
+        localStorage.userConfig = JSON.stringify(userConfig);
+    }
 }
 
 function getSavedFlags() {
@@ -121,7 +128,6 @@ function parseData(data, title) {
         var blockLocation
         var block_metadata = value.block_metadata;
         var course_data = value.course_data;
-        console.log(key, block_metadata.catalog_id);
 
         blockLocation = parseBlockLocation(block_metadata);
         quarter = $(".year-holder").children().eq(blockLocation[1]-1).children().eq(1).children(".quarter").eq(blockLocation[0]);
@@ -490,7 +496,7 @@ function toggleChartMenu() {
         chartMenu.removeClass('hidden');
         openChartMenuButton.addClass('active-button');
     } else {
-        chartMenu.addClass('hidden');
+        closeChartEditMenu();
         openChartMenuButton.removeClass('active-button');
     }
 }

@@ -20,6 +20,9 @@ function login() {
     request.done(function(response) {
         emptyStack();
         userConfig = response;
+        guestConfig = null;
+        localStorage.removeItem('guestConfig');
+
         if (remember) {
             localStorage.userConfig = JSON.stringify(response);
         } else {
@@ -78,21 +81,32 @@ function postChart(major, chartName) {
 }
 
 function deleteActiveChart() {
-    var username = userConfig.username.split('-')[1];
-    var chart = userConfig.active_chart;
-    var url = `${apiURL}users/${username}/charts/${chart}`;
-    var request = $.ajax({
-        type: 'DELETE',
-        url: url,
-        success: function(result) {
-            console.log(result);
-            userConfig = result;
-            localStorage.userConfig = JSON.stringify(userConfig);
-            $(".welcome-container").show();
-            $(".header-title").text('Welcome');
-            openMenu();
-        }
-    });
+    if (userConfigExists()) {
+        var username = userConfig.username.split('-')[1];
+        var chart = userConfig.active_chart;
+        var url = `${apiURL}users/${username}/charts/${chart}`;
+        var request = $.ajax({
+            type: 'DELETE',
+            url: url,
+            success: function(result) {
+                console.log(result);
+                userConfig = result;
+                localStorage.userConfig = JSON.stringify(userConfig);
+                $(".welcome-container").show();
+                $(".header-title").text('Welcome');
+                openMenu();
+            }
+        });
+    } else {
+        var activeChart = guestConfig.active_chart;
+        guestConfig.active_chart = null;
+        delete guestConfig.charts[activeChart];
+        localStorage.guestConfig = JSON.stringify(guestConfig);
+        $(".welcome-container").show();
+        $(".header-title").text('Welcome');
+        openMenu();
+
+    }
 }
 
 function deleteCourse(courseId) {

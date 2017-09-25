@@ -193,7 +193,7 @@ function newChartNamerView(newMajor) {
     return `
         <form class="menu-form slide-in-right" id="chart-name-form">
             <div class="input-field col s6">
-                <input id="chart-name-input" type="text" class="validate">
+                <input id="chart-name-input" type="text" class="validate" autofocus>
                 <label for="chart-name-input">Chart Name</label>
             </div>
             <button type="button" class="slide-in-right" onclick="saveChartInfo('${newMajor}')">Submit</button>
@@ -202,21 +202,30 @@ function newChartNamerView(newMajor) {
 }
 
 function newUserChartBrowserView() {
-    var view = `<h2 class="modal-header slide-in-right">Your Charts</h2>`;
-    if (Object.keys(userConfig.charts).length === 0 && userConfig.charts.constructor === Object) {
-        view = view.concat(`
-            <h3 class="menu-option slide-in-right" onclick="changeWindow('chart-year-browser')">New Flowchart
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-        `);
+    var title = userConfigExists() ? `${username}'s Charts` : "Your Charts (guest)";
+    var view = `<h2 class="modal-header slide-in-right">${title}</h2>`;
+    if (userConfigExists()) {
+        $.each(userConfig.charts, function(index, value) {
+            view = view.concat(`
+                <h3 class="menu-option slide-in-right" name="${value}" onclick="loadChart('${index}', true)">${index}
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </h3>
+            `);
+        });
+    } else if (guestConfig) {
+        $.each(guestConfig.charts, function(index, value) {
+            view = view.concat(`
+                <h3 class="menu-option slide-in-right" name="${value}" onclick="loadChart('${value}')">${index}
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </h3>
+            `);
+        });
     }
-    $.each(userConfig.charts, function(index, value) {
-        view = view.concat(`
-            <h3 class="menu-option slide-in-right" name="${value}" onclick="loadChart('${index}', true)">${index}
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-        `);
-    });
+    view = view.concat(`
+        <h3 class="menu-option slide-in-right" onclick="changeWindow('chart-year-browser')"><em>New Flowchart</em>
+            <i class="material-icons">keyboard_arrow_right</i>
+        </h3>
+    `);
     return view;
 }
 
@@ -257,7 +266,7 @@ function newLoginView() {
         </div>
         <form class="menu-form slide-in-right" id="login-form" action="javascript:login()">
             <div class="input-field col s6">
-                <input id="login-username" type="text" class="validate">
+                <input id="login-username" type="text" class="validate" autofocus>
                 <label for="login-username">Username</label>
             </div>
             <div class="input-field col s6">
