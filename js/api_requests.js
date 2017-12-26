@@ -1,59 +1,205 @@
-function login() {
-    var loginForm = $("#login-form");
-    var usernameEntered = $("#login-username").val();
-    var password = $("#login-password").val();
-    var remember = ($("#toggle-rememberMe").find("input").prop('checked'));
-    var header = window.btoa(usernameEntered+":"+password);
-    var data = JSON.stringify(remember ? {'remember': 'true'} : '');
+var API = {
+    url: '/api/cpslo',
 
-    var request = $.ajax({
-        type: "POST",
-        url: apiURL+"authorize",
-        contentType: 'application/json',
-        data: data,
-        beforeSend: function (xhr) {
+    authorize: (username, password, header, remember) => {
+        var beforeSend = function (xhr) {
             xhr.setRequestHeader ("Authorization", "Basic " + header);
             $("#submit-progress").removeClass("hidden");
         }
-    });
+        var options = {
+            type: 'POST',
+            url: `${API.url}/authorize`,
+            contentType: 'application/json',
+            beforeSend: beforeSend,
+            data: remember,
+        };
 
-    request.done(function(response) {
-        emptyStack();
-        userConfig = response;
-        guestConfig = null;
-        localStorage.removeItem('guestConfig');
+        API.newRequest(options)
+            .done(function(config) {
+                var guestConfig = User.data();
+                if (guestConfig.charts && guestConfig.username === 'cpslo-guest') {
+                    var username = config.username.split('-')[1];
+                    config.active_chart = guestConfig.active_chart;
 
-        if (remember) {
-            localStorage.userConfig = JSON.stringify(response);
-        } else {
-            localStorage.removeItem('userConfig');
+                    $.each(guestConfig.charts, function(key, value) {
+                        API.importChart(value, key, username, true);
+                        config.charts[key] = value;
+                    });
+                    User.logged_in = false;
+                } else {
+                    User.logged_in = true;
+                }
+                User.update(config);
+                Menu.init();
+            });
+    },
+
+    logout: () => {
+        var options = {
+            type: 'POST',
+            url: `${API.url}/users/${User.username()}/logout`,
+        };
+
+        API.newRequest(options)
+            .done(function() {
+                User.remove();
+            });
+    },
+
+    stockCharts: () => {
+
+    },
+
+    importChart: (major, name, username, login) => {
+        console.log(`Major: ${major}, Name: ${name}`);
+        username = username ? username : User.username();
+        var options = {
+            type: 'POST',
+            url: `${API.url}/users/${username}/import`,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "target": major,
+                "year": "15-17",
+                "destination": name
+            }),
+        };
+
+        API.newRequest(options)
+            .done(function(response) {
+                if (!login) {
+                    Menu.init();
+                }
+            }).fail(function(response) {
+                console.log(response);
+            });
+    },
+
+    loginStatus: () => {
+        var options = {
+            type: 'GET',
+            url: `${API.url}/users/${User.username()}`,
+        };
+
+        API.newRequest(options)
+            .done(function(response) {
+                User.logged_in = true;
+                Chart.init();
+                Menu.init();
+            }).fail(function(response) {
+                if (response.responseJSON.message === "User tvillare at school cpslo is successfully authenticated for this endpoint") {
+                    User.logged_in = true;
+                    Chart.init();
+                    Menu.init();
+                } else {
+                    User.logged_in = false;
+                }
+            });
+    },
+
+    getUserConfig: () => {
+        var options = {
+            type: 'GET',
+            url: `${API.url}/users/${User.username()}/config`,
         }
-        username = response.username.split('-')[1];
-        getUserCharts();
-    });
 
-    request.fail(function(jqXHR, textStatus, errorThrown) {
-        $(".login-error-text").removeClass("hidden");
-        $("#submit-progress").addClass("hidden");
-    });
-}
+        API.newRequest
+            .done(function(config) {
+                console.log('hi');
+                User.logged_in = true;
+                User.update(config);
+                $("#login-button").addClass('hidden');
+                $("#logout-button").removeClass("hidden");
+            });
+    },
 
-function logout() {
-    var username = userConfig.username.split('-')[1];
-    var url = `${apiURL}users/${username}/logout`;
+    updateUserConfig: (newConfig) => {
+        var username = newConfig.username.split('-')[1];
+        var options = {
+            type: 'POST',
+            url: `${API.url}/users/${username}/config`,
+            contentType: 'application/json',
+            data: JSON.stringify(newConfig),
+        };
 
-    localStorage.removeItem('savedChart');
-    localStorage.removeItem('userConfig');
+        API.newRequest(options)
+            .done(function(response) {
+                Chart.init();
+            });
+    },
 
-    var request = $.post({
-        url: url,
-        success: function(result) {
-            location.reload();
-        },
-        error: function() {
-            location.reload();
+    userCharts: () => {
+
+    },
+
+    addCourseToChart: () => {
+        /*
+        if (User.logged_in) {
+            var chart = User.getActiveChart();
+            var contentType = 'application/json';
+            var request = API.newRequest('POST', `${API.url}/users/${User.username()}/charts`, contentType);
         }
-    });
+        */
+    },
+
+    deleteChart: (name) => {
+        var options = {
+            type: 'DELETE',
+            url: `${API.url}/users/${User.username()}/charts/${name}`
+        };
+        var request = API.newRequest(options);
+    },
+
+    getCourseById: () => {
+
+    },
+
+    updateCourse: data => {
+        var id = data._id;
+        var options = {
+            type: 'PUT',
+            url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}/${id}`,
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+        }
+        console.log(data);
+        API.newRequest(options)
+            .done(function(response) {
+                console.log("Course Updated!", response);
+            }).fail(function(response) {
+                console.log(response);
+            });
+    },
+
+    deleteCourse: (chart, courseId) => {
+        var options = {
+            type: 'DELETE',
+            url: `${API.url}/users/${User.username()}/charts/${chart}/${courseId}`,
+        };
+        API.newRequest(options)
+            .done(function(response) {
+                console.log("Course Deleted!", response);
+            }).fail(function(response) {
+                console.log(response);
+            });
+    },
+
+    getCoursesByDepartment: () => {
+
+    },
+
+    getCourseByCatalog: () => {
+
+    },
+
+    newRequest: options => {
+        return $.ajax({
+            type: options.type,
+            url: options.url,
+            contentType: options.contentType,
+            data: options.data,
+            beforeSend: options.beforeSend,
+        });
+    },
 }
 
 function postChart(major, chartName) {
@@ -94,7 +240,7 @@ function deleteActiveChart() {
                 localStorage.userConfig = JSON.stringify(userConfig);
                 $(".welcome-container").show();
                 $(".header-title").text('Welcome');
-                openMenu();
+                Menu.open();
             }
         });
     } else {
@@ -104,20 +250,6 @@ function deleteActiveChart() {
         localStorage.guestConfig = JSON.stringify(guestConfig);
         $(".welcome-container").show();
         $(".header-title").text('Welcome');
-        openMenu();
-
+        Menu.open();
     }
-}
-
-function deleteCourse(courseId) {
-    var chartName = userConfig.active_chart;
-    var username = userConfig.username.split('-')[1];
-    var request = $.ajax({
-        type: "DELETE",
-        url: `${apiURL}users/${username}/charts/${chartName}/${courseId}`,
-    });
-
-    request.done(function(response) {
-        console.log("Deleted course", courseId);
-    });
 }

@@ -1,5 +1,4 @@
 #menu-button {
-    z-index: 32;
     position: relative;
     width: 55px;
     height: 50px;
@@ -118,7 +117,7 @@
         transform: translateY(50%);
     }
 }
- 
+
 .spinner:before {
     z-index: 100;
     content: '';
@@ -155,7 +154,7 @@
     height: 1rem;
     border: 2px solid #f2f2f2;
 }
- 
+
 .block-select:checked:before {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -170,7 +169,7 @@
     border-top-style: none;
     border-right-style: none;
 }
- 
+
 .block-select:after {
     content: "";
     position: absolute;
@@ -213,10 +212,10 @@
     background-color: white;
     border-radius: 2px;
     background-clip: padding-box;
-    overflow: hidden; 
+    overflow: hidden;
 }
 .progress-bar .indeterminate {
-    background-color: crimson; 
+    background-color: goldenrod;
 }
 .progress-bar .indeterminate:before {
     content: '';
@@ -227,7 +226,7 @@
     bottom: 0;
     will-change: left, right;
     -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
-    animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite; 
+    animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
 }
 @-webkit-keyframes indeterminate {
   0% {
@@ -250,8 +249,21 @@
     left: 100%;
     right: -90%; } }
 
+.popup-disabled {
+    z-index: 30;
+/*    display: none;*/
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.3);
+    cursor: pointer;
+    animation: fadein .15s;
+}
+/*
 .popup-message {
-    z-index: 22;
+    z-index: 31;
     position: fixed;
     width: 90%;
     left: 0;
@@ -265,15 +277,13 @@
     padding: .5em;
     border-radius: 4px;
     background: white;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
     padding-bottom: 0;
     animation: movingUp .15s;
-    transition: all 0.15s ease-in-out;
+    box-shadow: 0 0 50px rgb(100,100,100);
 }
 
-.desktop .popup-message {
-    bottom: auto;
-    top: 8em;
+.ext-popup-message {
+    max-height: 15em;
 }
 
 .popup-description-container {
@@ -316,13 +326,13 @@
 
 .popup-ps {
     margin-left: 1.5em;
-    color: rgba(0,0,0,.52);
+    color: #036228;
 }
 
 .close-popup-message {
     width: 7em;
     height: 2em;
-    background: dodgerblue;
+    background: #036228;
     color: white;
     border-radius: 4px;
     text-align: center;
@@ -348,3 +358,4 @@
     background: black;
     margin: 0;
 }
+*/
