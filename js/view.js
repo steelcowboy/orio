@@ -1,3 +1,71 @@
+var MenuView = {
+    stack: [],
+
+    change: (id, header) => {
+        var view;
+        MenuView.stack.push($('.menu-modal').children());
+
+        switch (id) {
+            case 'department-view':
+                view = MenuView.departmentView();
+            break;
+            case 'course-view':
+                view = MenuView.courseView(header);
+            break;
+        }
+
+        $('.menu-modal').empty().append(Button.header(header)).append(view);
+        $('.back-button').show();
+        if (id == 'department-view') {
+            ChartEditor.setupAutocomplete('department-search');
+        }
+        Menu.open();
+    },
+
+    populate: (id, data) => {
+        var valid_courses = [];
+        switch (id) {
+            case 'menu-course':
+                if ($('.replaceable .block-contents').length) {
+                    $.each($('.replaceable').data().course_data, function(index, course) {
+                        valid_courses.push(course.title);
+                    });
+                }
+                $.each(data, function(index, course_data) {
+                    if (!valid_courses.length || valid_courses.indexOf(course_data.title) >= 0) {
+                        MenuCourse.init({
+                            course_data: course_data,
+                            dest: $('.menu-modal'),
+                        });
+                    }
+                });
+            break;
+        }
+    },
+
+    departmentView: () => {
+        var element = Input.searchWithCompletion('department-search');
+        var view = '<div class="department-results slide-in-right" id="department-results">';
+        $.each(API.departments, function(index, department) {
+            view = view.concat(Button.menuButton({
+                id: '',
+                clickEvent: `MenuView.change('course-view', '${department}')`,
+                text: department,
+                icon: 'keyboard_arrow_right',
+                classes: 'department-item slide-in-right',
+            }));
+        });
+        view = view.concat('</div>')
+        return element.concat(view);
+    },
+
+    courseView: department => {
+        department = department != 'Choose a Course' ? department :
+            $('.replaceable .block-contents').text().trim().split(/\s/g)[0];
+        API.getCoursesByDepartment(department);
+    },
+}
+
 /* Menu Views */
 function newChartBrowserView() {
     var view = Button.header('New Flowchart');

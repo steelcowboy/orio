@@ -1,14 +1,14 @@
-.external-site-modal {
-    display: none;
+.curriculum-sheet {
+    z-index: 21;
     position: fixed;
-    top: 6em;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     background: white;
     animation: slide-up .35s;
 
-    .external-site-nav {
+    .nav-bar {
         display: flex;
         height: 1em;
         width: 100%;
@@ -23,22 +23,12 @@
         }
     }
 
-    .site-container {
-        position: fixed;
-        top: 9em;
-        bottom: 0;
-        left: 0;
-        right: 0;
+    .document-container {
+        height: 100%;
 
         embed {
             height: 100%;
             width: 100%;
         }
-    }
-}
-
-.desktop {
-    .site-container {
-        top: 7em;
     }
 }

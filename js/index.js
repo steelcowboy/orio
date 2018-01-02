@@ -49,7 +49,7 @@ function loadTasks() {
     }
     Menu.init();
     getAvailableCharts();
-    fetchDepartments();
+    API.getDepartments();
 }
 
 function getStartYear() {

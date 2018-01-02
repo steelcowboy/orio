@@ -118,16 +118,24 @@ var User = {
     },
 
     login: () => {
-        var usernameEntered = $("#login-username").val();
+        var usernameEntered = $("#login-username").val().toLowerCase();
         var password = $("#login-password").val();
         var remember = ($("#toggle-rememberMe").find("input").prop('checked'));
-        var header = window.btoa(usernameEntered+":"+password);
+        var header = window.btoa(`${usernameEntered}:${password}`);
         var data = JSON.stringify(remember ? {'remember': 'true'} : '');
+        var beforeSend = function (xhr) {
+            xhr.setRequestHeader ("Authorization", "Basic " + header);
+            $("#submit-progress").removeClass("hidden");
+        }
+
         if (remember)
             localStorage.remember = 'true';
         else
             localStorage.removeItem('remember')
 
-        API.authorize(username, password, header, data);
+        API.authorize({
+            data: data,
+            beforeSend: beforeSend
+        });
     }
 }

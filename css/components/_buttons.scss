@@ -95,7 +95,7 @@
     .back-button {
         cursor: pointer;
         display: none;
-	font-size: 2.5em;
+	    font-size: 2.5em;
         touch-action: manipulation;
         animation: slide-in-right .15s;
     }
@@ -273,5 +273,37 @@ h3.curriculum-sheet-button {
     &:hover {
         background: rgba(0,0,0,0.06);
         color: red;
+    }
+}
+
+.menu-course {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 4em;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+        background: rgba(0,0,0,0.05);
+    }
+
+    &.course-added {
+        border-left: 0.5em solid $header-color;
+    }
+
+    .menu-course-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .menu-course-catalog {
+        font-weight: bold;
+    }
+
+    .menu-course-units {
+        color: darkgray;
     }
 }

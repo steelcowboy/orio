@@ -43,24 +43,17 @@ var ChartEditor = {
         }
     },
 
-    replaceBlock: (blockId, courseUrl) => {
-        var request = $.get({
-            url: `${apiURL}courses/${courseUrl}`
-        });
-
-        request.done(function(data) {
-            data = {block_metadata: {}, course_data: data};
-            var oldBlock = $('#'+blockId).parent();
-            data.block_metadata.course_type = oldBlock.attr('class').split(' ')[1];
-            Block.init({
-                destination: oldBlock,
-                initType: 'replace',
-                header: Block.getHeader(data.block_metadata, data.course_data),
-                data: data,
-                className: data.block_metadata.course_type,
-                contents: data.course_data.title,
-                id: data.course_data._id,
-            });
+    replaceBlock: (oldBlock, course_data) => {
+        data = {block_metadata: {}, course_data: course_data};
+        data.block_metadata.course_type = oldBlock.attr('class').split(' ')[1];
+        Block.init({
+            destination: oldBlock,
+            initType: 'replace',
+            header: Block.getHeader(data.block_metadata, data.course_data),
+            data: data,
+            className: data.block_metadata.course_type,
+            contents: data.course_data.title,
+            id: data.course_data._id,
         });
         Menu.stack = [];
         Menu.init();
@@ -157,6 +150,28 @@ var ChartEditor = {
 
     disableEditButtons: () => {
         $('.edit-action-button').removeClass('clickable');
+    },
+
+    setupAutocomplete: (id) => {
+        $('#'+id).autocomplete({
+            source: API.departments,
+            open: function(e, ui) {
+                var list = [];
+                var element = ``;
+                var results = $('.ui-widget-content li');
+                results.each(function() {
+                    var value = $(this).text();
+                    element = element.concat(Button.menuButton({
+                        id: '',
+                        clickEvent: `MenuView.change('course-view', '${value}')`,
+                        text: value,
+                        icon: 'keyboard_arrow_right',
+                        classes: 'department-item slide-in-right',
+                    }));
+                });
+                $('#department-results').html(element);
+            }
+        });
     }
 }
 
@@ -264,7 +279,7 @@ function openMultiCourseSelector(block) {
 
     changeWindow('multi-course-selector', "Choose a Course", courseList);
 }
-var stuff = 'hi';
+
 function setupSortable(items, cancel, connectWith) {
     $(".quarter").sortable({
         items: items,

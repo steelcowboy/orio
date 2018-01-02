@@ -6,13 +6,13 @@ var Menu = {
         $menuModal.empty();
         $('.back-button').fadeOut('fast');
         $menuModal.append(
-            MenuView.main()
+            TempMenu.main()
         );
     },
 
     reloadCharts: () => {
         $('.flowchart-section').empty().append(
-            MenuView.ChartSelectButtons()
+            TempMenu.ChartSelectButtons()
         );
     },
 
@@ -36,6 +36,7 @@ var Menu = {
         $("#menu-button").removeClass("open").addClass("closed");
         $(".menu-modal").addClass("slide-out-left");
         $(".menu-modal, .popup-message, .disabled, .back-button, .block-menu").fadeOut("fast");
+        $('.replaceable').removeClass('replaceable');
 
         if ($('.base').hasClass('base-editing')) {
             $('.menu-nav-buttons').addClass('hidden');
@@ -43,10 +44,10 @@ var Menu = {
     },
 
     back: () => {
-        var window = Menu.stack.pop();
-        $(".menu-modal").html(window);
+        var view = MenuView.stack.length ? MenuView.stack.pop() : Menu.stack.pop();
+        $(".menu-modal").html(view);
         $(".menu-modal").children().addClass("slide-in-left");
-        if (Menu.stack.length == 0) {
+        if (Menu.stack.length == 0 && MenuView.stack.length == 0) {
             $(".back-button").fadeOut("fast");
         }
         setupAutocomplete();
@@ -136,3 +137,5 @@ function changeWindow(target, title=null, optionalData = null) {
     $(".menu-modal").empty().append(element);
     Menu.stack.push(currentWindow.toArray());
 }
+
+

@@ -6,6 +6,7 @@ var Chart = {
     ge_areas: ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'B6', 'C1', 'C2', 'C3', 'C4', 'D1', 'D2', 'D3', 'D4'],
     ge_count: 0,
     pendingBlocks: {},
+    course_list: [],
 
     init: () => {
         var startYear = ChartUpdater.getStartYear();
@@ -17,6 +18,7 @@ var Chart = {
             var yearOptions = {
                 title: titles[i],
                 year: startYear+i,
+                yearSpan: `(${(startYear + i)}-${(startYear + i+1).toString().substr(-2)})`,
                 id: `year${i+1}`,
                 showSummerQuarter: localStorage.summerQuarter == "true",
                 value: i+1,
@@ -82,7 +84,10 @@ var Chart = {
             var year = block.closest('.year').attr('value');
             var season = block.closest('.quarter').attr('value');
 
-            course_data.time = [parseInt(year), season];
+            block_metadata.time = [parseInt(year), season];
+            if (course_data) {
+                course_data.time = [parseInt(year), season];
+            }
             block.data(data);
 
             if (User.logged_in) {
@@ -96,15 +101,6 @@ var Chart = {
         $('.header-title').text('Welcome');
         $('.welcome-container').show();
         Chart.ge_count = 0;
-    },
-
-    curriculumSheet: (title) => {
-        var startYear = ChartUpdater.getStartYear() - 2000;
-
-        var url = `pdf/${title}.pdf`;
-        $('.site-container').html(`<embed src="${url}"/>`);
-        Menu.close();
-        $('.external-site-modal').show();
     },
 
     tab: (tabId) => {
@@ -159,19 +155,17 @@ var Chart = {
         return Chart.ge_areas[Chart.ge_count++];
     },
 
-    displayPopup: course_data => {
+    markReplace: el => {
+        var block = $(el).closest('.block-outline');
+        block.addClass('replaceable');
     },
-    /*
-    displayPopup: (name, catalog, description, prereqs, units, type, isTech) => {
-       $('.popup-disabled').show();
-       var popup = Popup.courseInfo(name, catalog, description, prereqs, units, type);
-       if (catalog === 'General Ed') {
-            popup = Popup.emptyCourseInfo(name, catalog, units, type);
-       } else if (catalog == 'undefined') {
-            popup = Popup.emptyCourseInfo('Use edit mode to choose',
-                                          'Multiple Choices', 4, 'general-ed');
-       }
-       $('body').append(popup);
-    },
-    */
+
+    addCourse: (id) => {
+        var course_data = $(`#${id}`).data();
+
+        if ($('.replaceable').length) {
+            var block = $('.replaceable');
+            ChartEditor.replaceBlock(block, course_data);
+        }
+    }
 }

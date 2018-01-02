@@ -30,7 +30,8 @@ var Year = {
         return `
             <div class="year" id="${options.id}" name="${options.year}" value="${options.value}">
                 <div class="head">
-                    <h2>${options.title}</h2>
+                    <h2 class="year-title">${options.title}</h2>
+                    <h4 class="year-span">${options.yearSpan}</h4>
                 </div>
                 <div class="quarter-holder"></div>
             </div>
@@ -67,6 +68,9 @@ var Block = {
             options.destination.replaceWith(block);
         } else {
             options.destination.append(block);
+        }
+        if (!options.data.block_metadata) {
+            options.data.block_metadata = API.getBlockMetadata($(block), options.data.course_data);
         }
 
         $(id).parent().data(options.data);
@@ -121,8 +125,8 @@ var Block = {
         if (!(options.genericCourse || options.multiCourse))
             return '';
         var clickEvent = options.genericCourse ?
-            'openCourseSelector(this.parentNode); return false;' :
-            'openMultiCourseSelector(this.parentNode); return false;'
+            `Chart.markReplace(this); MenuView.change('department-view', 'Departments'); return false;` :
+            `Chart.markReplace(this); MenuView.change('course-view', 'Choose a Course'); return false;`
         return `
             <div class="course-specify-button" onclick="${clickEvent}">
                 <i class="material-icons">edit</i>
@@ -161,7 +165,7 @@ var Block = {
             }
             return data.block_metadata.elective_title;
         }
-        return data.course_data.title;
+        return data.course_data ? data.course_data.title : 'Undefined';
     },
 
     getCourseType: (block_metadata, course_data) => {
@@ -205,6 +209,15 @@ var Button = {
         `;
     },
 
+    menuButton: options => {
+        return `
+            <h3 class="menu-option ${options.classes}" id="${options.id}" onclick="${options.clickEvent}">
+                ${options.text}
+                <i class="material-icons">${options.icon}</i>
+            </h3>
+        `;
+    },
+
     menuOption: (id, clickEvent, text, icon) => {
         return `
             <h3 class="menu-option slide-in-right" id="${id}" onclick="${clickEvent}">
@@ -235,7 +248,7 @@ var Button = {
     curriculumSheet: (major) => {
         return `
             <h3 class="button curriculum-sheet-button"
-             onclick="Chart.curriculumSheet('${major}'); return false">
+             onclick="CurriculumSheet.init('${major}'); return false">
                 Curriculum Sheet
             </h3>
         `;
@@ -259,6 +272,35 @@ var Button = {
     }
 }
 
+var CurriculumSheet = {
+    init: (title) => {
+        var element = CurriculumSheet.element({
+            url: `pdf/${title}.pdf`
+        });
+        Menu.close();
+        $('body').append(element);
+    },
+
+    element: (options) => {
+        return `
+            <div class="curriculum-sheet">
+                <div class="nav-bar">
+                    <p onclick="CurriculumSheet.remove(); Menu.open()">&times;</p>
+                </div>
+                <div class="document-container">
+                    <embed src="${options.url}"></embed>
+                </div>
+            </div>
+        `;
+    },
+
+    remove: () => {
+        $('.curriculum-sheet').fadeOut('fast', function() {
+            $('.curriculum-sheet').remove();
+        });
+    }
+}
+
 var Input = {
     searchWithCompletion: (id) => {
         return `
@@ -267,23 +309,6 @@ var Input = {
             </div>`;
     }
 }
-
-var View = {
-    curriculumSheet: () => {
-        var view = '';
-        var charts = User.getCharts();
-
-        $.each(charts, function(stockName, name) {
-	        stockName = stockName.replace(/'/g,'');
-            view = view.concat(
-                Button.menuOption('', "Chart.curriculumSheet('"+name+"')", stockName, '')
-            );
-        });
-
-        return view;
-    }
-}
-
 
 /* Chart Builder Components */
 
@@ -408,7 +433,7 @@ var Popup = {
     },
 }
 
-var MenuView = {
+var TempMenu = {
     main: () => {
         var loggedIn = User.logged_in;
         var view = `
@@ -418,7 +443,7 @@ var MenuView = {
             <h3 class="subheader slide-right">Flowcharts</h3>
             <div class="flowchart-section">
         `;
-        view = view.concat(MenuView.ChartSelectButtons());
+        view = view.concat(TempMenu.ChartSelectButtons());
         view = view.concat(`
             </div>
             <div class="menu-profile-section slide-right">
@@ -463,4 +488,26 @@ var MenuView = {
     }
 }
 
+var MenuCourse = {
+    init: options => {
+        var course = MenuCourse.element(options.course_data);
+        options.dest.append(course);
+        course = $(`#${options.course_data._id}-course`);
+        course.data(options.course_data);
+    },
 
+    element: course_data => {
+        var isAdded = $(`.block-contents:contains('${course_data.title}')`).length;
+        return `
+            <div class="menu-course ${isAdded ? 'course-added' : ''}"
+             id="${course_data._id}-course"
+             onclick="Chart.addCourse(this.id)">
+                <div class="menu-course-header">
+                    <span class="menu-course-catalog">${course_data.dept} ${course_data.course_number}</span>
+                    <span class="menu-course-units">${course_data.units} Units</span>
+                </div>
+                <div class="menu-course-title">${course_data.title}</div>
+            </div>
+        `;
+    },
+}

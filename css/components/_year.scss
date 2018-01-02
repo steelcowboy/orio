@@ -45,6 +45,17 @@
     }
 
     .head {
-        display: block !important;
+        display: flex !important;
+        justify-content: center;
+
+        .year-title, .year-span {
+            margin: 0.5em 1em;
+        }
+
+        .year-span {
+            margin-top: 0.84em;
+            margin-left: -1em;
+            color: gray;
+        }
     }
 }

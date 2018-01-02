@@ -393,6 +393,27 @@ h3.curriculum-sheet-button {
     background: rgba(0, 0, 0, 0.06);
     color: red; }
 
+.menu-course {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-height: 4em;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: all 0.15s ease-in-out; }
+  .menu-course:hover {
+    background: rgba(0, 0, 0, 0.05); }
+  .menu-course.course-added {
+    border-left: 0.5em solid #16AC61; }
+  .menu-course .menu-course-header {
+    display: flex;
+    justify-content: space-between; }
+  .menu-course .menu-course-catalog {
+    font-weight: bold; }
+  .menu-course .menu-course-units {
+    color: darkgray; }
+
 .menu-form, #chart-name-form {
   width: 80%;
   margin-left: 1.6em; }
@@ -495,7 +516,7 @@ input:checked + .toggle:before {
     width: auto;
     animation: welcome-fade 2s; }
   .welcome-container h3 {
-    font-family: avenir;
+    font-family: avenir, sans-serif;
     font-weight: 400;
     color: #15522c;
     font-size: 2.5em;
@@ -605,7 +626,14 @@ input:checked + .toggle:before {
   min-width: 35em;
   margin-left: 1.5em; }
 .desktop .head {
-  display: block !important; }
+  display: flex !important;
+  justify-content: center; }
+  .desktop .head .year-title, .desktop .head .year-span {
+    margin: 0.5em 1em; }
+  .desktop .head .year-span {
+    margin-top: 0.84em;
+    margin-left: -1em;
+    color: gray; }
 
 .quarter-holder {
   width: 100%;
@@ -1163,38 +1191,31 @@ body {
   color: red;
   margin-bottom: -0.5em; }
 
-.external-site-modal {
-  display: none;
+.curriculum-sheet {
+  z-index: 21;
   position: fixed;
-  top: 6em;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   background: white;
   animation: slide-up .35s; }
-  .external-site-modal .external-site-nav {
+  .curriculum-sheet .nav-bar {
     display: flex;
     height: 1em;
     width: 100%;
     justify-content: flex-end;
     font-size: 3em;
     color: #646464; }
-    .external-site-modal .external-site-nav p {
+    .curriculum-sheet .nav-bar p {
       margin: 0.4em;
       line-height: 0;
       cursor: pointer; }
-  .external-site-modal .site-container {
-    position: fixed;
-    top: 9em;
-    bottom: 0;
-    left: 0;
-    right: 0; }
-    .external-site-modal .site-container embed {
+  .curriculum-sheet .document-container {
+    height: 100%; }
+    .curriculum-sheet .document-container embed {
       height: 100%;
       width: 100%; }
-
-.desktop .site-container {
-  top: 7em; }
 
 /* 3rd Party */
 .tabs {

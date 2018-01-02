@@ -35,21 +35,24 @@ function showCourseSelector() {
 
 function setupAutocomplete(id) {
     var input = $(`#${id}`);
+    console.log(input);
     input.autocomplete({
-        source: departments,
+        source: API.departments,
         open: function(e, ui) {
             var list = [];
             var element = ``;
             var results = $('.ui-widget-content li');
             results.each(function() {
                 var value = $(this).text();
-                element = element.concat(`
-                    <h3 class="menu-option department-item" name="${value}" onclick="fetchDepartmentCourses('${value}')">
-                        ${value}
-                    </h3>
-                `);
+                element = element.concat(Button.menuButton({
+                    id: '',
+                    clickEvent: `MenuView.change('course-view', '${value}')`,
+                    text: value,
+                    icon: 'keyboard_arrow_right',
+                    classes: 'department-item slide-in-right',
+                }));
             });
-            $('#departmentResults').html(element);
+            $('#department-results').html(element);
         }
     });
 }
@@ -127,7 +130,7 @@ function fetchCourse(courseItem) {
             data: data,
             className: Block.getCourseType(data.block_metadata, data.course_data),
             contents: data.course_data.title,
-            id: data._id,
+            id: data.course_data._id,
         });
 
         Menu.init();
