@@ -83,6 +83,16 @@
     color: white;
 }
 
+.block-comment-ribbon {
+    position: absolute;
+    width: 2em;
+    top: 0;
+    right: 0;
+    text-align: center;
+    color: #c79b9b;
+    line-height: 3em;
+}
+
 /* Menu Modal */
 
 .menu-nav-buttons {
@@ -285,6 +295,7 @@ h3.curriculum-sheet-button {
     border-bottom: 1px solid rgba(0,0,0,0.12);
     cursor: pointer;
     transition: all 0.15s ease-in-out;
+    border-left: 0.5em solid transparent;
 
     &:hover {
         background: rgba(0,0,0,0.05);
@@ -305,5 +316,14 @@ h3.curriculum-sheet-button {
 
     .menu-course-units {
         color: darkgray;
+    }
+
+    .menu-course-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-height: 1em;
     }
 }

@@ -251,6 +251,15 @@ h3, h4, h5, h6 {
   border-radius: 50%;
   color: white; }
 
+.block-comment-ribbon {
+  position: absolute;
+  width: 2em;
+  top: 0;
+  right: 0;
+  text-align: center;
+  color: #c79b9b;
+  line-height: 3em; }
+
 /* Menu Modal */
 .menu-nav-buttons {
   position: fixed;
@@ -401,7 +410,8 @@ h3.curriculum-sheet-button {
   padding: 0.5em 1em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   cursor: pointer;
-  transition: all 0.15s ease-in-out; }
+  transition: all 0.15s ease-in-out;
+  border-left: 0.5em solid transparent; }
   .menu-course:hover {
     background: rgba(0, 0, 0, 0.05); }
   .menu-course.course-added {
@@ -413,6 +423,13 @@ h3.curriculum-sheet-button {
     font-weight: bold; }
   .menu-course .menu-course-units {
     color: darkgray; }
+  .menu-course .menu-course-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1em; }
 
 .menu-form, #chart-name-form {
   width: 80%;
@@ -437,6 +454,10 @@ h3.curriculum-sheet-button {
     filter: brightness(0.8); }
 
 .department-searchbar {
+  width: 90%;
+  margin: 0 auto; }
+
+.textarea-container {
   width: 90%;
   margin: 0 auto; }
 
@@ -894,7 +915,8 @@ input:checked + .toggle:before {
     .popup-window .prereq-container .popup-section-title {
       color: #ad2929; }
   .popup-window .description-container {
-    max-height: 6.4em; }
+    max-height: 6.4em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
   .popup-window .notes-container {
     max-height: 3em; }
     .popup-window .notes-container .popup-section-title {
@@ -1178,7 +1200,7 @@ body {
   padding-left: .7em;
   margin: 0;
   margin-top: -1em;
-  padding-left: 1.5em;
+  padding: 1.5em;
   color: rgba(0, 0, 0, 0.52); }
 
 .login-img-container {

@@ -110,7 +110,6 @@ var ChartEditor = {
         var chartContainer = $(".base");
         var block = $(".block-outline");
         $('#send-to-pp-button').addClass('edit-action-button');
-        $('.menu-modal').children().css('opacity', '0');
         $('.edit-icon').addClass('hidden');
         $('.check-icon').removeClass('hidden');
 
@@ -128,7 +127,6 @@ var ChartEditor = {
 
     view: () => {
         var chartContainer = $(".base");
-        $('.menu-modal').children().css('opacity', '1');
         chartContainer.removeClass("base-editing");
         $(".selected-block").removeClass("selected-block");
         $(".menu-nav-buttons").removeClass('hidden');
@@ -153,7 +151,7 @@ var ChartEditor = {
     },
 
     setupAutocomplete: (id) => {
-        $('#'+id).autocomplete({
+        $('#department-search').autocomplete({
             source: API.departments,
             open: function(e, ui) {
                 var list = [];
@@ -172,7 +170,11 @@ var ChartEditor = {
                 $('#department-results').html(element);
             }
         });
-    }
+    },
+
+    addComment: () => {
+        MenuView.change('comment', 'Add a Comment');
+    },
 }
 
 var ChartUpdater = {
@@ -246,7 +248,7 @@ var ChartUpdater = {
             return config.start_year;
         }
         return 2015;
-    }
+    },
 }
 
 function openCourseSelector(block) {

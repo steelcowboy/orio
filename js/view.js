@@ -3,15 +3,18 @@ var MenuView = {
 
     change: (id, header) => {
         var view;
-        MenuView.stack.push($('.menu-modal').children());
+        Menu.stack.push($('.menu-modal').children());
 
         switch (id) {
             case 'department-view':
                 view = MenuView.departmentView();
-            break;
+                break;
             case 'course-view':
                 view = MenuView.courseView(header);
-            break;
+                break;
+            case 'comment-view':
+                view = MenuView.commentView();
+                break;
         }
 
         $('.menu-modal').empty().append(Button.header(header)).append(view);
@@ -32,10 +35,12 @@ var MenuView = {
                     });
                 }
                 $.each(data, function(index, course_data) {
+                    var isAdded = $(`.block-contents:contains('${course_data.title}')`).length;
                     if (!valid_courses.length || valid_courses.indexOf(course_data.title) >= 0) {
                         MenuCourse.init({
                             course_data: course_data,
                             dest: $('.menu-modal'),
+                            classes: `slide-in-right ${isAdded ? 'course-added' : ''}`,
                         });
                     }
                 });
@@ -63,6 +68,14 @@ var MenuView = {
         department = department != 'Choose a Course' ? department :
             $('.replaceable .block-contents').text().trim().split(/\s/g)[0];
         API.getCoursesByDepartment(department);
+        return Button.subheader("Note: Courses already added are marked in green");
+    },
+
+    commentView: () => {
+        console.log("hi");
+        return `
+            ${Input.textArea('Type here')}
+        `;
     },
 }
 

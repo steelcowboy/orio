@@ -64,6 +64,9 @@ var Chart = {
             var className = block_metadata ?
                 block_metadata.course_type.toLowerCase().split(' ').join('-') : '';
 
+            if (block_metadata._id == "5a4c259869db4e182162433c") {
+                console.log(value);
+            }
             Block.init({
                 destination: dest,
                 header: Block.getHeader(block_metadata, course_data),
@@ -91,7 +94,7 @@ var Chart = {
             block.data(data);
 
             if (User.logged_in) {
-                API.updateCourse(block_metadata);
+                API.updateCourse(data);
             }
         });
     },
@@ -158,14 +161,30 @@ var Chart = {
     markReplace: el => {
         var block = $(el).closest('.block-outline');
         block.addClass('replaceable');
+        $('.selected-block').removeClass('selected-block');
     },
 
     addCourse: (id) => {
         var course_data = $(`#${id}`).data();
+        var data = {block_metadata: {}, course_data: course_data};
+        id = id.split('-')[0];
 
         if ($('.replaceable').length) {
             var block = $('.replaceable');
             ChartEditor.replaceBlock(block, course_data);
+        } else {
+            Block.init({
+                destination: $('.appending'),
+                initType: 'append',
+                header: Block.getHeader(data.block_metadata, data.course_data),
+                data: data,
+                contents: Block.getSubtitle(data),
+                className: 'blank',
+                id: id,
+            });
+            var data = $(`#${id}`).parent().data();
+            Menu.close();
+            API.addCourseToChart(data);
         }
     }
 }

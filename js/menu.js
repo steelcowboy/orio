@@ -3,6 +3,7 @@ var Menu = {
 
     init: () => {
         var $menuModal = $('.menu-modal');
+        Menu.stack = [];
         $menuModal.empty();
         $('.back-button').fadeOut('fast');
         $menuModal.append(
@@ -44,13 +45,13 @@ var Menu = {
     },
 
     back: () => {
-        var view = MenuView.stack.length ? MenuView.stack.pop() : Menu.stack.pop();
-        $(".menu-modal").html(view);
-        $(".menu-modal").children().addClass("slide-in-left");
-        if (Menu.stack.length == 0 && MenuView.stack.length == 0) {
+        var view = Menu.stack.pop();
+        if (Menu.stack.length == 0) {
             $(".back-button").fadeOut("fast");
         }
-        setupAutocomplete();
+        $(".menu-modal").html(view);
+        $(".menu-modal").children().addClass("slide-in-left");
+        ChartEditor.setupAutocomplete();
     }
 }
 
@@ -109,9 +110,6 @@ function changeWindow(target, title=null, optionalData = null) {
             break;
         case "settings-button":
             view = newSettingsView();
-            break;
-        case "login-button":
-            view = newLoginView();
             break;
         case "department-selector":
             view = newDepartmentSelectorView(optionalData);

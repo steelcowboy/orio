@@ -13,7 +13,7 @@ var Year = {
 
         $('.year-holder').append(Year.element(yearOptions));
         for (var i=0; i < numQuarters; i++) {
-            var fullSeason = `${seasons[i]} ${yearOptions.year}`;
+            var fullSeason = `${seasons[i]} ${i > 0 ? yearOptions.year+1 : yearOptions.year}`;
             var quarterOptions = {
                 destination: $(`#${yearOptions.id}`),
                 season: seasons[i],
@@ -69,7 +69,7 @@ var Block = {
         } else {
             options.destination.append(block);
         }
-        if (!options.data.block_metadata) {
+        if ($.isEmptyObject(options.data.block_metadata)) {
             options.data.block_metadata = API.getBlockMetadata($(block), options.data.course_data);
         }
 
@@ -114,6 +114,9 @@ var Block = {
         }
 
         return `
+            <div class="block-comment-ribbon ${options.comment ? '' : 'hidden'}">
+                <i class="material-icons">comment</i>
+            </div>
             <h3 class="block-header">${header}</h3>
             <div class="block-contents">${contents}</div>
             <h5 class="block-units">${units} Units</h5>
@@ -262,6 +265,14 @@ var Button = {
         `;
     },
 
+    subheader: (text) => {
+        return `
+            <h3 class='modal-subheader slide-in-right'>
+                ${text}
+            </h3>
+        `;
+    },
+
     headerButton: (id, clickEvent, icon) => {
         return `
             <div class="header-button"
@@ -307,6 +318,14 @@ var Input = {
             <div class = "ui-widget department-searchbar slide-in-right">
                 <input class="input-field" id ="${id}" autofocus placeholder="Search" maxlength="4">
             </div>`;
+    },
+
+    textArea: placeholder => {
+        return `
+            <div class="textarea-container slide-in-right">
+                <input type="text" autofocus class="input-field" placeholder="${placeholder}">
+            </div>
+        `;
     }
 }
 
@@ -490,16 +509,16 @@ var TempMenu = {
 
 var MenuCourse = {
     init: options => {
-        var course = MenuCourse.element(options.course_data);
+        var course = MenuCourse.element(options);
         options.dest.append(course);
         course = $(`#${options.course_data._id}-course`);
         course.data(options.course_data);
     },
 
-    element: course_data => {
-        var isAdded = $(`.block-contents:contains('${course_data.title}')`).length;
+    element: options => {
+        var course_data = options.course_data;
         return `
-            <div class="menu-course ${isAdded ? 'course-added' : ''}"
+            <div class="menu-course ${options.classes}"
              id="${course_data._id}-course"
              onclick="Chart.addCourse(this.id)">
                 <div class="menu-course-header">

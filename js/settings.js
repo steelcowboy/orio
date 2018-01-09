@@ -26,6 +26,7 @@ function toggleSuperSenior(toggle) {
     var value = !($(toggle).find("input").prop('checked'));
     if (value) {
         localStorage.superSenior = true;
+        $('#5-tab').removeClass('hidden');
     } else {
         $("#5-tab").addClass("hidden");
         localStorage.removeItem('superSenior');

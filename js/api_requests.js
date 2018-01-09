@@ -133,17 +133,24 @@ var API = {
 
     },
 
-    addCourseToChart: () => {
+    addCourseToChart: (data) => {
+        var course_data = data.course_data;
+        var block_metadata = data.block_metadata;
+
         if (User.logged_in) {
-            var options = {
+            console.log(block_metadata);
+            console.log("Course not actually added. This endpoint is disabled");
+            API.newRequest({
                 type: 'POST',
                 url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}`,
-
-            }
-
-            var chart = User.getActiveChart();
-            var contentType = 'application/json';
-            var request = API.newRequest('POST', `${API.url}/users/${User.username()}/charts`, contentType);
+                contentType: 'application/json',
+                data: JSON.stringify(block_metadata),
+            }).done(function(response) {
+                data.block_metadata._id = response._id;
+                Chart.pendingBlocks = [];
+                Chart.pendingBlocks.push(data);
+                Chart.update();
+            });
         }
     },
 
@@ -160,14 +167,18 @@ var API = {
     },
 
     updateCourse: data => {
-        var id = data._id;
+        var block_metadata = data.block_metadata;
+        var id = block_metadata._id;
         var options = {
             type: 'PUT',
             url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}/${id}`,
             contentType: 'application/json',
-            data: JSON.stringify(data),
+            data: JSON.stringify(block_metadata),
         }
         API.newRequest(options)
+            .done(function(response) {
+                console.log(response);
+            })
             .fail(function(response) {
                 console.log('Unable to update course');
                 console.log(response);
@@ -218,14 +229,12 @@ var API = {
         var id = course_data && course_data.length ? course_data[0]._id : course_data._id;
 
 		return {
-            catalog_id: id,
             course_type: course_type,
             department: course_data.dept,
             flags: [],
             ge_type: [],
             notes: 'Course added by user',
             time: [parseInt(year), season],
-            _id: id,
         }
     },
 

@@ -27,7 +27,8 @@ $(document).ready(function() {
 
 $.ajaxSetup({
     beforeSend:function() {
-        $(".loading").addClass("progress-bar");
+        if (!User.logged_in)
+            $(".loading").addClass("progress-bar");
     },
     complete:function() {
         $(".loading").removeClass("progress-bar");

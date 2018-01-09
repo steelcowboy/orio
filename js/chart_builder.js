@@ -1,13 +1,12 @@
 $(document).on('click', '.add-block-button', function() {
-    if (!$(this).parent().hasClass("appending") || menuStack.length == 0) {
+    if (!$(this).parent().hasClass("appending") || Menu.stack.length == 0) {
         Menu.init();
         $(".quarter").removeClass("appending");
         $(this).parent().addClass("appending");
-        showCourseSelector();
+        MenuView.change('department-view', 'Departments');
     } else {
         Menu.open();
     }
-    disableChart();
 });
 
 function setupBuilder() {
