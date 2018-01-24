@@ -77,6 +77,7 @@ var Chart = {
             });
         });
         $('.quarter').append(`<div class="add-block-button">&plus;</div>`);
+        ChartUpdater.countUnits();
     },
 
     update: () => {

@@ -72,6 +72,15 @@
         }
     }
 
+    .popup-info {
+        max-height: 18em;
+        overflow: auto;
+
+        @media screen and (max-width: 750px) {
+            max-height: 48em;
+        }
+    }
+
     .popup-section {
         display: flex;
         padding: 1em 2em;
@@ -89,7 +98,7 @@
 
     .prereq-container {
         height: 15%;
-        max-height: 4em;
+        //max-height: 4em;
         border-bottom: 1px solid rgba(0,0,0,0.12);
 
         .popup-section-title {
@@ -98,12 +107,12 @@
     }
 
     .description-container {
-        max-height: 6.4em;
+        //max-height: 6.4em;
         border-bottom: 1px solid rgba(0,0,0,0.12);
     }
 
     .notes-container {
-        max-height: 3em;
+        //max-height: 3em;
 
         .popup-section-title {
             color: #4d8cca;

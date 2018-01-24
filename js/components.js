@@ -189,7 +189,7 @@ var Block = {
                 },
                 'notes-container': {
                     title: 'Notes',
-                    text: data.block_metadata ? data.block_metadata.notes ? data.block_metadata.notes : 'None' : 'None'
+                    text: data.block_metadata ? data.block_metadata.notes ? data.block_metadata.notes : null : null
                 }
             }
         } else {
@@ -390,7 +390,9 @@ var Popup = {
                     ${Popup.header(options)}
                 </div>
                 <div class="popup-body">
-                    ${Popup.body(options.sections)}
+                    <div class="popup-info">
+                        ${Popup.body(options.sections)}
+                    </div>
                     ${options.button ? Popup.button(options.button) : ''}
                 </div>
             </div>
@@ -413,11 +415,13 @@ var Popup = {
     body: options => {
         var view = '';
         $.each(options, function(key, section) {
-            view = view.concat(Popup.section({
-                class: key,
-                title: section.title,
-                text: section.text,
-            }));
+            if (section.text) {
+                view = view.concat(Popup.section({
+                    class: key,
+                    title: section.title,
+                    text: section.text,
+                }));
+            }
         });
         return view;
     },

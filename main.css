@@ -899,6 +899,12 @@ input:checked + .toggle:before {
       text-align: center;
       font-size: 1.5em;
       color: rgba(0, 0, 0, 0.4); }
+  .popup-window .popup-info {
+    max-height: 18em;
+    overflow: auto; }
+    @media screen and (max-width: 750px) {
+      .popup-window .popup-info {
+        max-height: 48em; } }
   .popup-window .popup-section {
     display: flex;
     padding: 1em 2em; }
@@ -910,17 +916,13 @@ input:checked + .toggle:before {
       overflow: auto; }
   .popup-window .prereq-container {
     height: 15%;
-    max-height: 4em;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
     .popup-window .prereq-container .popup-section-title {
       color: #ad2929; }
   .popup-window .description-container {
-    max-height: 6.4em;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
-  .popup-window .notes-container {
-    max-height: 3em; }
-    .popup-window .notes-container .popup-section-title {
-      color: #4d8cca; }
+  .popup-window .notes-container .popup-section-title {
+    color: #4d8cca; }
   .popup-window .button-container {
     position: absolute;
     bottom: 0;
