@@ -33,7 +33,9 @@ var Menu = {
     },
 
     close: () => {
-        $('.floating-plus-button').show();
+        if (User.getActiveChart()) {
+            $('.floating-plus-button').show();
+        }
         $("#menu-button").removeClass("open").addClass("closed");
         $(".menu-modal").addClass("slide-out-left");
         $(".menu-modal, .popup-message, .disabled, .back-button, .block-menu").fadeOut("fast");

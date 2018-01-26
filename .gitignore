@@ -1,2 +1,6 @@
 css/.sass-cache/
 *.swp
+.DS_Store
+._.DS_Store
+Blue/
+main.css.map

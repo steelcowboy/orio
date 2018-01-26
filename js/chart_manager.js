@@ -187,5 +187,5 @@ var Chart = {
             Menu.close();
             API.addCourseToChart(data);
         }
-    }
+    },
 }

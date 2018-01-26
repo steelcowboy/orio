@@ -13,7 +13,7 @@ var API = {
         API.newRequest(options)
             .done(function(config) {
                 User.logged_in = true;
-                API.mergeGuestCharts(config);
+                //API.mergeGuestCharts(config);
                 User.update(config);
                 Menu.init();
             }).fail(function() {
@@ -72,10 +72,10 @@ var API = {
         };
 
         API.newRequest(options)
-            .done(function(response) {
-                if (!login) {
-                    Menu.init();
-                }
+            .done(function(config) {
+                User.update(config, /* don't POST */ true);
+                User.setActiveChart(name);
+                Menu.init();
             }).fail(function(response) {
                 console.log(response);
             });
@@ -155,11 +155,16 @@ var API = {
     },
 
     deleteChart: (name) => {
-        var options = {
+        var request = API.newRequest({
             type: 'DELETE',
             url: `${API.url}/users/${User.username()}/charts/${name}`
-        };
-        var request = API.newRequest(options);
+        }).done(function(config){
+            var config = User.data();
+            console.log("Chart deleted");
+            User.update(config, true);
+            if (config && config.charts.length)
+                User.setActiveChart(data.charts[0]);
+        });
     },
 
     getCourseById: () => {

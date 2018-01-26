@@ -24,14 +24,26 @@
 
 .general-ed {
     background: $general-color;
+
+    .block-units {
+        background: $general-color;
+    }
 }
 
 .minor {
     background: $minor-color;
+
+    .block-units {
+        background: $minor-color;
+    }
 }
 
 .concentration {
     background: $concentration-color;
+
+    .block-units {
+        background: $concentration-color;
+    }
 }
 
 .blank {

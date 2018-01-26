@@ -44,11 +44,11 @@ var User = {
         return config.charts[activeChart];
     },
 
-    setActiveChart: (chart) => {
+    setActiveChart: (chart, noPost) => {
         var config = User.data();
         if (config.active_chart !== chart) {
             config.active_chart = chart;
-            User.update(config);
+            User.update(config, noPost);
         }
 
         $('.chart-select-component').each(function() {
@@ -74,6 +74,10 @@ var User = {
     },
 
     getStartYear: () => {
+        if (!User.logged_in) {
+            changeWindow('login-button');
+            return;
+        }
         var config = User.data();
         if (config.start_year) {
             changeWindow('chart-browser');
@@ -84,12 +88,8 @@ var User = {
 
     addChart: (major) => {
         var title = $('#chart-name-input').val();
-        $('#chart-name-input').blur();
-        var config = User.data();
 
-        config.charts[`${title}`] = major;
-        config.active_chart = title;
-        User.update(config);
+        $('#chart-name-input').blur();
 
         if (User.logged_in) {
             API.importChart(major, title);
@@ -98,9 +98,11 @@ var User = {
         }
     },
 
-    update: (newConfig) => {
+    update: (newConfig, noPost) => {
         if (User.logged_in) {
-            API.updateUserConfig(newConfig);
+            if (!noPost) {
+                API.updateUserConfig(newConfig);
+            }
             localStorage.userConfig = JSON.stringify(newConfig);
         } else {
             localStorage.guestConfig = JSON.stringify(newConfig);

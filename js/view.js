@@ -104,7 +104,7 @@ function newChartNamerView(newMajor) {
                 <input id="chart-name-input" type="text" class="validate" autofocus autocomplete="off">
                 <label for="chart-name-input">Chart Name</label>
             </div>
-            <button class="slide-in-right" onclick="User.addChart('${newMajor}')">Submit</button>
+            <button class="slide-in-right" onclick="User.addChart('${newMajor}'); return false">Submit</button>
         </form>
     `;
 }

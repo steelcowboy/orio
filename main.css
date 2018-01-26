@@ -18,12 +18,18 @@
 
 .general-ed {
   background: #AAFCA3; }
+  .general-ed .block-units {
+    background: #AAFCA3; }
 
 .minor {
   background: #EEAEEE; }
+  .minor .block-units {
+    background: #EEAEEE; }
 
 .concentration {
   background: #EA80FC; }
+  .concentration .block-units {
+    background: #EA80FC; }
 
 .blank {
   background: #f1f1f1; }
