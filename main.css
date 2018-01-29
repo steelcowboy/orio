@@ -861,6 +861,7 @@ input:checked + .toggle:before {
   right: 0;
   max-width: 34em;
   max-height: 32em;
+  overflow: auto;
   background: white;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   animation: movingUp 0.15s; }
@@ -871,7 +872,8 @@ input:checked + .toggle:before {
   .popup-window .popup-header {
     display: flex;
     justify-content: space-between;
-    padding: 1em 1em 1em 2em; }
+    padding: 1em 1em 1em 2em;
+    min-height: 6em; }
     .popup-window .popup-header h3 {
       margin: 0.5em 0;
       font-size: 1.6em;

@@ -82,12 +82,15 @@ var ChartEditor = {
         var colorClass = $(colorItem).attr("id");
         var selectedBlocks = $(".selected-block .block");
         var colorPalette = $(".color-palette");
+        Chart.pendingBlocks = [];
 
         selectedBlocks.parent().each(function(index, block) {
             var data = $(block).data();
-            data.block_metadata.course_type = colorClass;
+            data.block_metadata.course_type = API.uppercaseFirst(colorClass);
             $(block).data(data);
+            Chart.pendingBlocks.push(data);
         });
+        Chart.update();
 
         selectedBlocks.removeClass("blank general-ed support free-class concentration major minor");
         selectedBlocks.addClass(colorClass);
@@ -173,7 +176,8 @@ var ChartEditor = {
     },
 
     addComment: () => {
-        MenuView.change('comment', 'Add a Comment');
+        alert("Comment added!");
+        Menu.close();
     },
 }
 
@@ -241,13 +245,8 @@ var ChartUpdater = {
     },
 
     getStartYear: () => {
-        if (userConfigExists()) {
-            return userConfig.start_year;
-        } else if (localStorage.guestConfig) {
-            var config = JSON.parse(localStorage.guestConfig);
-            return config.start_year;
-        }
-        return 2015;
+        var config = User.data();
+        return config.start_year;
     },
 }
 

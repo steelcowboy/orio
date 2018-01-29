@@ -72,9 +72,10 @@ var MenuView = {
     },
 
     commentView: () => {
-        console.log("hi");
         return `
+            ${Button.subheader('Comments will be attached to the selected blocks')}
             ${Input.textArea('Type here')}
+            ${Button.actionButton('Submit', 'ChartEditor.addComment()')}
         `;
     },
 }
@@ -182,6 +183,7 @@ function newSettingsView(val) {
                 <div class="toggle round" onclick="toggleSuperSenior(this.parentNode)"></div>
             </label>
         </h3>
+        ${Button.menuOption('', "Chart.enterBuilder()", 'Chart Builder', 'build')}
         ${Button.menuOption(/* id */ 'year-selector', /* clickEvent */ "changeWindow(this.id)",
          /* text */ 'Starting Year', /* icon */ 'keyboard_arrow_right')}
         ${Button.menuOption('about', "changeWindow(this.id)", 'About', 'keyboard_arrow_right')}

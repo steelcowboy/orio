@@ -134,24 +134,18 @@ var API = {
     },
 
     addCourseToChart: (data) => {
-        var course_data = data.course_data;
-        var block_metadata = data.block_metadata;
-
-        if (User.logged_in) {
-            console.log(block_metadata);
-            console.log("Course not actually added. This endpoint is disabled");
-            API.newRequest({
-                type: 'POST',
-                url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}`,
-                contentType: 'application/json',
-                data: JSON.stringify(block_metadata),
-            }).done(function(response) {
-                data.block_metadata._id = response._id;
-                Chart.pendingBlocks = [];
-                Chart.pendingBlocks.push(data);
-                Chart.update();
-            });
-        }
+        console.log(data.block_metadata);
+        API.newRequest({
+            type: 'POST',
+            url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}`,
+            contentType: 'application/json',
+            data: JSON.stringify(data.block_metadata)
+        }).done(function(response) {
+            data.block_metadata._id = response._id;
+            Chart.pendingBlocks = [];
+            Chart.pendingBlocks.push(data);
+            Chart.update({userAdded: true});
+        });
     },
 
     deleteChart: (name) => {
@@ -222,34 +216,28 @@ var API = {
         });
     },
 
-    getBlockMetadata(block, course_data) {
-        if (!course_data) {
-            return {};
-        }
-        block = $(`#${course_data._id}`);
-        var year = block.closest('.year').attr('value');
-        var season = block.closest('.quarter').attr('value');
+    getBlockMetadata(data, time, course_data, catalog_id) {
+        var year = $('.appending').closest('.year').attr('value');
+        var season = $('.appending').attr('value');
         var course_type = !$('.appending').length ?
             $('.block.replaceable').attr('class').split(' ')[1] : "blank";
-        var id = course_data && course_data.length ? course_data[0]._id : course_data._id;
-
-		return {
+        API.addCourseToChart(data, {
             course_type: course_type,
             department: course_data.dept,
             flags: [],
             ge_type: [],
+            time: time,
             notes: 'Course added by user',
-            time: [parseInt(year), season],
-        }
+            catalog_id: catalog_id,
+        });
     },
 
     newRequest: options => {
-        return $.ajax({
-            type: options.type,
-            url: options.url,
-            contentType: options.contentType,
-            data: options.data,
-            beforeSend: options.beforeSend,
-        });
+        return $.ajax(options);
+    },
+
+    uppercaseFirst: (string) => {
+        string = string.charAt(0).toUpperCase() + string.slice(1);
+        return string.split('-').join(' ');
     },
 }

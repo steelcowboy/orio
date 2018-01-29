@@ -7,12 +7,14 @@ var Chart = {
     ge_count: 0,
     pendingBlocks: {},
     course_list: [],
+    inBuildMode: false,
 
-    init: () => {
+    init: (options) => {
         var startYear = ChartUpdater.getStartYear();
         var numYears = localStorage.superSenior ? 5 : 4;
         var titles = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'SuperSenior'];
         Chart.clear();
+        this.inBuildMode = (options && options.inBuildMode);
 
         for (var i=0; i<numYears; i++) {
             var yearOptions = {
@@ -27,9 +29,14 @@ var Chart = {
         }
         checkWindowSize();
 
-        var charts = User.getCharts();
-        if (!jQuery.isEmptyObject(charts))
-            Chart.get();
+        if (this.inBuildMode) {
+            Chart.hideWelcome();
+            $('.quarter').append(`<div class="add-block-button">&plus;</div>`);
+        } else {
+            var charts = User.getCharts();
+            if (!jQuery.isEmptyObject(charts))
+                Chart.get();
+        }
     },
 
     get: () => {
@@ -41,8 +48,7 @@ var Chart = {
             url: url,
             timeout: 10000,
         }).done(function(data) {
-            $('.welcome-container').fadeOut('fast');
-            $('.floating-plus-button').show();
+            Chart.hideWelcome();
             Chart.parse(data);
         }).fail(function() {
             popupMessage('Oops', 'Server crapped out');
@@ -64,9 +70,6 @@ var Chart = {
             var className = block_metadata ?
                 block_metadata.course_type.toLowerCase().split(' ').join('-') : '';
 
-            if (block_metadata._id == "5a4c259869db4e182162433c") {
-                console.log(value);
-            }
             Block.init({
                 destination: dest,
                 header: Block.getHeader(block_metadata, course_data),
@@ -74,17 +77,30 @@ var Chart = {
                 contents: Block.getSubtitle(value),
                 className: className,
                 id: key,
+                hasCourseData: !!(course_data),
             });
         });
         $('.quarter').append(`<div class="add-block-button">&plus;</div>`);
         ChartUpdater.countUnits();
     },
 
-    update: () => {
+    hideWelcome: () => {
+        $('.welcome-container').fadeOut('fast');
+        $('.floating-plus-button').show();
+    },
+
+    showWelcome: () => {
+        $('.welcome-container').show();
+    },
+
+    update: (options) => {
         $.each(Chart.pendingBlocks, function(index, data) {
             var block_metadata = data.block_metadata;
             var course_data = data.course_data;
-            var block = $(`#${block_metadata._id}`).parent();
+            var id = options && options.userAdded ?
+                block_metadata.catalog_id : block_metadata._id;
+            var block = $(`#${id}`).parent();
+
             var year = block.closest('.year').attr('value');
             var season = block.closest('.quarter').attr('value');
 
@@ -103,7 +119,7 @@ var Chart = {
     clear: () => {
         $('.year-holder').empty();
         $('.header-title').text('Welcome');
-        $('.welcome-container').show();
+        Chart.showWelcome();
         Chart.ge_count = 0;
     },
 
@@ -143,9 +159,8 @@ var Chart = {
 
     deleteCourses: () => {
         var chart = User.getActiveChart();
-        console.log(chart);
         $('.selected-block .block').each(function() {
-            if (User.logged_in) {
+            if (User.logged_in && !Chart.inBuildMode) {
                 API.deleteCourse(chart, $(this).attr('id'));
             }
         });
@@ -167,8 +182,24 @@ var Chart = {
 
     addCourse: (id) => {
         var course_data = $(`#${id}`).data();
-        var data = {block_metadata: {}, course_data: course_data};
         id = id.split('-')[0];
+        var year = $('.appending').closest('.year').attr('value');
+        var season = $('.appending').attr('value');
+        var time = [parseInt(year), season];
+        var course_type = !$('.appending').length ?
+            $('.replaceable').attr('class').split(' ')[1] : "blank";
+        var data = {
+            block_metadata: {
+                course_type: course_type,
+                department: course_data.dept,
+                flags: [],
+                ge_type: [],
+                time: time,
+                notes: 'Course added by user',
+                catalog_id: id,
+            },
+            course_data: course_data
+        }
 
         if ($('.replaceable').length) {
             var block = $('.replaceable');
@@ -183,9 +214,18 @@ var Chart = {
                 className: 'blank',
                 id: id,
             });
-            var data = $(`#${id}`).parent().data();
-            Menu.close();
+
             API.addCourseToChart(data);
+            Menu.close();
         }
+    },
+
+    enterBuilder: () => {
+        Chart.init({
+            inBuildMode: true,
+        });
+        Chart.inBuildMode = true;
+        Menu.close();
+        ChartEditor.edit();
     },
 }

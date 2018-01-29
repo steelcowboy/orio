@@ -70,7 +70,8 @@ var Block = {
             options.destination.append(block);
         }
         if ($.isEmptyObject(options.data.block_metadata)) {
-            options.data.block_metadata = API.getBlockMetadata($(block), options.data.course_data);
+            options.data.block_metadata =
+                API.getBlockMetadata($(block), options.data.course_data, options.catalog_id);
         }
 
         $(id).parent().data(options.data);
