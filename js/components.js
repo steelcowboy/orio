@@ -87,7 +87,7 @@ var Block = {
                     <i class="material-icons">check</i>
                 </div>
                 <div class="block ${options.className}" id="${options.id}"
-                 value="${options.hasCourseData ? options.data.course_data.units : 4}" >
+                 value="${options.hasCourseData ? options.data.course_data.units || 4 : 4}" >
                     ${Block.contents(options)}
                 </div>
             </div>
