@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>FlowChamp</title>
-        <link rel="stylesheet" href="css/index.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>PolyPlanner</title>
+        <link rel="stylesheet" href="main.css">
         <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="css/materialize.css">
         <link rel="stylesheet" href="css/animations.css">
-        <link rel="icon" href="/img/icon48.png?v=1.1">
+        <link rel="icon" href="/img/logo_2.png">
         <script src="js/plugins/jquery.js"></script>
         <script src="js/plugins/jquery-ui.js"></script>
         <script src="js/plugins/jquery-touch.js" ></script>
         <script src="js/plugins/materialize.js" ></script>
         <meta name="viewport" content="width=device-width, initial-scale=0.8 user-scalable=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="description" content="PolyPlanner for the modern web.
+        Create, edit, and save flowcharts to help you plan out your college
+        journey, all from one site. Use our Chrome extension to send courses
+        directly to PolyPlanner."/>
     </head>
     <body onload="loadTasks()">
         <div class="welcome-container">
-            <div class="logo">
-                <div class="logo-letter">
-                    <div id="top-f"></div>
-                    <div id="bottom-f"></div>
-                </div>
-                <div class="bottom-text">flowchamp</div>
+            <div class="logo-container">
+                <img class="logo" src="img/logo.svg">
             </div>
-            <h3>Take Control of Your Flowchart</h3>
+            <h3>PolyPlanner</h3>
+            <div class="button" id="get-started-button" onclick="Menu.open()">Start</div>
         </div>
         <div class="menu-nav-buttons">
             <div id="menu-button">
@@ -34,7 +32,7 @@
                 <span></span>
                 <span></span>
             </div>
-            <img class="back-button" src="img/arrow.svg" onclick="popStack()">
+	    <i class="material-icons back-button" onclick="Menu.back()">arrow_back</i>
         </div>
         <div class="header">
             <div class=header-contents>
@@ -42,120 +40,65 @@
                 <div class="loading">
                     <div class="indeterminate"></div>
                 </div>
-                <div class="header-button chart-menu-open-button hidden"
-                id="chart-menu-open-button" onclick="toggleChartMenu()">
-                    <i class="material-icons">more_vert</i>
-                </div>
-                <div class="chart-menu hidden">
-                    <div class="chart-menu-button" onclick="deleteActiveChart()">
-                        Delete Chart <i class="material-icons">delete</i>
-                    </div>
-                </div>
             </div>
             <div class="edit-container">
                 <div class="left-container">
-                    <div class="header-button" id="close-edit-container-button" onclick="closeEditMode()">&times;</div>
                     <div id="selected-count-container">1 selected</div>
                 </div>
                 <div class="edit-action-container">
-                    <div class="header-button" onclick="toggleFlagPalette()">
-                        <i class="material-icons">flag</i>
+                    <div class="header-button edit-action-button"
+                        onclick="MenuView.change('comment-view', 'Add a Comment')">
+                        <i class="material-icons edit-action-button">comment</i>
                     </div>
-                    <div class="header-button" onclick="toggleColorPalette()">
-                        <i class="material-icons">color_lens</i>
+                    <div class="header-button edit-action-button" onclick="toggleColorPalette()">
+                        <i class="material-icons edit-action-button">color_lens</i>
                     </div>
-                    <div class="header-button" onclick="deleteSelectedBlocks()">
+                    <div class="header-button edit-action-button" onclick="Chart.deleteCourses()">
                         <i class="material-icons">delete</i>
                     </div>
                 </div>
             </div>
             <ul class="tabs">
-                <li class="tab" id="1-tab" value="1" onclick="changeTab(this.id)"><a href="#year1">Freshman</a></li>
-                <li class="tab" id="2-tab" value="2" onclick="changeTab(this.id)"><a href="#year2">Sophomore</a></li>
-                <li class="tab" id="3-tab" value="3" onclick="changeTab(this.id)"><a href="#year3">Junior</a></li>
-                <li class="tab" id="4-tab" value="4" onclick="changeTab(this.id)"><a href="#year4">Senior</a></li>
-                <li class="tab hidden" id="5-tab" value="5" onclick="changeTab(this.id)"><a href="#year5">SuperSenior</a></li>
+                <li class="tab" id="1-tab" value="1" onclick="Chart.tab(this.id)"><a href="#year1">Freshman</a></li>
+                <li class="tab" id="2-tab" value="2" onclick="Chart.tab(this.id)"><a href="#year2">Sophomore</a></li>
+                <li class="tab" id="3-tab" value="3" onclick="Chart.tab(this.id)"><a href="#year3">Junior</a></li>
+                <li class="tab" id="4-tab" value="4" onclick="Chart.tab(this.id)"><a href="#year4">Senior</a></li>
+                <li class="tab hidden" id="5-tab" value="5" onclick="Chart.tab(this.id)"><a href="#year5">SuperSenior</a></li>
             </ul>
         </div>
         <div class="color-palette hidden">
-            <div class="color-choice concentration" id="concentration" onclick="changeSelectedBlockColor(this)"></div>
-            <div class="color-choice minor" id="minor" onclick="changeSelectedBlockColor(this)"></div>
-            <div class="color-choice free-class" id="free-class" onclick="changeSelectedBlockColor(this)"></div>
-            <div class="color-choice general-ed" id="general-ed" onclick="changeSelectedBlockColor(this)"></div>
-            <div class="color-choice major" id="major" onclick="changeSelectedBlockColor(this)"></div>
-            <div class="color-choice support" id="support" onclick="changeSelectedBlockColor(this)"></div>
-        </div>
-        <div class="flag-palette hidden">
-            <div class="flag-choice" id="mark-complete" onclick="addBlockFlag(this.id)">
-                <i class="material-icons">check</i>
-                <p>Complete</p>
-            </div>
-            <div class="flag-choice" id="mark-next-quarter" onclick="addBlockFlag(this.id)">
-                <i class="material-icons">call_made</i>
-                <p>Next quarter</p>
-            </div>
-            <div class="flag-choice" id="mark-in-progress" onclick="addBlockFlag(this.id)">
-                <i class="material-icons" >schedule</i>
-                <p>In Progress</p>
-            </div>
-            <div class="flag-choice" id="mark-retake" onclick="addBlockFlag(this.id)">
-                <i class="material-icons">settings_backup_restore</i>
-                <p>Retake</p>
-            </div>
+            <div class="color-choice concentration" id="concentration" onclick="ChartEditor.changeBlockColor(this)">
+                Concentration</div>
+            <div class="color-choice minor" id="minor" onclick="ChartEditor.changeBlockColor(this)">
+                Minor</div>
+            <div class="color-choice free-class" id="free-class" onclick="ChartEditor.changeBlockColor(this)">
+                Free</div>
+            <div class="color-choice general-ed" id="general-ed" onclick="ChartEditor.changeBlockColor(this)">
+                GE</div>
+            <div class="color-choice major" id="major" onclick="ChartEditor.changeBlockColor(this)">
+                Major</div>
+            <div class="color-choice support" id="support" onclick="ChartEditor.changeBlockColor(this)">
+                Support</div>
         </div>
         <div class="base">
             <div class="year-holder">
                 <!-- Flowchart populates here -->
             </div>
-        </div>
-        <div class="disabled" onclick="closeMenu()"></div>
-        <div class="menu-modal">
-            <div class="menu-logo-container slide-right">
-                <div class="logo menu-logo">
-                    <div class="logo-letter">
-                        <div id="top-f"></div>
-                        <div id="bottom-f"></div>
-                    </div>
-                    <div class="bottom-text">flowchamp</div>
-                </div>
+            <div class="floating-plus-button"
+             id="edit-chart-button" style="display: none" onclick="ChartEditor.toggleEditMode()">
+                <i class="material-icons edit-icon">edit</i>
+                <i class="material-icons check-icon hidden">check</i>
             </div>
-            <h3 class="menu-option slide-right" id="pp-connector-link" onclick="openUrlInNewTab('https://chrome.google.com/webstore/detail/flowchamp-connector-tool/ieaomdjhdichopdhgbdnlggooafonahh')">PolyPlanner Connector
-                <i class="material-icons">open_in_new</i>
-            </h3>
-            <h3 class="menu-option slide-right hidden" id="user-chart-browser" onclick="changeWindow(this.id)">Your Charts
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-            <h3 class="menu-option slide-right" id="chart-year-browser" onclick="changeWindow(this.id)">New Flowchart
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-            <!--
-            <h3 class="menu-option slide-right" id="utilities-browser" onclick="changeWindow(this.id)">Supplements
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-            -->
-            <h3 class="menu-option slide-right" id="chart-builder" onclick="setupBuilder()">Chart Builder
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-            <h3 class="menu-option slide-right" id="settings-button" onclick="changeWindow(this.id)">Settings
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-            <h3 class="menu-option slide-right" id="login-button" onclick="changeWindow(this.id)">Log In
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
-            <h3 class="menu-option slide-right hidden" id="logout-button" onclick="logout()">Log Out
-                <i class="material-icons">keyboard_arrow_right</i>
-            </h3>
         </div>
-
-        <div class="external-site-modal">
-            <div class="external-site-nav">
-                <p onclick="closeSiteNav()">&times;</p>
-            </div>
-            <div class="site-container"></div>
-        </div>
+        <div class="disabled" id="disabled" onclick="Menu.close()"></div>
+        <div class="popup-disabled" onclick="Popup.remove()"></div>
+        <div class="menu-modal"></div>
         <script src="js/index.js"></script>
+        <script src="js/user.js"></script>
         <script src="js/components.js"></script>
-        <script src="js/chart.js"></script>
+        <script src="js/view.js"></script>
+        <script src="js/chart_manager.js"></script>
+        <script src="js/chart_editor.js"></script>
         <script src="js/settings.js"></script>
         <script src="js/menu.js"></script>
         <script src="js/chart_builder.js"></script>

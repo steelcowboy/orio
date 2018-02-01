@@ -1,0 +1,113 @@
+.block-outline {
+    position: relative;
+    box-sizing: border-box;
+    height: 8em;
+    width: 97%;
+    max-width: 10em;
+    margin: 0.5em auto;
+    box-shadow: $block-shadow;
+    transition: all 0.3s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 9px rgba(0, 0, 0, 0.20);
+    }
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    &.dragging {
+        position: absolute;
+        top: -1em;
+        left: 2em;
+        bottom: .1em;
+        width: 100%;
+        max-width: 9em;
+        animation: none;
+        outline: none;
+        transform: scale(1);
+    }
+
+    &.selected-block {
+        animation: none !important;
+        .block {
+            transform: scale(0.8);
+            transition: all .15s ease-in-out;
+            box-shadow: none;
+            cursor: move !important;
+            animation: none;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        .edit-block-button {
+            background: $header-color;
+            color: white;
+            border: 2px solid transparent;
+            visibility: visible !important;
+            transition: all .15s ease-in-out;
+        }
+        background: rgba(0,0,0,0.08);
+        box-shadow: none;
+    }
+
+}
+
+.block {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 15px;
+    text-align: left;
+
+    &.editable {
+        position: relative;
+        cursor: move !important;
+    }
+
+    &.concentration, &.free {
+        .block-contents {
+            opacity: 0;
+        }
+    }
+
+    p, h3, h4, h5, h6 {
+        margin: 0;
+    }
+
+    .block-header {
+        font-weight: bold;
+    }
+
+    .block-contents {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        height: 3.7em;
+        padding-top: 0.5em;
+        font-size: 0.85em;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .block-units {
+        position: absolute;
+        height: 2em;
+        width: 100%;
+        line-height: 2em;
+        bottom: 0.6em;
+        font-weight: bold;
+    }
+}
+
+.desktop {
+    .dragging {
+        left: .5em !important;
+    }
+}

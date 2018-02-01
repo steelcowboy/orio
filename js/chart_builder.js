@@ -1,11 +1,11 @@
 $(document).on('click', '.add-block-button', function() {
-    if (!$(this).parent().hasClass("appending") || menuStack.length == 0) {
-        emptyStack();
+    if (!$(this).parent().hasClass("appending") || Menu.stack.length == 0) {
+        Menu.init();
         $(".quarter").removeClass("appending");
         $(this).parent().addClass("appending");
-        showCourseSelector();
+        MenuView.change('department-view', 'Departments');
     } else {
-        openMenu();
+        Menu.open();
     }
 });
 
@@ -23,53 +23,59 @@ function setupBuilder() {
         $(".header-title").text("New Flowchart");
     }
     checkWindowSize();
-    closeMenu();
+    Menu.close();
 }
 
 function showCourseSelector() {
     changeWindow("department-selector", "Departments");
-    setupAutocomplete();
-    openMenu();
+    setupAutocomplete('department-search');
+    Menu.open();
 }
 
-function setupAutocomplete() {
-    $( "#departmentSearch" ).autocomplete({
-        source: departments,
-        appendTo: ".menu-modal",
-        select: function(event, ui) {
-            fetchDepartmentCourses(ui.item.label);
-            $( "#departmentSearch" ).autocomplete( "destroy" );
-            $(".department-item").fadeIn("slow");
-        },
-        response: function( event, ui ) {
-            $(".department-item").hide();
+function setupAutocomplete(id) {
+    var input = $(`#${id}`);
+    console.log(input);
+    input.autocomplete({
+        source: API.departments,
+        open: function(e, ui) {
+            var list = [];
+            var element = ``;
+            var results = $('.ui-widget-content li');
+            results.each(function() {
+                var value = $(this).text();
+                element = element.concat(Button.menuButton({
+                    id: '',
+                    clickEvent: `MenuView.change('course-view', '${value}')`,
+                    text: value,
+                    icon: 'keyboard_arrow_right',
+                    classes: 'department-item slide-in-right',
+                }));
+            });
+            $('#department-results').html(element);
         }
     });
 }
 
 function newDepartmentSelectorView() {
-    var element = "";
-    /*
-    var uiWidget = `
-        <div class = "ui-widget menu-option slide-in-right">
-            <input class="input-field" id ="departmentSearch" placeholder="Search" maxlength="4">
-        </div>`
-    element = element.concat(uiWidget);
-   */
+    var element = Input.searchWithCompletion('department-search');
+    var departmentResults = `<div class="department-results slide-in-right" id='departmentResults'>`;
+
     $.each(departments, function(index, value) {
-        element = element.concat(`<h3 class="menu-option department-item slide-in-right" name="${value}" onclick="fetchDepartmentCourses(this)">${value}</h3>`);
+        departmentResults = departmentResults.concat(`<h3 class="menu-option department-item" name="${value}" onclick="fetchDepartmentCourses('${value}')">${value}</h3>`);
     });
-    return element;
+    departmentResults = departmentResults.concat(`</div>`)
+    return element.concat(departmentResults);
 }
 
 function newCourseSelectorView() {
-    var element = "";
+    var element = "<div>";
     $.each(departmentCourses, function(index, value) {
         if (index > 0) {
             element = element.concat(`<h3 class="menu-option course-item slide-in-right"
              name="${departmentCourses[0] /* Department Name */}/${value}" onclick="fetchCourse(this)">${value}</h3>`);
         }
     });
+    element = element.concat('</div>');
     return element;
 }
 
@@ -86,9 +92,9 @@ function fetchDepartments() {
     });
 }
 
-function fetchDepartmentCourses(location) {
+function fetchDepartmentCourses(dept) {
     departmentCourses = [];
-    var departmentName = $(location).attr("name");
+    var departmentName = dept;
     var request = $.get({
         url: `${apiURL}courses/${departmentName}`
     });
@@ -112,23 +118,24 @@ function fetchCourse(courseItem) {
     });
 
     request.done(function(data) {
-        if ($('.block').hasClass('replaceable')) {
-            var course_type = $('.block.replaceable').attr('class').split(' ')[1];
-            var course = newBlockComponent(null, data, course_type);
-            var block = $('.block.replaceable').parent();
-            block.replaceWith(course);
-            $('.block.replaceable').removeClass('replaceable');
-        } else {
-            var course = newBlockComponent(null, data);
-            var parentLocation = $(".appending").index()-1;
-            //putBlock(data);
-            console.log(parentLocation);
-            $(course).insertBefore(".appending .add-block-button");
-        }
-        emptyStack();
-    });
+        data = {block_metadata: {}, course_data: data};
+        data.block_metadata.course_type = !$('.appending').length ?
+            $('.block.replaceable').attr('class').split(' ')[1] : "blank";
 
-    closeMenu();
+        Block.init({
+            destination: $('.appending').length ? $('.appending') : $('.replaceable').parent(),
+            initType: $('.appending').length ? 'append' : 'replace',
+            header: Block.getHeader(null, data.course_data),
+            data: data,
+            className: Block.getCourseType(data.block_metadata, data.course_data),
+            contents: data.course_data.title,
+            id: data.course_data._id,
+        });
+
+        Menu.init();
+        Menu.stack = [];
+    });
+    Menu.close();
 }
 
 function addCourseSpecifier(addComponent) {
@@ -155,5 +162,9 @@ function fetchFullCourse(location) {
     request.done(function(data) {
         var block = newBlockComponent(/* block_data */ {course_type: courseType}, data);
         $(location).replaceWith(block);
+
+        if (isFullDesktop()) {
+            enableChart();
+        }
     });
 }

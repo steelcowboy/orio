@@ -1,0 +1,34 @@
+.curriculum-sheet {
+    z-index: 21;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    animation: slide-up .35s;
+
+    .nav-bar {
+        display: flex;
+        height: 1em;
+        width: 100%;
+        justify-content: flex-end;
+        font-size: 3em;
+        color: rgb(100,100,100);
+
+        p {
+            margin: 0.4em;
+            line-height: 0;
+            cursor: pointer;
+        }
+    }
+
+    .document-container {
+        height: 100%;
+
+        embed {
+            height: 100%;
+            width: 100%;
+        }
+    }
+}

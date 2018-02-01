@@ -1,109 +1,243 @@
-function login() {
-    var loginForm = $("#login-form");
-    var usernameEntered = $("#login-username").val();
-    var password = $("#login-password").val();
-    var remember = ($("#toggle-rememberMe").find("input").prop('checked'));
-    var header = window.btoa(usernameEntered+":"+password);
-    var data = JSON.stringify(remember ? {'remember': 'true'} : '');
+var API = {
+    url: '/api/cpslo',
+    failed_auths: 0,
+    departments: [],
+    departmentCourses: [],
+    departmentCourseTitles: [],
 
-    var request = $.ajax({
-        type: "POST",
-        url: apiURL+"authorize",
-        contentType: 'application/json',
-        data: data,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader ("Authorization", "Basic " + header);
-            $("#submit-progress").removeClass("hidden");
+    authorize: (options) => {
+        options.type = 'POST';
+        options.url = `${API.url}/authorize`;
+        options.contentType = 'application/json';
+
+        API.newRequest(options)
+            .done(function(config) {
+                User.logged_in = true;
+                //API.mergeGuestCharts(config);
+                User.update(config);
+                Menu.init();
+            }).fail(function() {
+                User.logged_in = false;
+                API.failed_auths += 1;
+                if (API.failed_auths == 3) {
+                    alert("Careful, one more try before you get locked out for 30 mins!");
+                }
+                $('.login-error-text').removeClass('hidden');
+                $('#submit-progress').addClass('hidden');
+            });
+    },
+
+    mergeGuestCharts: (config) => {
+        var guestConfig = User.data();
+        if (guestConfig.charts && guestConfig.username === 'cpslo-guest') {
+            var username = config.username.split('-')[1];
+            config.active_chart = guestConfig.active_chart;
+
+            $.each(guestConfig.charts, function(key, value) {
+                API.importChart(value, key, username, true);
+                config.charts[key] = value;
+            });
+            return true;
         }
-    });
+        return false;
+    },
 
-    request.done(function(response) {
-        emptyStack();
-        userConfig = response;
-        if (remember) {
-            localStorage.userConfig = JSON.stringify(response);
-        } else {
-            localStorage.removeItem('userConfig');
+    logout: () => {
+        var options = {
+            type: 'POST',
+            url: `${API.url}/users/${User.username()}/logout`,
+        };
+
+        API.newRequest(options)
+            .done(function() {
+                User.remove();
+            });
+    },
+
+    stockCharts: () => {
+
+    },
+
+    importChart: (major, name, username, login) => {
+        username = username ? username : User.username();
+        var options = {
+            type: 'POST',
+            url: `${API.url}/users/${username}/import`,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "target": major,
+                "year": "15-17",
+                "destination": name
+            }),
+        };
+
+        API.newRequest(options)
+            .done(function(config) {
+                User.update(config, /* don't POST */ true);
+                User.setActiveChart(name);
+                Menu.init();
+            }).fail(function(response) {
+                console.log(response);
+            });
+    },
+
+    loginStatus: () => {
+        var options = {
+            type: 'GET',
+            url: `${API.url}/users/${User.username()}`,
+        };
+
+        API.newRequest(options)
+            .done(function(response) {
+                User.logged_in = true;
+                Chart.init();
+                Menu.init();
+            }).fail(function(response) {
+                User.logged_in = false;
+                changeWindow('login-button');
+                Menu.open();
+            });
+    },
+
+    getUserConfig: () => {
+        var options = {
+            type: 'GET',
+            url: `${API.url}/users/${User.username()}/config`,
         }
-        username = response.username.split('-')[1];
-        getUserCharts();
-    });
 
-    request.fail(function(jqXHR, textStatus, errorThrown) {
-        $(".login-error-text").removeClass("hidden");
-        $("#submit-progress").addClass("hidden");
-    });
-}
+        API.newRequest(options)
+            .done(function(config) {
+                User.logged_in = true;
+                User.update(config);
+                $("#login-button").addClass('hidden');
+                $("#logout-button").removeClass("hidden");
+            });
+    },
 
-function logout() {
-    var username = userConfig.username.split('-')[1];
-    var url = `${apiURL}users/${username}/logout`;
+    updateUserConfig: (newConfig) => {
+        var username = newConfig.username.split('-')[1];
+        var options = {
+            type: 'POST',
+            url: `${API.url}/users/${username}/config`,
+            contentType: 'application/json',
+            data: JSON.stringify(newConfig),
+        };
 
-    localStorage.removeItem('savedChart');
-    localStorage.removeItem('userConfig');
+        API.newRequest(options)
+            .done(function(response) {
+                Chart.init();
+            });
+    },
 
-    var request = $.post({
-        url: url,
-        success: function(result) {
-            location.reload();
-        },
-        error: function() {
-            location.reload();
+    userCharts: () => {
+
+    },
+
+    addCourseToChart: (data) => {
+        console.log(data.block_metadata);
+        API.newRequest({
+            type: 'POST',
+            url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}`,
+            contentType: 'application/json',
+            data: JSON.stringify(data.block_metadata)
+        }).done(function(response) {
+            data.block_metadata._id = response._id;
+            Chart.pendingBlocks = [];
+            Chart.pendingBlocks.push(data);
+            Chart.update({userAdded: true});
+        });
+    },
+
+    deleteChart: (name) => {
+        var request = API.newRequest({
+            type: 'DELETE',
+            url: `${API.url}/users/${User.username()}/charts/${name}`
+        }).done(function(config){
+            var config = User.data();
+            console.log("Chart deleted");
+            User.update(config, true);
+            if (config && config.charts.length)
+                User.setActiveChart(data.charts[0]);
+        });
+    },
+
+    getCourseById: () => {
+
+    },
+
+    updateCourse: data => {
+        var block_metadata = data.block_metadata;
+        var id = block_metadata._id;
+        var options = {
+            type: 'PUT',
+            url: `${API.url}/users/${User.username()}/charts/${User.getActiveChart()}/${id}`,
+            contentType: 'application/json',
+            data: JSON.stringify(block_metadata),
         }
-    });
-}
+        API.newRequest(options)
+            .done(function(response) {
+                console.log(response);
+            })
+            .fail(function(response) {
+                console.log('Unable to update course');
+                console.log(response);
+            });
+    },
 
-function postChart(major, chartName) {
-    var username = userConfig.username.split('-')[1];
-    var url = `${apiURL}users/${username}/import`;
-    var data = JSON.stringify({
-        "target": major,
-        "year": "15-17",
-        "destination": chartName
-    });
-    var request = $.post({
-        contentType: 'application/json',
-        url: url,
-        data: data
-    });
+    deleteCourse: (chart, courseId) => {
+        var options = {
+            type: 'DELETE',
+            url: `${API.url}/users/${User.username()}/charts/${chart}/${courseId}`,
+        };
+        API.newRequest(options)
+            .done(function(response) {
+                console.log("Course Deleted!", response);
+            }).fail(function(response) {
+                console.log(response);
+            });
+    },
 
-    request.done(function(response) {
-        console.log("Success!", response);
-        sendUserConfig(chartName);
-    });
+    getDepartments: () => {
+        API.newRequest({
+            type: 'GET',
+            url: `${API.url}/courses`,
+        }).done(function(departments) {
+            API.departments = departments.departments;
+        });
+    },
 
-    request.fail(function(response) {
-        console.log(response);
-    });
-}
+    getCoursesByDepartment: DEPT => {
+        API.newRequest({
+            type: 'GET',
+            url: `${API.url}/catalog/${DEPT}`,
+        }).done(function(courses) {
+            API.departmentCourses = courses;
+            MenuView.populate('menu-course', courses);
+        });
+    },
 
-function deleteActiveChart() {
-    var username = userConfig.username.split('-')[1];
-    var chart = userConfig.active_chart;
-    var url = `${apiURL}users/${username}/charts/${chart}`;
-    var request = $.ajax({
-        type: 'DELETE',
-        url: url,
-        success: function(result) {
-            console.log(result);
-            userConfig = result;
-            localStorage.userConfig = JSON.stringify(userConfig);
-            $(".welcome-container").show();
-            $(".header-title").text('Welcome');
-            openMenu();
-        }
-    });
-}
+    getBlockMetadata(data, time, course_data, catalog_id) {
+        var year = $('.appending').closest('.year').attr('value');
+        var season = $('.appending').attr('value');
+        var course_type = !$('.appending').length ?
+            $('.block.replaceable').attr('class').split(' ')[1] : "blank";
+        API.addCourseToChart(data, {
+            course_type: course_type,
+            department: course_data.dept,
+            flags: [],
+            ge_type: [],
+            time: time,
+            notes: 'Course added by user',
+            catalog_id: catalog_id,
+        });
+    },
 
-function deleteCourse(courseId) {
-    var chartName = userConfig.active_chart;
-    var username = userConfig.username.split('-')[1];
-    var request = $.ajax({
-        type: "DELETE",
-        url: `${apiURL}users/${username}/charts/${chartName}/${courseId}`,
-    });
+    newRequest: options => {
+        return $.ajax(options);
+    },
 
-    request.done(function(response) {
-        console.log("Deleted course", courseId);
-    });
+    uppercaseFirst: (string) => {
+        string = string.charAt(0).toUpperCase() + string.slice(1);
+        return string.split('-').join(' ');
+    },
 }

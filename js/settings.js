@@ -19,26 +19,20 @@ function toggleSummerQuarter(toggle) {
     } else {
         localStorage.removeItem('summerQuarter');
     }
-    loadTasks();
+    Chart.init();
 }
 
 function toggleSuperSenior(toggle) {
     var value = !($(toggle).find("input").prop('checked'));
     if (value) {
         localStorage.superSenior = true;
+        $('#5-tab').removeClass('hidden');
     } else {
         $("#5-tab").addClass("hidden");
         localStorage.removeItem('superSenior');
         checkWindowSize();
     }
-    loadTasks();
-}
-
-function userConfigExists() {
-    if (Object.keys(userConfig).length === 0 && userConfig.constructor === Object) {
-        return false;
-    }
-    return true;
+    Chart.init();
 }
 
 function guestConfigExists() {
@@ -49,22 +43,16 @@ function guestConfigExists() {
 }
 
 function changeStartYear(yearItem, chartBrowser) {
-    startYear = parseInt($(yearItem).text());
-    if (userConfigExists()) {
-        userConfig.start_year = startYear;
-        if (!chartBrowser) {
-            sendUserConfig();
-        }
-    } else if (guestConfig) {
-        guestConfig.startYear = startYear;
-        localStorage.guestConfig = JSON.stringify(guestConfig);
-    }
+    var startYear = parseInt($(yearItem).text());
+    var config = User.data();
+
+    config.start_year = startYear;
+    User.update(config);
 
     if (chartBrowser == 'true') {
         changeWindow('chart-browser');
     } else {
-        closeMenu();
-        emptyStack();
+        Menu.back();
     }
     $(".year").each(function(key, el) {
         $(this).attr("name", parseInt($(yearItem).text())+key);
@@ -78,7 +66,8 @@ function changeStartYear(yearItem, chartBrowser) {
         }
         $(this).attr("name", `${season} ${year}`);
     });
-    getCurrentQuarter();
+    Chart.setCurrentQuarter();
+    ChartUpdater.checkCompletion();
 }
 
 function sendUserConfig(chartName = null) {
